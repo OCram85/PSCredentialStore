@@ -6,7 +6,7 @@
     - Git repository name
     - Module name
 #>
-$CALLSIGN = 'PSCoverage'
+$CALLSIGN = 'PSCredentialStore'
 Write-Host ("Callsign is: {0}" -f $CALLSIGN) -ForegroundColor Yellow
 
 Function Invoke-AppVeyorBumpVersion() {
@@ -128,7 +128,7 @@ Function Invoke-CoverageReport() {
         [String]$RepoToken = $Env:CoverallsToken
     )
 
-    Import-Module '.\src\PSCoverage.psm1' -Verbose -Force
+    Import-Module ('.\src\{0}.psm1' -f $CALLSIGN) -Verbose -Force
     $FileMap = New-PesterFileMap -SourceRoot '.\src' -PesterRoot '.\tests'
     $CoverageReport = New-CoverageReport -PesterFileMap $FileMap -RepoToken $RepoToken
     Write-Host "CoverageReport JSON:" -ForegroundColor Yellow
