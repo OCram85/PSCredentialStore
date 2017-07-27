@@ -9,10 +9,10 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    # RootModule = ''
+    RootModule = 'PSCredentialStore'
 
     # Version number of this module.
-    ModuleVersion = '1.0'
+    ModuleVersion = $Env:APPVEYOR_BUILD_VERSION
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
@@ -33,7 +33,7 @@
     # Description = ''
 
     # Minimum version of the Windows PowerShell engine required by this module
-    # PowerShellVersion = ''
+    PowerShellVersion = '4.0'
 
     # Name of the Windows PowerShell host required by this module
     # PowerShellHostName = ''
