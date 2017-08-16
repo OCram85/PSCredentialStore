@@ -14,7 +14,9 @@ Else {
 }
 
 # load additional functions defined in the repository. Replace the expression <FunctionName>.
-# . (Get-ChildItem -Path $RepoRoot -Filter "<Function-Name>.ps1" -Recurse).FullName
+. (Get-ChildItem -Path $RepoRoot -Filter "Test-CredentialStore.ps1" -Recurse).FullName
+. (Get-ChildItem -Path $RepoRoot -Filter "Test-ChallengeFile.ps1" -Recurse).FullName
+. (Get-ChildItem -Path $RepoRoot -Filter "Set-ChallengeFile.ps1" -Recurse).FullName
 
 #endregion HEADER
 
@@ -46,7 +48,7 @@ Describe "New-CredentialStore" {
         It "Test1: Create new private CredentialStore" {
             New-CredentialStore
             $result = Test-Path -Path $pCS
-            $CS = Get-Content -Path $pCS -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json -ErrorAction SilentlyContinue
+            $CS = Get-Content -Path $pCS -Raw | ConvertFrom-Json -ErrorAction SilentlyContinue
             ($result -eq $True) -and ($CS.Type -eq "Private") | Should Be $True
         }
         It "Test2: Try to override private Store" {
