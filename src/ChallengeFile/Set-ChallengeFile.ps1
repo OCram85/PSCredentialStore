@@ -67,6 +67,6 @@ Function Set-ChallengeFile() {
         [io.file]::WriteAllBytes($Path, $Keys)
     }
     catch {
-        $_.Exception | Format-List -Force | Out-String | Write-ErrorErrorAction Stop
+        $_.Exception | Format-List -Force | Out-String | Write-Error -ErrorAction Stop
     }
 }
