@@ -17,6 +17,7 @@ Else {
 . (Get-ChildItem -Path $RepoRoot -Filter "Test-CredentialStore.ps1" -Recurse).FullName
 . (Get-ChildItem -Path $RepoRoot -Filter "Test-ChallengeFile.ps1" -Recurse).FullName
 . (Get-ChildItem -Path $RepoRoot -Filter "Set-ChallengeFile.ps1" -Recurse).FullName
+. (Get-ChildItem -Path $RepoRoot -Filter "Get-RandomKey.ps1" -Recurse).FullName
 
 #endregion HEADER
 
