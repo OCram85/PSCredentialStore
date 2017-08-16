@@ -19,7 +19,7 @@ Function Invoke-AppVeyorBumpVersion() {
 
     Try {
         $ModManifest = Get-Content -Path (".\src\{0}.psd1" -f $CALLSIGN)
-        $BumpedManifest = $ModManifest -replace '\$Env:APPVEYOR_BUILD_VERSION', "'$Env:APPVEYOR_BUILD_VERSION'"
+        $BumpedManifest = $ModManifest -replace '0.0.0.9999', $Env:APPVEYOR_BUILD_VERSION
         Remove-Item -Path (".\src\{0}.psd1" -f $CALLSIGN)
         Out-File -FilePath (".\src\{0}.psd1" -f $CALLSIGN) -InputObject $BumpedManifest -NoClobber -Encoding utf8 -Force
     }

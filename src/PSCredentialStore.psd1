@@ -12,7 +12,8 @@
     RootModule = 'PSCredentialStore'
 
     # Version number of this module.
-    ModuleVersion = $Env:APPVEYOR_BUILD_VERSION
+    # Do not touch the version number. It gets replaced in the build process.
+    ModuleVersion = '0.0.0.9999'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
