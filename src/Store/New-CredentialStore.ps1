@@ -34,7 +34,7 @@ function New-CredentialStore {
 
     .EXAMPLE
         New-CredentialStore -Shared
-        # Creates a new shead CredentialStore
+        # Creates a new shared CredentialStore
 
     .EXAMPLE
         New-CredentialStore -Shared -Path "C:\TMP\CredentialStore.json"
