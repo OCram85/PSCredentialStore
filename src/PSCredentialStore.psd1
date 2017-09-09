@@ -70,7 +70,22 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @()
+    FunctionsToExport = @(
+        # Connection Group
+        'Connect-To',
+        'Disconnect-From',
+        # Item Group
+        'Get-CredentialStoreItem',
+        'Set-CredentialStoreItem',
+        'New-CredentialStoreItem',
+        'Remove-CredentialStoreItem',
+        'Test-CredentialStoreItem',
+        # Store Group
+        'Get-CredentialStore',
+        'New-CredentialStore',
+        'Test-CredentialStore'
+
+    )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport = @()
@@ -96,13 +111,15 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            # Tags = @()
+            Tags = @('Credential Store',
+                'Credential Manager'
+            )
 
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri = 'https://github.com/OCram85/PSCredentialStore/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri = 'https://github.com/OCram85/PSCredentialStore'
 
             # A URL to an icon representing this module.
             # IconUri = ''
@@ -115,10 +132,9 @@
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    # HelpInfoURI = ''
+    HelpInfoURI = 'https://github.com/OCram85/PSCredentialStore'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
 
 }
-
