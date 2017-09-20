@@ -22,7 +22,7 @@ function Connect-To {
 
     .PARAMETER Credentials
         Use this parameter to bypass the stored credentials. Without this parameter Connect-To tries to read the
-        needed credentials from the CredenialStore. If you provide this parameter you skip this lookup behavior.
+        needed credentials from the CredentialStore. If you provide this parameter you skip this lookup behavior.
         So you can use it to enable credentials without preparing any user interaction.
 
     .PARAMETER Path
@@ -86,6 +86,10 @@ function Connect-To {
     )
 
     begin {
+        # First check the optional modules
+        If (-not (Resolve-Dependency -Name $Type)) {
+            Write-Error -Message ("Could not resolve the optional dependencies defined for {0}" -f $Type) -ErrorAction 'Stop'
+        }
         switch ($Type) {
             "VMware" {
                 # Disable the yellow certificate warning, since we haven't replaced the SSL certs for vCenter/ESXi
@@ -98,7 +102,6 @@ function Connect-To {
     }
 
     process {
-
         # Set the correct CredentialStore Path depending on the used ParameterSetName
         if ($PSCmdlet.ParameterSetName -eq "Private") {
             $Path = "{0}\CredentialStore.json" -f $env:APPDATA
