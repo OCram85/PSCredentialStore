@@ -1,11 +1,10 @@
 function Test-Module {
     <#
     .SYNOPSIS
-        Internal helper to check optional dependencies.
+        Tests if the given module exists on the local system.
 
     .DESCRIPTION
-        Test-Dependency checks if the given module or pssnapin is available on the system. It returns a bool value
-        So it is possible to use this function in a if condition.
+        Tests if the given module is installed on the local system. It returns a bool value as result.
 
     .PARAMETER Name
         Define a item name you need to test
