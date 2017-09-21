@@ -37,6 +37,19 @@
                 "kind": "test",
                 "isDefault": true
             }
+        },
+        {
+            "taskName": "DebugBuild",
+            "suppressTaskName": true,
+            "args": [
+                "Write-Host 'Invoking Build...';",
+                "If (Test-Path -Path '.\\bin\\PSCredentialStore.zip') { Remove-Item -Path '.\\bin\\PSCredentialStore.zip' -Verbose};",
+                "Compress-Archive -Path '.\\src\\*' -DestinationPath '.\\bin\\PSCredentialStore.zip' -Update -Verbose"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }
