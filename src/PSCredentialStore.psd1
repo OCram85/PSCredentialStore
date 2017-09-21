@@ -125,7 +125,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'This is a draft version / pre-release. Do not use in production!'
+            ReleaseNotes = 'This is a pre-release version!. Do not use in production!'
 
         } # End of PSData hashtable
 
