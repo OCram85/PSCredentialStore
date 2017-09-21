@@ -87,7 +87,7 @@ function Connect-To {
 
     begin {
         # First check the optional modules
-        If (-not (Resolve-Dependency -Name $Type)) {
+        if (-not (Resolve-Dependency -Name $Type)) {
             Write-Error -Message ("Could not resolve the optional dependencies defined for {0}" -f $Type) -ErrorAction 'Stop'
         }
         switch ($Type) {
