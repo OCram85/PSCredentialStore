@@ -1,0 +1,31 @@
+{
+    "Version": 0.1,
+    "Mandatory": {},
+    "Optional": [
+        {
+            "Name": "VMware",
+            "Modules": [
+                "VMware.VimAutomation.Core"
+            ]
+        },
+        {
+            "Name": "CiscoUCS",
+            "Modules": [
+                "Cisco.UCS.Core",
+                "Cisco.UCSManager"
+            ]
+        },
+        {
+            "Name": "FTP",
+            "Modules": [
+                "WinSCP"
+            ]
+        },
+        {
+            "Name": "NetAppFAS",
+            "Modules": [
+                "DataONTAP"
+            ]
+        }
+    ]
+}
