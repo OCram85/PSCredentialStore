@@ -10,7 +10,10 @@
         },
         {
             "Name": "CiscoUCS",
-            "Modules": []
+            "Modules": [
+                "Cisco.UCS.Core",
+                "Cisco.UCSManager"
+            ]
         },
         {
             "Name": "FTP",
@@ -20,7 +23,9 @@
         },
         {
             "Name": "NetAppFAS",
-            "Modules": []
+            "Modules": [
+                "DataONTAP"
+            ]
         }
     ]
 }
