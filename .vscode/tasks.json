@@ -43,8 +43,10 @@
             "suppressTaskName": true,
             "args": [
                 "Write-Host 'Invoking Build...';",
+                "Write-Host -Object 'Test previous builds.' -ForegroundColor Blue;",
                 "If (Test-Path -Path '.\\bin\\PSCredentialStore.zip') { Remove-Item -Path '.\\bin\\PSCredentialStore.zip' -Verbose};",
-                "Compress-Archive -Path '.\\src\\*' -DestinationPath '.\\bin\\PSCredentialStore.zip' -Update -Verbose"
+                "Copy-Item -Path '.\\src\\' -Destination '.\\bin\\PSCredentialStore' -Recurse -Verbose -Force;",
+                "Compress-Archive -Path '.\\src\\*' -DestinationPath '.\\bin\\PSCredentialStore.zip' -Update -Verbose;"
             ],
             "group": {
                 "kind": "build",
