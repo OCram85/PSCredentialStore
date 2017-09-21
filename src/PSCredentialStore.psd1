@@ -25,13 +25,13 @@
     Author = 'OCram85'
 
     # Company or vendor of this module
-    CompanyName = 'Unknown'
+    CompanyName = ''
 
     # Copyright statement for this module
     Copyright = '(c) 2017 OCram85. All rights reserved.'
 
     # Description of the functionality provided by this module
-    # Description = ''
+    Description = 'A simple credential manager to store and reuse multiple credential objecs'
 
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '4.0'
@@ -125,7 +125,7 @@
             # IconUri = ''
 
             # ReleaseNotes of this module
-            # ReleaseNotes = ''
+            ReleaseNotes = 'This is a draft version / pre-release. Do not use in production!'
 
         } # End of PSData hashtable
 
