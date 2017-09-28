@@ -31,7 +31,7 @@
     Copyright = '(c) 2017 OCram85. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'A simple credential manager to store and reuse multiple credential objecs'
+    Description = 'A simple credential manager to store and reuse multiple credential objects.'
 
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '4.0'
