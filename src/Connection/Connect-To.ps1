@@ -19,6 +19,7 @@ function Connect-To {
             - FTP          Establish a connection to a FTP host.
             - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
             - VMware       Establish a connection to a VMware vCenter or ESXi host.
+            - CisServer    Establish a connection to a Vmware CisServer.
 
     .PARAMETER Credentials
         Use this parameter to bypass the stored credentials. Without this parameter Connect-To tries to read the
@@ -40,9 +41,18 @@ function Connect-To {
 
     .EXAMPLE
         Connect-To -RemoteHost "ucs.myside.local" -Type CiscoUcs
+
+    .EXAMPLE
         Connect-To -RemoteHost "ftp.myside.local" -Type FTP
+
+    .EXAMPLE
         Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
+
+    .EXAMPLE
         Connect-To -RemoteHost "esx01.myside.local" -Type VMware
+
+    .EXAMPLE
+        Connect-To -RemoteHost "vCenter.myside.local" -Type CisServer
 
     .EXAMPLE
         $MyCreds = Get-Credential
@@ -53,7 +63,7 @@ function Connect-To {
     .NOTES
         File Name   : Connect-To.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    : PSFTP, PowerCLI
+        Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -70,7 +80,7 @@ function Connect-To {
 
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
         [Parameter(Mandatory = $true, ParameterSetName = "Private")]
-        [ValidateSet("CiscoUcs", "FTP", "NetAppFAS", "VMware")]
+        [ValidateSet("CiscoUcs", "FTP", "NetAppFAS", "VMware", "CisServer")]
         [String]$Type,
 
         [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
@@ -188,6 +198,20 @@ function Connect-To {
                 "VMware" {
                     try {
                         Connect-VIServer -Server $RemoteHost -Credential $creds -ErrorAction Stop | Out-Null
+                    }
+
+                    catch {
+                        # Write a error message to the log.
+                        $MessageParams = @{
+                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            ErrorAction = "Stop"
+                        }
+                        Write-Error @MessageParams
+                    }
+                }
+                "CisServer" {
+                    try {
+                        Connect-CisServer -Server $RemoteHost -Credential $creds -ErrorAction Stop | Out-Null
                     }
 
                     catch {

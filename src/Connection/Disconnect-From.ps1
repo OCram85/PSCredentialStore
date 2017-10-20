@@ -15,11 +15,11 @@ function Disconnect-From {
 
     .PARAMETER Type
         Specify the host type of the target. Currently implemented targets are:
-            - CiscoUcs     Establish a connection to a Cisco UCS Fabric Interconnect.
-            - FTP          Establish a connection to a FTP host.
-            - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
-            - VMware       Establish a connection to a VMware vCenter or ESXi host.
-
+            - CiscoUcs     Terminates the connection from a Cisco UCS Fabric Interconnect.
+            - FTP          Terminates the connection from a FTP host.
+            - NetAppFAS    Terminates the connection from a NetApp Clustered ONTAP filer.
+            - VMware       Terminates the connection from a VMware vCenter or ESXi host.
+            - CisServer    Terminates the connection from a Vmware CisServer.
     .PARAMETER Force
         Force the disconnect, even if the disconnect would fail.
 
@@ -44,8 +44,11 @@ function Disconnect-From {
     .EXAMPLE
         Disconnect-From -RemoteHost "esx01.myside.local" -Type VMware -Force:$True
 
+    .EXAMPLE
+        Disconnect-From -RemoteHost "vcenter.myside.local" -Type CisServer
+
     .NOTES
-        File Name   : Disconnect-To.ps1
+        File Name   : Disconnect-From.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
 
@@ -59,7 +62,7 @@ function Disconnect-From {
         [string]$RemoteHost,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("CiscoUcs", "FTP", "NetAppFAS", "VMware")]
+        [ValidateSet("CiscoUcs", "FTP", "NetAppFAS", "VMware", "CisServer")]
         [string]$Type,
 
         [Parameter(Mandatory = $false)]
@@ -85,7 +88,25 @@ function Disconnect-From {
                 }
                 Write-Error @MessageParams
             }
+        }
+        "CisServer" {
+            try {
+                if ($Force) {
+                    Disconnect-CisServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop -Force:$true
+                }
+                else {
+                    Disconnect-CisServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop
+                }
+            }
 
+            catch {
+                # Write a error message to the log.
+                $MessageParams = @{
+                    Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                    ErrorAction = "Stop"
+                }
+                Write-Error @MessageParams
+            }
         }
         # Check for an existing WinSCP Session var
         "FTP" {
