@@ -26,6 +26,12 @@
             "Modules": [
                 "DataONTAP"
             ]
+        },
+        {
+            "Name": "CisServer",
+            "Modules": [
+                "VMware.VimAutomation.Cis.Core"
+            ]
         }
     ]
 }
