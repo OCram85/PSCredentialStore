@@ -48,9 +48,11 @@ function Disconnect-From {
         Disconnect-From -RemoteHost "vcenter.myside.local" -Type CisServer
 
     .NOTES
+        ```
         File Name   : Disconnect-From.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
+        ```
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

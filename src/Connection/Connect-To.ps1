@@ -61,9 +61,11 @@ function Connect-To {
         Disconnect-From -RemoteHost "vcr01.myside.local" -Type VMware
 
     .NOTES
+        ```
         File Name   : Connect-To.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
+        ```
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

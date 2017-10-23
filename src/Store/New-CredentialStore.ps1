@@ -41,10 +41,11 @@ function New-CredentialStore {
         # Creates a new shared CredentialStore in the given location.
 
     .NOTES
+        ```
         File Name   : New-CredentialStore.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
-
+        ```
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>

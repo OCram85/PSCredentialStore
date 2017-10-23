@@ -34,9 +34,11 @@ function Test-Module {
         .\Test-Dependency -Name 'VMware.PowerCLI' -Type 'Module' -StopIfFails
 
     .NOTES
+        ```
         File Name   : Get-RandomKey.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
+        ```
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
