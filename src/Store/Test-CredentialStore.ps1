@@ -15,10 +15,11 @@ function Test-CredentialStore {
         can be decrypted across systems.
 
     .NOTES
+        ```
         File Name   : Test-CredentialStore.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
-
+        ```
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>

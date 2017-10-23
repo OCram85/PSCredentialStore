@@ -19,10 +19,11 @@ function Get-ChallengeFile {
         .\Get-RandomKey -Path "C:\TMP\Challenge.bin"
 
     .NOTES
+        ```
         File Name   : Get-ChallengeFile.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
-
+        ```
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>

@@ -14,15 +14,8 @@ image: Visual Studio 2017
 
 # Install pester module and init the Appveyor support.
 install:
-  - ps: Install-PackageProvider -Name NuGet -MinimumVersion '2.8.5.201' -Force -Verbose
-  - ps: Import-PackageProvider NuGet -MinimumVersion '2.8.5.201' -Force
-  - ps: Install-Module -Name 'Pester' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber
-  - ps: Update-Module 'Pester'
-  - ps: Install-Module -Name 'posh-git' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber
-  - ps: Update-Module 'posh-git'
-  - ps: Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber
-  - ps: Import-Module 'PSCoverage'
   - ps: Import-Module .\tools\AppVeyor.psm1
+  - ps: Invoke-InstallDependencies -Verbose
 
 environment:
   NuGetToken:
@@ -42,15 +35,23 @@ test_script:
   - ps: Invoke-AppVeyorTests
   - ps: Invoke-CoverageReport
 
-#deploy:
-#  - provider: GitHub
-#    auth_token:
-#      secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
-#    artifact: PSCredentialStore.zip           # upload all NuGet packages to release assets
-#    draft: false
-#    prerelease: true
-#    on:
-#      branch: master                # release from master branch only
-#
-#after_deploy:
-#  - ps: Invoke-AppVeyorPSGallery
+deploy:
+  #- provider: GitHub
+  #  auth_token:
+  #    secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
+  #  artifact: PSCredentialStore.zip           # upload all NuGet packages to release assets
+  #  draft: true
+  #  prerelease: true
+  #  on:
+  #    branch: dev
+  - provider: GitHub
+    auth_token:
+      secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
+    artifact: PSCredentialStore.zip           # upload all NuGet packages to release assets
+    draft: false
+    prerelease: false
+    on:
+      branch: master                 # release from master branch only
+
+after_deploy:
+  - ps: Invoke-AppVeyorPSGallery -OnBranch 'master'

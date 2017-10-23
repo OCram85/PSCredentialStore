@@ -78,9 +78,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ## NOTES
+\`\`\`
 File Name   : Test-CredentialStore.ps1
 Author      : Marco Blessing - marco.blessing@googlemail.com
 Requires    :
+\`\`\`
 
 ## RELATED LINKS
 

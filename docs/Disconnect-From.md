@@ -46,6 +46,11 @@ Disconnect-From -RemoteHost "esx01.myside.local" -Type VMware
 Disconnect-From -RemoteHost "esx01.myside.local" -Type VMware -Force:$True
 ```
 
+### -------------------------- EXAMPLE 6 --------------------------
+```
+Disconnect-From -RemoteHost "vcenter.myside.local" -Type CisServer
+```
+
 ## PARAMETERS
 
 ### -RemoteHost
@@ -66,10 +71,11 @@ Accept wildcard characters: False
 ### -Type
 Specify the host type of the target.
 Currently implemented targets are:
-    - CiscoUcs     Establish a connection to a Cisco UCS Fabric Interconnect.
-    - FTP          Establish a connection to a FTP host.
-    - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
-    - VMware       Establish a connection to a VMware vCenter or ESXi host.
+    - CiscoUcs     Terminates the connection from a Cisco UCS Fabric Interconnect.
+    - FTP          Terminates the connection from a FTP host.
+    - NetAppFAS    Terminates the connection from a NetApp Clustered ONTAP filer.
+    - VMware       Terminates the connection from a VMware vCenter or ESXi host.
+    - CisServer    Terminates the connection from a Vmware CisServer.
 
 ```yaml
 Type: String
@@ -110,9 +116,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### [None]
 
 ## NOTES
-File Name   : Disconnect-To.ps1
+\`\`\`
+File Name   : Disconnect-From.ps1
 Author      : Marco Blessing - marco.blessing@googlemail.com
 Requires    :
+\`\`\`
 
 ## RELATED LINKS
 
