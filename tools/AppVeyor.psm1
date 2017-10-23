@@ -138,7 +138,11 @@ Function Invoke-CoverageReport() {
 
 Function Invoke-AppVeyorPSGallery() {
     [CmdletBinding()]
-    Param()
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [String]$OnBranch
+    )
     Expand-Archive -Path (".\bin\{0}.zip" -f $CALLSIGN) -DestinationPath ("C:\Users\appveyor\Documents\WindowsPowerShell\Modules\{0}\" -f $CALLSIGN) -Verbose
     Import-Module -Name $CALLSIGN -Verbose -Force
     Write-Host "Available Package Provider:" -ForegroundColor Yellow

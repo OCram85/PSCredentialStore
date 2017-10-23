@@ -52,5 +52,5 @@ deploy:
     on:
       branch: dev                # release from master branch only
 
-#after_deploy:
-#  - ps: Invoke-AppVeyorPSGallery
+after_deploy:
+  - ps: Invoke-AppVeyorPSGallery -OnBranch 'master'
