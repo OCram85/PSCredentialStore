@@ -70,15 +70,18 @@ If you have already installed the underlying framework your can connect to:
   * Required Modules: [`DataONTAP`](http://mysupport.netapp.com/tools/info/ECMLP2310788I.html?productID=61926)
 * **VMware** - Establish a connection to a VMware vCenter or ESXi host.
   * Required Modules: [`VMware.VimAutomation.Core`](https://www.powershellgallery.com/packages/VMware.PowerCLI)
+* **CisServer** - Establish a connection to the CisServer Service on vCenter Host.
+  * Required Modules: [`VMware.VimAutomation.Cis.Core`](https://www.powershellgallery.com/packages/VMware.PowerCLI))
 
 # EXAMPLES
+
 ```powershell
 Connect-To -RemoteHost "ucs.myside.local" -Type CiscoUcs
 Connect-To -RemoteHost "ftp.myside.local" -Type FTP
 Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
 Connect-To -RemoteHost "esx01.myside.local" -Type VMware
+Connect-To -RemoteHost "vcr.myside.local" -Type CisServer
 ```
-
 # NOTE
 
 
