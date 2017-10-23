@@ -15,7 +15,7 @@ image: Visual Studio 2017
 # Install pester module and init the Appveyor support.
 install:
   - ps: Import-Module .\tools\AppVeyor.psm1
-  - ps: Invoke-InstallDependencies
+  - ps: Invoke-InstallDependencies -Verbose
 
 environment:
   NuGetToken:
