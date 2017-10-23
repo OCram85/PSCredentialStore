@@ -9,6 +9,32 @@
 $CALLSIGN = 'PSCredentialStore'
 Write-Host ("Callsign is: {0}" -f $CALLSIGN) -ForegroundColor Yellow
 
+
+Function Invoke-InstallDependencies() {
+    [CmdletBinding()]
+    Param()
+
+    Process {
+        Try {
+            Install-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force -Verbose
+            Import-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force
+            Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.0.8' -Force -SkipPublisherCheck -AllowClobber
+            Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '0.7.1' -Force -SkipPublisherCheck -AllowClobber
+            Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber
+            Import-Module -Name 'Pester', 'posh-git', 'PSCoverage'
+        }
+        Catch {
+            $MsgParams = @{
+                Message = 'Could not install the required dependencies!'
+                Category = 'Error'
+                Details = $_.Exception.Message
+            }
+            Add-AppveyorMessage @MsgParams
+            Throw $MsgParams.Message
+        }
+
+    }
+}
 Function Invoke-AppVeyorBumpVersion() {
     [CmdletBinding()]
     Param()
