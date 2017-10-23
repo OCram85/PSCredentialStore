@@ -82,9 +82,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### [PSObject] Returns the credential store content as PSObject.
 
 ## NOTES
+\`\`\`
 File Name   : Get-CredentialStore.ps1
 Author      : Marco Blessing - marco.blessing@googlemail.com
 Requires    :
+\`\`\`
 
 ## RELATED LINKS
 

@@ -34,11 +34,27 @@ Establish a connection to the selected host using a stored CredentialStoreItem.
 Connect-To -RemoteHost "ucs.myside.local" -Type CiscoUcs
 ```
 
-Connect-To -RemoteHost "ftp.myside.local" -Type FTP
-Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
-Connect-To -RemoteHost "esx01.myside.local" -Type VMware
-
 ### -------------------------- EXAMPLE 2 --------------------------
+```
+Connect-To -RemoteHost "ftp.myside.local" -Type FTP
+```
+
+### -------------------------- EXAMPLE 3 --------------------------
+```
+Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
+```
+
+### -------------------------- EXAMPLE 4 --------------------------
+```
+Connect-To -RemoteHost "esx01.myside.local" -Type VMware
+```
+
+### -------------------------- EXAMPLE 5 --------------------------
+```
+Connect-To -RemoteHost "vCenter.myside.local" -Type CisServer
+```
+
+### -------------------------- EXAMPLE 6 --------------------------
 ```
 $MyCreds = Get-Credential
 ```
@@ -88,6 +104,7 @@ Currently implemented targets are:
     - FTP          Establish a connection to a FTP host.
     - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
     - VMware       Establish a connection to a VMware vCenter or ESXi host.
+    - CisServer    Establish a connection to a Vmware CisServer.
 
 ```yaml
 Type: String
@@ -164,9 +181,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### [None]
 
 ## NOTES
+\`\`\`
 File Name   : Connect-To.ps1
 Author      : Marco Blessing - marco.blessing@googlemail.com
-Requires    : PSFTP, PowerCLI
+Requires    :
+\`\`\`
 
 ## RELATED LINKS
 
