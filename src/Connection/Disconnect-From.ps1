@@ -20,6 +20,8 @@ function Disconnect-From {
             - NetAppFAS    Terminates the connection from a NetApp Clustered ONTAP filer.
             - VMware       Terminates the connection from a VMware vCenter or ESXi host.
             - CisServer    Terminates the connection from a Vmware CisServer.
+            - ExchangeHTTP Remove the existing remote session to the given Exchange server
+            - ExchangeHTTPS Remove the existing remote session to the given Exchange server
     .PARAMETER Force
         Force the disconnect, even if the disconnect would fail.
 
@@ -47,12 +49,16 @@ function Disconnect-From {
     .EXAMPLE
         Disconnect-From -RemoteHost "vcenter.myside.local" -Type CisServer
 
+    .EXAMPLE
+        Disconnect-From -RemoteHost "exchange01.myside.local" -Type ExchangeHTTP
+
+    .EXAMPLE
+        Disconnect-From -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
+
     .NOTES
-        ```
         File Name   : Disconnect-From.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
-        ```
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -64,14 +70,14 @@ function Disconnect-From {
         [string]$RemoteHost,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet("CiscoUcs", "FTP", "NetAppFAS", "VMware", "CisServer")]
+        [ValidateSet('CiscoUcs', 'FTP', 'NetAppFAS', 'VMware', 'CisServer', 'ExchangeHTTP', 'ExchangeHTTPS')]
         [string]$Type,
 
         [Parameter(Mandatory = $false)]
         [switch]$Force
     )
 
-    switch ($Type) {
+    switch -Regex ($Type) {
         "VMware" {
             try {
                 if ($Force) {
@@ -134,6 +140,7 @@ function Disconnect-From {
                 Write-Verbose @MessageParams
                 $Global:CurrentNcController = $null
             }
+
             catch {
                 # Write a error message to the log.
                 $MessageParams = @{
@@ -151,6 +158,19 @@ function Disconnect-From {
 
             catch {
                 # Write a error message to the log.
+                $MessageParams = @{
+                    Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                    ErrorAction = "Stop"
+                }
+                Write-Error @MessageParams
+            }
+        }
+        "ExchangeHTTP*" {
+            try {
+                Get-Variable -Name 'PSExchangeRemote' -Scope Global -ErrorAction Stop
+                Remove-PSSession -Session $Global:PSExchangeRemote -ErrorAction Stop
+            }
+            catch {
                 $MessageParams = @{
                     Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
                     ErrorAction = "Stop"

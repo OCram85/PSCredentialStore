@@ -20,6 +20,8 @@ function Connect-To {
             - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
             - VMware       Establish a connection to a VMware vCenter or ESXi host.
             - CisServer    Establish a connection to a Vmware CisServer.
+            - ExchangeHTTP Start a new remote session to the given Exchange server via unsecure http.
+            - Exchange HTTPS Start a new remote session to the given exchange server with the secure https endpoint.
 
     .PARAMETER Credentials
         Use this parameter to bypass the stored credentials. Without this parameter Connect-To tries to read the
@@ -55,35 +57,40 @@ function Connect-To {
         Connect-To -RemoteHost "vCenter.myside.local" -Type CisServer
 
     .EXAMPLE
+        Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTP
+
+    .EXAMPLE
+        Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
+
+    .EXAMPLE
         $MyCreds = Get-Credential
         Connect-To -RemoteHost "vcr01.myside.local" -Type VMware -Credentials $MyCreds
         Get-VM -Name "*vlm*" | Select-Object -Property Name
         Disconnect-From -RemoteHost "vcr01.myside.local" -Type VMware
 
     .NOTES
-        ```
         File Name   : Connect-To.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
-        ```
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding(DefaultParameterSetName = "Private")]
     param(
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
         [Parameter(Mandatory = $true, ParameterSetName = "Private")]
-        [String]$RemoteHost,
+        [string]$RemoteHost,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
-        [String]$Identifier,
+        [string]$Identifier,
 
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
         [Parameter(Mandatory = $true, ParameterSetName = "Private")]
-        [ValidateSet("CiscoUcs", "FTP", "NetAppFAS", "VMware", "CisServer")]
-        [String]$Type,
+        [ValidateSet('CiscoUcs', 'FTP', 'NetAppFAS', 'VMware', 'CisServer', 'ExchangeHTTP', 'ExchangeHTTPS')]
+        [string]$Type,
 
         [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
         [Parameter(Mandatory = $False, ParameterSetName = "Private")]
@@ -91,10 +98,10 @@ function Connect-To {
 
         [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
         [ValidateNotNullOrEmpty()]
-        [String]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
+        [string]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
 
         [Parameter(Mandatory = $false, ParameterSetNAme = "Shared")]
-        [Switch]$Shared
+        [switch]$Shared
     )
 
     begin {
@@ -216,6 +223,46 @@ function Connect-To {
                         Connect-CisServer -Server $RemoteHost -Credential $creds -ErrorAction Stop | Out-Null
                     }
 
+                    catch {
+                        # Write a error message to the log.
+                        $MessageParams = @{
+                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            ErrorAction = "Stop"
+                        }
+                        Write-Error @MessageParams
+                    }
+                }
+                "ExchangeHTTP" {
+                    try {
+                        $ConnectionParams = @{
+                            ConnectionURI = "http://{0}/powershell" -f $RemoteHost
+                            ConfigurationName = 'Microsoft.Exchange'
+                            Credential = $creds
+                            ErrorAction = 'Stop'
+                        }
+                        $Global:PSExchangeRemote = New-PSSession @ConnectionParams
+                        $Global:PSExchangeRemote
+                    }
+                    catch {
+                        # Write a error message to the log.
+                        $MessageParams = @{
+                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            ErrorAction = "Stop"
+                        }
+                        Write-Error @MessageParams
+                    }
+                }
+                "ExchangeHTTPS" {
+                    try {
+                        $ConnectionParams = @{
+                            ConnectionURI = "https://{0}/powershell" -f $RemoteHost
+                            ConfigurationName = 'Microsoft.Exchange'
+                            Credential = $creds
+                            ErrorAction = 'Stop'
+                        }
+                        $Global:PSExchangeRemote = New-PSSession @ConnectionParams
+                        $Global:PSExchangeRemote
+                    }
                     catch {
                         # Write a error message to the log.
                         $MessageParams = @{
