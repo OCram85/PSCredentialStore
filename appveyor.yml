@@ -44,14 +44,14 @@ deploy:
   #  prerelease: true
   #  on:
   #    branch: dev
-  - provider: GitHub
-    auth_token:
-      secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
-    artifact: PSCredentialStore.zip           # upload all NuGet packages to release assets
-    draft: false
-    prerelease: false
-    on:
-      branch: master                 # release from master branch only
+  # - provider: GitHub
+  #   auth_token:
+  #     secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
+  #   artifact: PSCredentialStore.zip           # upload all NuGet packages to release assets
+  #   draft: false
+  #   prerelease: false
+  #   on:
+  #     branch: master                 # release from master branch only
 
 after_deploy:
-  - ps: Invoke-AppVeyorPSGallery -OnBranch 'master'
+  # - ps: Invoke-AppVeyorPSGallery -OnBranch 'master'
