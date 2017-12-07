@@ -74,7 +74,7 @@ function Test-CSConnection {
             }
         }
 
-        "CiscoUcs" {
+        'CiscoUcs' {
             $MsgParams = @{
                 ErrorAction = "Stop"
                 Message = "CiscoUCS connection test is not implemented yet!"
@@ -83,7 +83,7 @@ function Test-CSConnection {
             return $false
         }
 
-        "FTP" {
+        'FTP' {
             $MsgParams = @{
                 ErrorAction = "Stop"
                 Message = "FTP connection test is not implemented yet!"
@@ -92,7 +92,7 @@ function Test-CSConnection {
             return $false
         }
 
-        "NetAppFAS" {
+        'NetAppFAS' {
             $MsgParams = @{
                 ErrorAction = "Stop"
                 Message = "NetAppFAS connection test is not implemented yet!"
