@@ -45,8 +45,8 @@ deploy:
   #  on:
   #    branch: dev
   - provider: GitHub
-      auth_token:
-       secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
+    auth_token:
+      secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
     artifact: PSCredentialStore.zip     # upload all NuGet packages to release assets
     draft: false
     prerelease: false
