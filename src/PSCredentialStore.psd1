@@ -74,6 +74,7 @@
         # Connection Group
         'Connect-To',
         'Disconnect-From',
+        'Test-CSConnection',
         # Item Group
         'Get-CredentialStoreItem',
         'Set-CredentialStoreItem',
