@@ -142,7 +142,11 @@ function Connect-To {
             }
 
             catch {
-                Write-Message2 ("Unable to look up credential store item for RemoteHost {0}/Identifier {1}!" -f $RemoteHost, $Identifier) -ErrorAction Stop
+                $MessageParams = @{
+                    Message = "Unable to look up credential store item for RemoteHost {0}/Identifier {1}!" -f $RemoteHost, $Identifier
+                    ErrorAction = "Stop"
+                }
+                Write-Error @MessageParams
             }
         }
         else {
@@ -150,8 +154,11 @@ function Connect-To {
         }
 
         if ($creds.UserName -eq "" -or $creds.Password.GetType().Name -ne "SecureString") {
-            # Write a error message to the log.
-            Write-Message2 ("Please provide valid credentials for RemoteHost {0}!" -f $RemoteHost) -ErrorAction Stop
+            $MessageParams = @{
+                Message = "Please provide valid credentials for RemoteHost {0}!" -f $RemoteHost
+                ErrorAction = "Stop"
+            }
+            Write-Error @MessageParams
         }
         else {
             switch ($Type) {
@@ -162,8 +169,11 @@ function Connect-To {
                     }
 
                     catch {
-                        # Write a error message to the log.
-                        Write-Message2 ("Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type) -ErrorAction Stop
+                        $MessageParams = @{
+                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            ErrorAction = "Stop"
+                        }
+                        Write-Error @MessageParams
                     }
                 }
                 "FTP" {
