@@ -33,7 +33,13 @@ build_script:
 
 test_script:
   - ps: Invoke-AppVeyorTests
-  - ps: Invoke-CoverageReport
+  - ps: |
+      if ($null -ne $Env:CoverallsToken) {
+        Invoke-CoverageReport
+      }
+      else {
+        Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
+      }
 
 deploy:
   #- provider: GitHub
