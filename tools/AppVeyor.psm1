@@ -153,17 +153,13 @@ Function Invoke-CoverageReport() {
         [ValidateNotNullOrEmpty()]
         [String]$RepoToken = $Env:CoverallsToken
     )
-    if ( $null -ne $RepoToken) {
-        Import-Module ('.\src\{0}.psm1' -f $CALLSIGN) -Verbose -Force
-        $FileMap = New-PesterFileMap -SourceRoot '.\src' -PesterRoot '.\tests'
-        $CoverageReport = New-CoverageReport -PesterFileMap $FileMap -RepoToken $RepoToken
-        Write-Host "CoverageReport JSON:" -ForegroundColor Yellow
-        $CoverageReport | Out-String | Write-Host
-        Publish-CoverageReport -CoverageReport $CoverageReport
-    }
-    else {
-        Write-Warning 'CoverallsToken var given but empty. This run is triggered by a PR. Skipping coverage report...'
-    }
+
+    Import-Module ('.\src\{0}.psm1' -f $CALLSIGN) -Verbose -Force
+    $FileMap = New-PesterFileMap -SourceRoot '.\src' -PesterRoot '.\tests'
+    $CoverageReport = New-CoverageReport -PesterFileMap $FileMap -RepoToken $RepoToken
+    Write-Host "CoverageReport JSON:" -ForegroundColor Yellow
+    $CoverageReport | Out-String | Write-Host
+    Publish-CoverageReport -CoverageReport $CoverageReport
 }
 
 Function Invoke-AppVeyorPSGallery() {
