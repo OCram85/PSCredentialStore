@@ -33,7 +33,7 @@ a VIConnection, NetApp FAS or UCS Fabric Interconnect.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 New-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 ```
@@ -46,7 +46,7 @@ Define the store in which you would like to add a new item.
 ```yaml
 Type: String
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -61,7 +61,7 @@ The identifier or rather name for the given credentials.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -79,7 +79,7 @@ For example ad/sys1, ftp/sys1, mssql/sys1
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -94,7 +94,7 @@ You can provide credentials optionally as pre existing pscredential object.
 ```yaml
 Type: PSCredential
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -109,7 +109,7 @@ Accept wildcard characters: False
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named

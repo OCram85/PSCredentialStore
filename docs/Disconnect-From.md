@@ -21,34 +21,44 @@ Terminates a session established with Connect-To using a CredentialStoreItem.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 Disconnect-From -RemoteHost "ucs.myside.local" -Type CiscoUcs
 ```
 
-### -------------------------- EXAMPLE 2 --------------------------
+### EXAMPLE 2
 ```
 Disconnect-From -RemoteHost "ftp.myside.local" -Type FTP
 ```
 
-### -------------------------- EXAMPLE 3 --------------------------
+### EXAMPLE 3
 ```
 Disconnect-From -RemoteHost "fas.myside.local" -Type NetAppFAS
 ```
 
-### -------------------------- EXAMPLE 4 --------------------------
+### EXAMPLE 4
 ```
 Disconnect-From -RemoteHost "esx01.myside.local" -Type VMware
 ```
 
-### -------------------------- EXAMPLE 5 --------------------------
+### EXAMPLE 5
 ```
 Disconnect-From -RemoteHost "esx01.myside.local" -Type VMware -Force:$True
 ```
 
-### -------------------------- EXAMPLE 6 --------------------------
+### EXAMPLE 6
 ```
 Disconnect-From -RemoteHost "vcenter.myside.local" -Type CisServer
+```
+
+### EXAMPLE 7
+```
+Disconnect-From -RemoteHost "exchange01.myside.local" -Type ExchangeHTTP
+```
+
+### EXAMPLE 8
+```
+Disconnect-From -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
 ```
 
 ## PARAMETERS
@@ -59,7 +69,7 @@ Specify the remote endpoint, whose session you would like to terminate.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: 1
@@ -76,11 +86,14 @@ Currently implemented targets are:
     - NetAppFAS    Terminates the connection from a NetApp Clustered ONTAP filer.
     - VMware       Terminates the connection from a VMware vCenter or ESXi host.
     - CisServer    Terminates the connection from a Vmware CisServer.
+    - ExchangeHTTP Remove the existing remote session to the given Exchange server
+    - ExchangeHTTPS Remove the existing remote session to the given Exchange server
+    - SCP          Terminates the existing SCP session.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: 2
@@ -95,7 +108,7 @@ Force the disconnect, even if the disconnect would fail.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -116,11 +129,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### [None]
 
 ## NOTES
-\`\`\`
 File Name   : Disconnect-From.ps1
 Author      : Marco Blessing - marco.blessing@googlemail.com
 Requires    :
-\`\`\`
 
 ## RELATED LINKS
 

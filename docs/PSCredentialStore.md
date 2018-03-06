@@ -8,7 +8,7 @@ Locale: en-US
 
 # PSCredentialStore Module
 ## Description
-PSCredentialStore enables managing multiple PSCredential objects.
+{{Manually Enter Description Here}}
 
 ## PSCredentialStore Cmdlets
 ### [Connect-To](Connect-To.md)
@@ -40,4 +40,7 @@ Returns the credential store state.
 
 ### [Test-CredentialStoreItem](Test-CredentialStoreItem.md)
 Checks if the given RemoteHost identifier combination exists in the credential store.
+
+### [Test-CSConnection](Test-CSConnection.md)
+Returns the connection state of a given type to the remote host.
 

@@ -31,7 +31,7 @@ Get-CredentialStoreItem.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 $CSContent = Get-CredentialStore -Path "C:\TMP\mystore.json"
 ```
@@ -44,7 +44,7 @@ Define a custom path to a shared CredentialStore.
 ```yaml
 Type: String
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -61,7 +61,7 @@ can be decrypted across systems.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
