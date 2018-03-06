@@ -20,8 +20,9 @@ function Connect-To {
             - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
             - VMware       Establish a connection to a VMware vCenter or ESXi host.
             - CisServer    Establish a connection to a Vmware CisServer.
-            - ExchangeHTTP Start a new remote session to the given Exchange server via unsecure http.
+            - ExchangeHTTP Start a new remote session to the given Exchange server via insecure http.
             - Exchange HTTPS Start a new remote session to the given exchange server with the secure https endpoint.
+            - SCP          Establish a SCP connection.
 
     .PARAMETER Credentials
         Use this parameter to bypass the stored credentials. Without this parameter Connect-To tries to read the
@@ -89,7 +90,16 @@ function Connect-To {
 
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
         [Parameter(Mandatory = $true, ParameterSetName = "Private")]
-        [ValidateSet('CiscoUcs', 'FTP', 'NetAppFAS', 'VMware', 'CisServer', 'ExchangeHTTP', 'ExchangeHTTPS')]
+        [ValidateSet(
+            'CiscoUcs',
+            'FTP',
+            'NetAppFAS',
+            'VMware',
+            'CisServer',
+            'ExchangeHTTP',
+            'ExchangeHTTPS',
+            'SCP'
+        )]
         [string]$Type,
 
         [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
@@ -251,7 +261,6 @@ function Connect-To {
                             ErrorAction = 'Stop'
                         }
                         $Global:PSExchangeRemote = New-PSSession @ConnectionParams
-                        $Global:PSExchangeRemote
                     }
                     catch {
                         # Write a error message to the log.
@@ -271,12 +280,41 @@ function Connect-To {
                             ErrorAction = 'Stop'
                         }
                         $Global:PSExchangeRemote = New-PSSession @ConnectionParams
-                        $Global:PSExchangeRemote
                     }
                     catch {
                         # Write a error message to the log.
                         $MessageParams = @{
                             Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            ErrorAction = "Stop"
+                        }
+                        Write-Error @MessageParams
+                    }
+                }
+                "SCP" {
+                    $WinSCPSessionParams = @{
+                        Credential = $creds
+                        Hostname = $RemoteHost
+                        Protocol = 'Scp'
+                        GiveUpSecurityAndAcceptAnySshHostKey = $True
+                    }
+                    try {
+                        $SessionOption = New-WinSCPSessionOption @WinSCPSessionParams
+                        $Global:WinSCPSession = New-WinSCPSession -SessionOption $SessionOption
+                        Write-Verbose -Message ("SCP Connection established with {0}" -f $Global:WinSCPSession.Hostname)
+                    }
+                    catch {
+                        # Write a error message to the log.
+                        $MessageParams = @{
+                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            ErrorAction = "Stop"
+                        }
+                        Write-Error @MessageParams
+                    }
+                    # Check the Connection State
+                    if (!($WinSCPSession.Opened)) {
+                        # Check the connection state and find out if the session is still open.
+                        $MessageParams = @{
+                            Message = "Connection to {0} using Type {1} was established. But now it seems to be lost!" -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
