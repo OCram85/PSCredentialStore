@@ -22,6 +22,8 @@ function Disconnect-From {
             - CisServer    Terminates the connection from a Vmware CisServer.
             - ExchangeHTTP Remove the existing remote session to the given Exchange server
             - ExchangeHTTPS Remove the existing remote session to the given Exchange server
+            - SCP          Terminates the existing SCP session.
+
     .PARAMETER Force
         Force the disconnect, even if the disconnect would fail.
 
@@ -70,7 +72,16 @@ function Disconnect-From {
         [string]$RemoteHost,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('CiscoUcs', 'FTP', 'NetAppFAS', 'VMware', 'CisServer', 'ExchangeHTTP', 'ExchangeHTTPS')]
+        [ValidateSet(
+            'CiscoUcs',
+            'FTP',
+            'NetAppFAS',
+            'VMware',
+            'CisServer',
+            'ExchangeHTTP',
+            'ExchangeHTTPS',
+            'SCP'
+        )]
         [string]$Type,
 
         [Parameter(Mandatory = $false)]
@@ -173,6 +184,18 @@ function Disconnect-From {
             catch {
                 $MessageParams = @{
                     Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                    ErrorAction = "Stop"
+                }
+                Write-Error @MessageParams
+            }
+        }
+        "SCP" {
+            if ($Global:WinSCPSession.Opened) {
+                Remove-WinSCPSession -WinSCPSession $Global:WinSCPSession
+            }
+            else {
+                $MessageParams = @{
+                    Message = "There is no open WinSCP Session"
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
