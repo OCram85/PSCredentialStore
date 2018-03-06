@@ -28,7 +28,7 @@ Return the credential as PSCredential object.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 $myCreds = Get-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 ```
@@ -41,7 +41,7 @@ Define a custom path to a shared CredentialStore.
 ```yaml
 Type: String
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -56,7 +56,7 @@ Specify the host, for which you would like to change the credentials.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -74,7 +74,7 @@ For example ad/sys1, ftp/sys1, mssql/sys1
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -91,7 +91,7 @@ can be decrypted across systems.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named

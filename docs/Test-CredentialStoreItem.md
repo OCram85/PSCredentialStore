@@ -30,7 +30,7 @@ you try to interact with it.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 If (Test-CredentialStoreItem -RemoteHost "Default") {
 ```
@@ -51,7 +51,7 @@ Without the \`-Path\` parameter
 ```yaml
 Type: String
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -66,7 +66,7 @@ Specify the host, for which you would like to change the credentials.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -83,7 +83,7 @@ for a single host.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -100,7 +100,7 @@ can be decrypted across systems.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named

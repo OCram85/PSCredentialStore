@@ -28,7 +28,7 @@ Use this CMDLet to completely remove an credential store item.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 Remove-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 ```
@@ -43,7 +43,7 @@ Define the store in which your given host entry already exists.
 ```yaml
 Type: String
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -58,7 +58,7 @@ Specify the host you for which you would like to change the credentials.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -75,7 +75,7 @@ same hostname.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -92,7 +92,7 @@ can be decrypted across systems.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named

@@ -29,32 +29,42 @@ Establish a connection to the selected host using a stored CredentialStoreItem.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 Connect-To -RemoteHost "ucs.myside.local" -Type CiscoUcs
 ```
 
-### -------------------------- EXAMPLE 2 --------------------------
+### EXAMPLE 2
 ```
 Connect-To -RemoteHost "ftp.myside.local" -Type FTP
 ```
 
-### -------------------------- EXAMPLE 3 --------------------------
+### EXAMPLE 3
 ```
 Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
 ```
 
-### -------------------------- EXAMPLE 4 --------------------------
+### EXAMPLE 4
 ```
 Connect-To -RemoteHost "esx01.myside.local" -Type VMware
 ```
 
-### -------------------------- EXAMPLE 5 --------------------------
+### EXAMPLE 5
 ```
 Connect-To -RemoteHost "vCenter.myside.local" -Type CisServer
 ```
 
-### -------------------------- EXAMPLE 6 --------------------------
+### EXAMPLE 6
+```
+Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTP
+```
+
+### EXAMPLE 7
+```
+Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
+```
+
+### EXAMPLE 8
 ```
 $MyCreds = Get-Credential
 ```
@@ -71,7 +81,7 @@ Specify the host, for which you would like to change the credentials.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -88,7 +98,7 @@ same hostname.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -105,11 +115,14 @@ Currently implemented targets are:
     - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
     - VMware       Establish a connection to a VMware vCenter or ESXi host.
     - CisServer    Establish a connection to a Vmware CisServer.
+    - ExchangeHTTP Start a new remote session to the given Exchange server via insecure http.
+    - Exchange HTTPS Start a new remote session to the given exchange server with the secure https endpoint.
+    - SCP          Establish a SCP connection.
 
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: True
 Position: Named
@@ -128,7 +141,7 @@ So you can use it to enable credentials without preparing any user interaction.
 ```yaml
 Type: PSCredential
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -143,7 +156,7 @@ Define a custom path to a shared CredentialStore.
 ```yaml
 Type: String
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -160,7 +173,7 @@ can be decrypted across systems.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -181,11 +194,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ### [None]
 
 ## NOTES
-\`\`\`
 File Name   : Connect-To.ps1
 Author      : Marco Blessing - marco.blessing@googlemail.com
 Requires    :
-\`\`\`
 
 ## RELATED LINKS
 
