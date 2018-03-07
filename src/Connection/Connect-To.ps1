@@ -15,6 +15,7 @@ function Connect-To {
 
     .PARAMETER Type
         Specify the host type of the target. Currently implemented targets are:
+
             - CiscoUcs     Establish a connection to a Cisco UCS fabric interconnect.
             - FTP          Establish a connection to a FTP host.
             - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
