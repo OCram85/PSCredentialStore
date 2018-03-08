@@ -46,11 +46,10 @@ $VerbosePreference = "SilentlyContinue"
 Describe "New-CredentialStore" {
     Context "Private CS tests" {
         $pCS = Join-Path -Path $env:APPDATA -ChildPath "CredentialStore.json"
-        Write-Debug -Message ("Parsed private CS:" -f $pCS)
         It "Test1: Create new private CredentialStore" {
             New-CredentialStore
             $result = Test-Path -Path $pCS
-            $CS = Get-Content -Path $pCS -Raw | ConvertFrom-Json -ErrorAction SilentlyContinue
+            $CS = Get-Content -Path $pCS -Raw | ConvertFrom-Json
             ($result -eq $True) -and ($CS.Type -eq "Private") | Should Be $True
         }
         It "Test2: Try to override private Store" {
