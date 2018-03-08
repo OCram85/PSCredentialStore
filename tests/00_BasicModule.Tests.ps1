@@ -9,7 +9,7 @@ Describe "Pre-Flight module tests" {
     }
     Context "Module consistency tests" {
         IT "Importing should work" {
-            { Import-Module -Name $ManifestFilePath -Global } | Should -Not -Throw
+            { Import-Module -Name $ManifestFilePath -Global -Force }| Should -Not -Throw
         }
     }
 }

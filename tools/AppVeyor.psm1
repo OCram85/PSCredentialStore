@@ -95,7 +95,7 @@ Function Invoke-AppVeyorTests() {
         Details = 'Now running all test found in .\tests\ dir.'
     }
     Add-AppveyorMessage @MsgParams
-    $testresults = Invoke-Pester -Path ".\tests\*" -ExcludeTag 'Disabled' -PassThru
+    $testresults = Invoke-Pester -Path ( Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property Name ) -ExcludeTag 'Disabled' -PassThru
     ForEach ($Item in $testresults.TestResult) {
         Switch ($Item.Result) {
             "Passed" {
