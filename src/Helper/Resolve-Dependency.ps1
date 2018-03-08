@@ -53,11 +53,12 @@ function Resolve-Dependency {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$Name
     )
 
     begin {
-        $ModuleRootDir = $MyInvocation.MyCommand.Module.ModuleBase
+        $ModuleRootDir = Get-ModuleBase
         $DepFilePath = Join-Path -Path $ModuleRootDir -ChildPath "Dependency.json"
         if (Test-Path -Path $DepFilePath) {
             $Dependency = Get-Content -Path $DepFilePath -Raw -Encoding UTF8 | ConvertFrom-Json
