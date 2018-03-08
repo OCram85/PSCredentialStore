@@ -46,6 +46,7 @@ $VerbosePreference = "SilentlyContinue"
 Describe "New-CredentialStore" {
     Context "Private CS tests" {
         $pCS = Join-Path -Path $env:APPDATA -ChildPath "CredentialStore.json"
+        Write-Debug -Message ("Parsed private CS:" -f $pCS)
         It "Test1: Create new private CredentialStore" {
             New-CredentialStore
             $result = Test-Path -Path $pCS
