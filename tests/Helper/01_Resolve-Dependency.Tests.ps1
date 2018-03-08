@@ -14,7 +14,8 @@ Else {
 }
 
 # load additional functions defined in the repository. Replace the expression <FunctionName>.
-#. (Get-ChildItem -Path $RepoRoot -Filter "<FunctionName>.ps1" -Recurse).FullName
+. (Get-ChildItem -Path $RepoRoot -Filter "Get-ModuleBase.ps1" -Recurse).FullName
+. (Get-ChildItem -Path $RepoRoot -Filter "Test-Module.ps1" -Recurse).FullName
 #endregion HEADER
 
 Describe "Resolve-Dependency" {
@@ -25,7 +26,7 @@ Describe "Resolve-Dependency" {
             { Resolve-Dependency -Name 'foobar2000' } | Should -Not -Throw
         }
         It "Test2: Output type should be bool" {
-            Resolve-Dependency -Name 'foobar2000' | Should -BeOfType system.bool
+            Resolve-Dependency -Name 'foobar2000' | Should -BeOfType bool
         }
     }
 }
