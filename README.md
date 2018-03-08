@@ -1,6 +1,6 @@
 [![AppVeyor branch](https://img.shields.io/appveyor/ci/OCram85/PSCredentialStore/master.svg?style=plastic "Master Banch Build Status")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master)
 [![AppVeyor tests branch](https://img.shields.io/appveyor/tests/OCram85/PSCredentialStore/master.svg?style=plastic "Pester Tests Results")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master/tests)
-[![Coveralls github](https://img.shields.io/coveralls/github/OCram85/PSCredentialStore.svg?style=plastic "Coveralls.io Coverage Report")](https://coveralls.io/github/OCram85/PSCredentialStorebranch=master)
+[![Coveralls github](https://img.shields.io/coveralls/github/OCram85/PSCredentialStore.svg?style=plastic "Coveralls.io Coverage Report")](https://coveralls.io/github/OCram85/PSCredentialStore?branch=master)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PSCredentialStore.svg?style=plastic "PowershellGallery Published Version")](https://www.powershellgallery.com/packages/PSCredentialStore)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCredentialStore.svg?style=plastic "PowershellGallery Downloads")](https://www.powershellgallery.com/packages/PSCredentialStore)
 
