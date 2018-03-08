@@ -35,6 +35,24 @@ $myCreds = Get-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx0
 
 ## PARAMETERS
 
+### -Identifier
+Provide a custom identifier to the given remote host key.
+This enables you to store multiple credentials
+for a single remote host entry.
+For example ad/sys1, ftp/sys1, mssql/sys1
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Path
 Define a custom path to a shared CredentialStore.
 
@@ -65,24 +83,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Identifier
-Provide a custom identifier to the given remote host key.
-This enables you to store multiple credentials
-for a single remote host entry.
-For example ad/sys1, ftp/sys1, mssql/sys1
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Shared
 Switch to shared mode with this param.
 This enforces the command to work with a shared CredentialStore which
@@ -101,7 +101,8 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

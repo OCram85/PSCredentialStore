@@ -64,26 +64,21 @@ Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTP
 Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
 ```
 
-### EXAMPLE 8
-```
-$MyCreds = Get-Credential
-```
-
-Connect-To -RemoteHost "vcr01.myside.local" -Type VMware -Credentials $MyCreds
-Get-VM -Name "*vlm*" | Select-Object -Property Name
-Disconnect-From -RemoteHost "vcr01.myside.local" -Type VMware
-
 ## PARAMETERS
 
-### -RemoteHost
-Specify the host, for which you would like to change the credentials.
+### -Credentials
+Use this parameter to bypass the stored credentials.
+Without this parameter Connect-To tries to read the
+needed credentials from the CredentialStore.
+If you provide this parameter you skip this lookup behavior.
+So you can use it to enable credentials without preparing any user interaction.
 
 ```yaml
-Type: String
+Type: PSCredential
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -97,49 +92,6 @@ same hostname.
 
 ```yaml
 Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Type
-Specify the host type of the target.
-Currently implemented targets are:
-    - CiscoUcs     Establish a connection to a Cisco UCS fabric interconnect.
-    - FTP          Establish a connection to a FTP host.
-    - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
-    - VMware       Establish a connection to a VMware vCenter or ESXi host.
-    - CisServer    Establish a connection to a Vmware CisServer.
-    - ExchangeHTTP Start a new remote session to the given Exchange server via insecure http.
-    - Exchange HTTPS Start a new remote session to the given exchange server with the secure https endpoint.
-    - SCP          Establish a SCP connection.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Credentials
-Use this parameter to bypass the stored credentials.
-Without this parameter Connect-To tries to read the
-needed credentials from the CredentialStore.
-If you provide this parameter you skip this lookup behavior.
-So you can use it to enable credentials without preparing any user interaction.
-
-```yaml
-Type: PSCredential
 Parameter Sets: (All)
 Aliases:
 
@@ -165,6 +117,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -RemoteHost
+Specify the host, for which you would like to change the credentials.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Shared
 Switch to shared mode with this param.
 This enforces the command to work with a shared CredentialStore which
@@ -182,8 +149,26 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Type
+Specify the host type of the target.
+Currently implemented targets are: Possible connection values are:
+CiscoUcs, FTP, NetAppFAS, VMware, CisServer, ExchangeHTTP, ExchangeHTTPS, SCP.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

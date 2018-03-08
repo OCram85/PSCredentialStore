@@ -40,6 +40,39 @@ New-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.lo
 
 ## PARAMETERS
 
+### -Credential
+You can provide credentials optionally as pre existing pscredential object.
+
+```yaml
+Type: PSCredential
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Identifier
+Provide a custom identifier to the given remote host key.
+This enables you to store multiple credentials
+for a single remote host entry.
+For example ad/sys1, ftp/sys1, mssql/sys1
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Path
 Define the store in which you would like to add a new item.
 
@@ -70,39 +103,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Identifier
-Provide a custom identifier to the given remote host key.
-This enables you to store multiple credentials
-for a single remote host entry.
-For example ad/sys1, ftp/sys1, mssql/sys1
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Credential
-You can provide credentials optionally as pre existing pscredential object.
-
-```yaml
-Type: PSCredential
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Shared
 {{Fill Shared Description}}
 
@@ -119,7 +119,8 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
