@@ -1,0 +1,25 @@
+{
+    "Version": 0.1,
+    "Mandatory": {},
+    "Optional": [
+        {
+            "Name": "foobar2000",
+            "Modules": [
+                "foobar2000"
+            ]
+        },
+        {
+            "Name": "foo",
+            "Modules": [
+                "foo",
+                "bar"
+            ]
+        },
+        {
+            "Name": "bar",
+            "Modules": [
+                "bar"
+            ]
+        }
+    ]
+}
