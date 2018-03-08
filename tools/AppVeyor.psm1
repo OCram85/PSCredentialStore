@@ -156,6 +156,7 @@ Function Invoke-CoverageReport() {
 
     Import-Module ('.\src\{0}.psm1' -f $CALLSIGN) -Verbose -Force
     $FileMap = New-PesterFileMap -SourceRoot '.\src' -PesterRoot '.\tests'
+    $FileMap | Format-List
     $CoverageReport = New-CoverageReport -PesterFileMap $FileMap -RepoToken $RepoToken
     Write-Host "CoverageReport JSON:" -ForegroundColor Yellow
     $CoverageReport | Out-String | Write-Host
