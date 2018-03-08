@@ -14,16 +14,8 @@ function Connect-To {
         same hostname.
 
     .PARAMETER Type
-        Specify the host type of the target. Currently implemented targets are:
-
-            - CiscoUcs     Establish a connection to a Cisco UCS fabric interconnect.
-            - FTP          Establish a connection to a FTP host.
-            - NetAppFAS    Establish a connection to a NetApp Clustered ONTAP filer.
-            - VMware       Establish a connection to a VMware vCenter or ESXi host.
-            - CisServer    Establish a connection to a Vmware CisServer.
-            - ExchangeHTTP Start a new remote session to the given Exchange server via insecure http.
-            - Exchange HTTPS Start a new remote session to the given exchange server with the secure https endpoint.
-            - SCP          Establish a SCP connection.
+        Specify the host type of the target. Currently implemented targets are: Possible connection values are:
+        CiscoUcs, FTP, NetAppFAS, VMware, CisServer, ExchangeHTTP, ExchangeHTTPS, SCP.
 
     .PARAMETER Credentials
         Use this parameter to bypass the stored credentials. Without this parameter Connect-To tries to read the
@@ -63,12 +55,6 @@ function Connect-To {
 
     .EXAMPLE
         Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
-
-    .EXAMPLE
-        $MyCreds = Get-Credential
-        Connect-To -RemoteHost "vcr01.myside.local" -Type VMware -Credentials $MyCreds
-        Get-VM -Name "*vlm*" | Select-Object -Property Name
-        Disconnect-From -RemoteHost "vcr01.myside.local" -Type VMware
 
     .NOTES
         File Name   : Connect-To.ps1

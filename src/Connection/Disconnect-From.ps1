@@ -14,15 +14,8 @@ function Disconnect-From {
         same hostname.
 
     .PARAMETER Type
-        Specify the host type of the target. Currently implemented targets are:
-            - CiscoUcs     Terminates the connection from a Cisco UCS Fabric Interconnect.
-            - FTP          Terminates the connection from a FTP host.
-            - NetAppFAS    Terminates the connection from a NetApp Clustered ONTAP filer.
-            - VMware       Terminates the connection from a VMware vCenter or ESXi host.
-            - CisServer    Terminates the connection from a Vmware CisServer.
-            - ExchangeHTTP Remove the existing remote session to the given Exchange server
-            - ExchangeHTTPS Remove the existing remote session to the given Exchange server
-            - SCP          Terminates the existing SCP session.
+        Specify the host type of the target. Currently implemented targets are: CiscoUcs, FTP, NetAppFAS, VMware,
+        CisServer, ExchangeHTTP, ExchangeHTTPS, SCP.
 
     .PARAMETER Force
         Force the disconnect, even if the disconnect would fail.
