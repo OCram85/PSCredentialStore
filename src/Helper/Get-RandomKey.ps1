@@ -32,6 +32,7 @@ function Get-RandomKey {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [ValidateSet(16, 24, 32)]
         [string]$size
     )
