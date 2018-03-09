@@ -22,11 +22,4 @@ Describe "Get-ModuleBase" {
             { Get-ModuleBase } | Should -Not -Throw
         }
     }
-    Context "Testing basic scenario" {
-        # Dummy test. This can only be executed if it gets populated by the module itself. But it's
-        # private function an returns $null when it's called by pester...
-        It "Env: AppVeyor" {
-            Get-ModuleBase | Should -Be ''
-        }
-    }
 }
