@@ -1,4 +1,4 @@
-version: 0.2.0.{build}
+version: 0.2.1.{build}
 
 branches:
   only:
@@ -13,6 +13,11 @@ skip_tags: true
 image: Visual Studio 2017
 
 # Install pester module and init the Appveyor support.
+
+# Enable RDP connection for debugging
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 install:
   - ps: Import-Module .\tools\AppVeyor.psm1
   - ps: Invoke-InstallDependencies -Verbose
@@ -33,7 +38,13 @@ build_script:
 
 test_script:
   - ps: Invoke-AppVeyorTests
-  - ps: Invoke-CoverageReport
+  - ps: |
+      if ($null -ne $Env:CoverallsToken) {
+        Invoke-CoverageReport
+      }
+      else {
+        Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
+      }
 
 deploy:
   #- provider: GitHub
@@ -55,3 +66,7 @@ deploy:
 
 after_deploy:
   - ps: Invoke-AppVeyorPSGallery -OnBranch 'master'
+
+# Pause build until `lock` on desktop is deleted.
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

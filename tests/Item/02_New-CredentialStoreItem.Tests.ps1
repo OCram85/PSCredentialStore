@@ -14,10 +14,10 @@ Else {
 }
 
 # load additional functions defined in the repository. Replace the expression <FunctionName>.
-. (Get-ChildItem -Path $RepoRoot -Filter "Test-CredentialStore.ps1" -Recurse).FullName
-. (Get-ChildItem -Path $RepoRoot -Filter "New-CredentialStore.ps1" -Recurse).FullName
-. (Get-ChildItem -Path $RepoRoot -Filter "Get-CredentialStore.ps1" -Recurse).FullName
-. (Get-ChildItem -Path $RepoRoot -Filter "Get-CredentialStoreItem.ps1" -Recurse).FullName
+#. (Get-ChildItem -Path $RepoRoot -Filter "Test-CredentialStore.ps1" -Recurse).FullName
+#. (Get-ChildItem -Path $RepoRoot -Filter "New-CredentialStore.ps1" -Recurse).FullName
+#. (Get-ChildItem -Path $RepoRoot -Filter "Get-CredentialStore.ps1" -Recurse).FullName
+#. (Get-ChildItem -Path $RepoRoot -Filter "Get-CredentialStoreItem.ps1" -Recurse).FullName
 . (Get-ChildItem -Path $RepoRoot -Filter "Test-ChallengeFile.ps1" -Recurse).FullName
 . (Get-ChildItem -Path $RepoRoot -Filter "Get-ChallengeFile.ps1" -Recurse).FullName
 . (Get-ChildItem -Path $RepoRoot -Filter "Set-ChallengeFile.ps1" -Recurse).FullName

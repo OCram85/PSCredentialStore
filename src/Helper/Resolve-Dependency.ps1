@@ -53,11 +53,12 @@ function Resolve-Dependency {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$Name
     )
 
     begin {
-        $ModuleRootDir = $MyInvocation.MyCommand.Module.ModuleBase
+        $ModuleRootDir = Get-ModuleBase
         $DepFilePath = Join-Path -Path $ModuleRootDir -ChildPath "Dependency.json"
         if (Test-Path -Path $DepFilePath) {
             $Dependency = Get-Content -Path $DepFilePath -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -65,16 +66,16 @@ function Resolve-Dependency {
         else {
             Write-Warning ("Could not find the dependency file: {0}" -f $DepFilePath)
         }
-        $res = @()
     }
 
     process {
         $SelectedDependency = $Dependency.Optional | Where-Object {$_.Name -match $Name}
-
+        $res = @()
         foreach ($Module in $SelectedDependency.Modules) {
             $res += Test-Module -Name $Module
         }
-        if ($res -contains $false) {
+        # return false if there was not module at all
+        if (($res -contains $false) -or ($res.Count -eq 0)) {
             return $false
         }
         else {

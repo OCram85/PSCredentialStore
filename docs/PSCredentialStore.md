@@ -8,36 +8,39 @@ Locale: en-US
 
 # PSCredentialStore Module
 ## Description
-PSCredentialStore enables managing multiple PSCredential objects.
+{{Manually Enter Description Here}}
 
 ## PSCredentialStore Cmdlets
 ### [Connect-To](Connect-To.md)
-Connects to the given host using the stored CredentialStoreItem.
+{{Manually Enter Connect-To Description Here}}
 
 ### [Disconnect-From](Disconnect-From.md)
-Terminates a session established with Connect-To using a CredentialStoreItem.
+{{Manually Enter Disconnect-From Description Here}}
 
 ### [Get-CredentialStore](Get-CredentialStore.md)
-Reads the complete content of the credential store and returns it as a new object.
+{{Manually Enter Get-CredentialStore Description Here}}
 
 ### [Get-CredentialStoreItem](Get-CredentialStoreItem.md)
-Returns the Credential from a given remote host item.
+{{Manually Enter Get-CredentialStoreItem Description Here}}
 
-### [Get-CredentialStoreItem](Get-CredentialStoreItem.md)
-Returns the Credential from a given remote host item.
+### [New-CredentialStore](New-CredentialStore.md)
+{{Manually Enter New-CredentialStore Description Here}}
 
 ### [New-CredentialStoreItem](New-CredentialStoreItem.md)
-Adds a credential store item containing host, user and password to the given store.
+{{Manually Enter New-CredentialStoreItem Description Here}}
 
 ### [Remove-CredentialStoreItem](Remove-CredentialStoreItem.md)
-Remove the given credentials from the credential store.
+{{Manually Enter Remove-CredentialStoreItem Description Here}}
 
 ### [Set-CredentialStoreItem](Set-CredentialStoreItem.md)
-Changes the credentials for the given remote host in the store.
+{{Manually Enter Set-CredentialStoreItem Description Here}}
 
 ### [Test-CredentialStore](Test-CredentialStore.md)
-Returns the credential store state.
+{{Manually Enter Test-CredentialStore Description Here}}
 
 ### [Test-CredentialStoreItem](Test-CredentialStoreItem.md)
-Checks if the given RemoteHost identifier combination exists in the credential store.
+{{Manually Enter Test-CredentialStoreItem Description Here}}
+
+### [Test-CSConnection](Test-CSConnection.md)
+{{Manually Enter Test-CSConnection Description Here}}
 

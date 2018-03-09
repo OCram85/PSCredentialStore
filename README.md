@@ -1,6 +1,6 @@
 [![AppVeyor branch](https://img.shields.io/appveyor/ci/OCram85/PSCredentialStore/master.svg?style=plastic "Master Banch Build Status")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master)
 [![AppVeyor tests branch](https://img.shields.io/appveyor/tests/OCram85/PSCredentialStore/master.svg?style=plastic "Pester Tests Results")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master/tests)
-[![Coveralls github](https://img.shields.io/coveralls/github/OCram85/PSCredentialStore.svg?style=plastic "Coveralls.io Coverage Report")](https://coveralls.io/github/OCram85/PSCredentialStorebranch=master)
+[![Coveralls github](https://img.shields.io/coveralls/github/OCram85/PSCredentialStore.svg?style=plastic "Coveralls.io Coverage Report")](https://coveralls.io/github/OCram85/PSCredentialStore?branch=master)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PSCredentialStore.svg?style=plastic "PowershellGallery Published Version")](https://www.powershellgallery.com/packages/PSCredentialStore)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCredentialStore.svg?style=plastic "PowershellGallery Downloads")](https://www.powershellgallery.com/packages/PSCredentialStore)
 
@@ -20,7 +20,8 @@ scripts without exposing them as plain text.
 PSCredentialStore was developed to simplify the delegation of complex powershell scripts. In this case you often
 need to store credentials for non interactive usage like in scheduled tasks.
 
-For more details read the [about_PSCredentialStore](/src/en-US/about_PSCredential.help.txt) page.
+For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStore.md) page on github or via CLI with
+`Get-Help about_PSCredentialStore`.
 
 Installation
 ============
@@ -80,6 +81,12 @@ If you have already installed the underlying framework / modules, you can connec
   * Required Modules: [`VMware.VimAutomation.Core`](https://www.powershellgallery.com/packages/VMware.PowerCLI)
 * **CisServer** - Establish a connection to the CisServer Service on vCenter Host.
   * Required Modules: [`VMware.VimAutomation.Cis.Core`](https://www.powershellgallery.com/packages/VMware.PowerCLI)
+* **ExchangeHTTP** - Establish a remote connection with an Exchange endpoint via http.
+  * Requires PowerShell remoting
+* **ExchangeHTTPS** - Establish a remote connection with an Exchange endpoint via https.
+  * Requires PowerShell remoting
+* **SCP** - Establish a SCP connection.
+  * Required Modules: [`WinSCP`](https://www.powershellgallery.com/packages/WinSCP)
 
 Here are some basic examples:
 

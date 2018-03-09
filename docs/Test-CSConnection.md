@@ -5,67 +5,57 @@ online version: https://github.com/OCram85/PSCredentialStore
 schema: 2.0.0
 ---
 
-# Test-CredentialStore
+# Test-CSConnection
 
 ## SYNOPSIS
-Returns the credential store state.
+Returns the connection state of a given type to the remote host.
 
 ## SYNTAX
 
-### Private (Default)
 ```
-Test-CredentialStore [<CommonParameters>]
-```
-
-### Shared
-```
-Test-CredentialStore [-Path <String>] [-Shared] [<CommonParameters>]
+Test-CSConnection [-RemoteHost] <String> [-Type] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this script to test your credential store.
-For now it only checks if
-the file exists.
+Use this script to check a connection which was established with the \`Connect-To\` cmdlet.
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
 ```
-
-{{ Add example description here }}
+.\Test-CMConnection -RemoteHost "r0-i01-vcr01.p0r.kivbf-cloud.net" -Type VMware
+```
 
 ## PARAMETERS
 
-### -Path
-Define a custom path to a shared CredentialStore.
+### -RemoteHost
+Define the remote host you would like to check.
 
 ```yaml
 Type: String
-Parameter Sets: Shared
+Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: Named
-Default value: "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData
+Required: True
+Position: 1
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Shared
-Switch to shared mode with this param.
-This enforces the command to work with a shared CredentialStore which
-can be decrypted across systems.
+### -Type
+Define the connection type you would like to check.
+See the \`Connect-To\` documentation
+for valid type values.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: Shared
+Type: String
+Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: Named
-Default value: False
+Required: True
+Position: 2
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -76,14 +66,16 @@ For more information, see about_CommonParameters (http://go.microsoft.com/fwlink
 
 ## INPUTS
 
+### [None]
+
 ## OUTPUTS
 
+### [Boolean]
+
 ## NOTES
-\`\`\`
-File Name   : Test-CredentialStore.ps1
+File Name   : Test-CSConnection.ps1
 Author      : Marco Blessing - marco.blessing@googlemail.com
 Requires    :
-\`\`\`
 
 ## RELATED LINKS
 

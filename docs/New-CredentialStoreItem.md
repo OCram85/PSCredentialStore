@@ -33,37 +33,22 @@ a VIConnection, NetApp FAS or UCS Fabric Interconnect.
 
 ## EXAMPLES
 
-### -------------------------- EXAMPLE 1 --------------------------
+### EXAMPLE 1
 ```
 New-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 ```
 
 ## PARAMETERS
 
-### -Path
-Define the store in which you would like to add a new item.
+### -Credential
+You can provide credentials optionally as pre existing pscredential object.
 
 ```yaml
-Type: String
-Parameter Sets: Shared
-Aliases: 
+Type: PSCredential
+Parameter Sets: (All)
+Aliases:
 
 Required: False
-Position: Named
-Default value: "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -RemoteHost
-The identifier or rather name for the given credentials.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases: 
-
-Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -79,7 +64,7 @@ For example ad/sys1, ftp/sys1, mssql/sys1
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -88,15 +73,30 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Credential
-You can provide credentials optionally as pre existing pscredential object.
+### -Path
+Define the store in which you would like to add a new item.
 
 ```yaml
-Type: PSCredential
-Parameter Sets: (All)
-Aliases: 
+Type: String
+Parameter Sets: Shared
+Aliases:
 
 Required: False
+Position: Named
+Default value: "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RemoteHost
+The identifier or rather name for the given credentials.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -109,7 +109,7 @@ Accept wildcard characters: False
 ```yaml
 Type: SwitchParameter
 Parameter Sets: Shared
-Aliases: 
+Aliases:
 
 Required: False
 Position: Named
@@ -119,7 +119,8 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
+For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
