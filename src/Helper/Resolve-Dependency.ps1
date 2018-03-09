@@ -78,7 +78,7 @@ function Resolve-Dependency {
         if ($res.count -eq 0) {
             return $false
         }
-        elseif ($res.count -contains $false) {
+        elseif ($res -contains $false) {
             return $false
         }
         else {

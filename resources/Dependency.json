@@ -20,6 +20,19 @@
             "Modules": [
                 "bar"
             ]
+        },
+        {
+            "Name": "PSGet",
+            "Modules": [
+                "PowerShellGet"
+            ]
+        },
+        {
+            "Name": "PSGetMixed",
+            "Modules": [
+                "PowerShellGet",
+                "foobar2000"
+            ]
         }
     ]
 }
