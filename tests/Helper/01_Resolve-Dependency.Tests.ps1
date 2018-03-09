@@ -30,4 +30,15 @@ Describe "Resolve-Dependency" {
             Resolve-Dependency -Name 'foobar2000' | Should -BeOfType bool
         }
     }
+    Context "Enforce Error" {
+        # Return incorrect module base to enforce there is no config file.
+        Mock Get-ModuleBase {return "C:\"}
+        It "Missing dependency file should not cause an error" {
+            { Resolve-Dependency -Name 'awesome'} | Should -Not -Throw
+        }
+
+        It "Missing dependency file should return false" {
+            Resolve-Dependency -Name 'awesome' | Should -Be $false
+        }
+    }
 }
