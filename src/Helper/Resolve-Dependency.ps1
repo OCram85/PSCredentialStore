@@ -75,7 +75,10 @@ function Resolve-Dependency {
         foreach ($Module in $SelectedDependency.Modules) {
             $res += Test-Module -Name $Module
         }
-        if ($res -contains $false) {
+        if ($res.count -eq 0) {
+            return $false
+        }
+        elseif ($res.count -contains $false) {
             return $false
         }
         else {
