@@ -66,19 +66,16 @@ function Resolve-Dependency {
         else {
             Write-Warning ("Could not find the dependency file: {0}" -f $DepFilePath)
         }
-        $res = @()
     }
 
     process {
         $SelectedDependency = $Dependency.Optional | Where-Object {$_.Name -match $Name}
-
+        $res = @()
         foreach ($Module in $SelectedDependency.Modules) {
             $res += Test-Module -Name $Module
         }
-        if ($res.count -eq 0) {
-            return $false
-        }
-        elseif ($res -contains $false) {
+        # return false if there was not module at all
+        if (($res -contains $false) -or ($res.Count -eq 0)) {
             return $false
         }
         else {

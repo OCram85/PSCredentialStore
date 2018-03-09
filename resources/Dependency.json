@@ -22,7 +22,7 @@
             ]
         },
         {
-            "Name": "PSGet",
+            "Name": "Existing",
             "Modules": [
                 "PowerShellGet"
             ]

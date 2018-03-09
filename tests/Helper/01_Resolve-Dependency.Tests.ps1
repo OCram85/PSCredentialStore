@@ -44,7 +44,7 @@ Describe "Resolve-Dependency" {
     Context "Testing input variations" {
         Mock Get-ModuleBase {return "{0}\resources" -f $PWD}
         It "Should return true if all given dependencies exist" {
-            Resolve-Dependency -Name 'PSGet' | Should -Be $true
+            Resolve-Dependency -Name 'Existing' | Should -Be $true
         }
         It "Mixed results should return false" {
             Resolve-Dependency -Name 'PSGetMixed' | Should -Be $false
