@@ -72,7 +72,12 @@ If you have already installed the underlying framework your can connect to:
   * Required Modules: [`VMware.VimAutomation.Core`](https://www.powershellgallery.com/packages/VMware.PowerCLI)
 * **CisServer** - Establish a connection to the CisServer Service on vCenter Host.
   * Required Modules: [`VMware.VimAutomation.Cis.Core`](https://www.powershellgallery.com/packages/VMware.PowerCLI))
-
+* **ExchangeHTTP** - Establish a remote connection with an Exchange endpoint via http.
+  * Requires PowerShell remoting
+* **ExchangeHTTPS** - Establish a remote connection with an Exchange endpoint via https.
+  * Requires PowerShell remoting
+* **SCP** - Establish a SCP connection.
+  * Required Modules: [`WinSCP`](https://www.powershellgallery.com/packages/WinSCP)
 # EXAMPLES
 
 ```powershell
