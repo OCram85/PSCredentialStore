@@ -15,8 +15,8 @@ image: Visual Studio 2017
 # Install pester module and init the Appveyor support.
 
 # Enable RDP connection for debugging
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
   - ps: Import-Module .\tools\AppVeyor.psm1
@@ -68,5 +68,5 @@ after_deploy:
   - ps: Invoke-AppVeyorPSGallery -OnBranch 'master'
 
 # Pause build until `lock` on desktop is deleted.
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
