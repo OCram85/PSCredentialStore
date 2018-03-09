@@ -20,7 +20,8 @@ scripts without exposing them as plain text.
 PSCredentialStore was developed to simplify the delegation of complex powershell scripts. In this case you often
 need to store credentials for non interactive usage like in scheduled tasks.
 
-For more details read the [about_PSCredentialStore](/src/en-US/about_PSCredential.help.txt) page.
+For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStore.md) page on github or via CLI with
+`Get-Help about_PSCredentialStore`.
 
 Installation
 ============
@@ -80,6 +81,12 @@ If you have already installed the underlying framework / modules, you can connec
   * Required Modules: [`VMware.VimAutomation.Core`](https://www.powershellgallery.com/packages/VMware.PowerCLI)
 * **CisServer** - Establish a connection to the CisServer Service on vCenter Host.
   * Required Modules: [`VMware.VimAutomation.Cis.Core`](https://www.powershellgallery.com/packages/VMware.PowerCLI)
+* **ExchangeHTTP** - Establish a remote connection with an Exchange endpoint via http.
+  * Requires PowerShell remoting
+* **ExchangeHTTPS** - Establish a remote connection with an Exchange endpoint via https.
+  * Requires PowerShell remoting
+* **SCP** - Establish a SCP connection.
+  * Required Modules: [`WinSCP`](https://www.powershellgallery.com/packages/WinSCP)
 
 Here are some basic examples:
 
