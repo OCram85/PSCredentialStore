@@ -19,7 +19,7 @@ Else {
 Describe "Set-ChallengeFile" {
     Context "Tests with custom path" {
         It "Working dir and path not exist" {
-            Set-ChallengeFile -Path 'C:\CredentialStore\Challenge.bin' | Should -Not -Throw
+            {Set-ChallengeFile -Path 'C:\PSCredentialStore\Challenge.bin'} | Should -Not -Throw
         }
         It "No parameter and non file should return true" {
             if (Test-Path -Path ("{0}\PSCredentialStore\Challenge.bin" -f $env:ProgramData)) {
