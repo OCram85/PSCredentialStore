@@ -25,10 +25,12 @@ Describe "Set-ChallengeFile" {
             if (Test-Path -Path ("{0}\PSCredentialStore\Challenge.bin" -f $env:ProgramData)) {
                 Remove-Item -Path ("{0}\PSCredentialStore\Challenge.bin" -f $env:ProgramData)
             }
-            Set-ChallengeFile | Should -Be $true
+            Set-ChallengeFile
+            Test-Path -Path ("{0}\PSCredentialStore\Challenge.bin" -f $env:ProgramData) | Should -Be $true
         }
         It "Existing Credential file should return error" {
             { Set-ChallengeFile } | Should -Throw
+            Remove-Item -Path ("{0}\PSCredentialStore\Challenge.bin" -f $env:ProgramData)
         }
     }
 }
