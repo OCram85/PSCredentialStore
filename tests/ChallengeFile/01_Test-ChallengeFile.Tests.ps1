@@ -27,7 +27,7 @@ Describe "Test-ChallengeFile" {
         }
     }
     Context "Execute with parameter" {
-        $TestChFile = "{0}\resources\Challenge.bin" -f $RepoRoot
+        $TestChFile = "{0}\resources\cs\Challenge.bin" -f $RepoRoot
         It "Provide valid path" {
             Test-ChallengeFile -Path $TestChFile | Should -Be $true
         }
