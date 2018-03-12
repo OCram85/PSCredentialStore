@@ -25,15 +25,14 @@ Describe "Test-ChallengeFile" {
         It "No parameter and existing file should return true" {
             Test-ChallengeFile | Should -Be $true
         }
-        Context "Execute with parameter" {
-            $TestChFile = "{0}\resources\Challenge.bin" -f $RepoRoot
-            It "Provide valid path" {
-                Test-ChallengeFile -Path $TestChFile | Should -Be $true
-            }
-            It "Provide fake path" {
-                Test-ChallengeFile -Path "C:\notexisting.bin" | Should -Be $false
-            }
+    }
+    Context "Execute with parameter" {
+        $TestChFile = "{0}\resources\Challenge.bin" -f $RepoRoot
+        It "Provide valid path" {
+            Test-ChallengeFile -Path $TestChFile | Should -Be $true
         }
-
+        It "Provide fake path" {
+            Test-ChallengeFile -Path "C:\notexisting.bin" | Should -Be $false
+        }
     }
 }
