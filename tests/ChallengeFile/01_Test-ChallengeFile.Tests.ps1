@@ -12,7 +12,7 @@ Else {
 }
 
 # load additional functions defined in the repository. Replace the expression <FunctionName>.
-. (Get-ChildItem -Path $RepoRoot -Filter "Test-ChallengeFile.ps1" -Recurse).FullName
+#. (Get-ChildItem -Path $RepoRoot -Filter "Test-ChallengeFile.ps1" -Recurse).FullName
 
 #endregion HEADER
 
