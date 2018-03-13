@@ -33,12 +33,11 @@ Describe "Test-ModuleName" {
     Context "Working with PSSnapins" {
         It "Loading first PSSnaping should not throw " {
             $Snap = Get-PSSnapin -Registered
-            $Snap | Format-List | Out-String | Write-Verbose -Verbose
+            $Snap = Get-PSSnapin -Registered | Select-Object -First 1
             { $loaded = Test-Module -Name $Snap.Name -Type PSSnapin } | Should -Not -Throw
         }
         It "Loading first PSSnaping should return true" {
-            $Snap = Get-PSSnapin -Registered
-            $Snap | Format-List | Out-String | Write-Verbose -Verbose
+            $Snap = Get-PSSnapin -Registered | Select-Object -First 1
             Test-Module -Name $Snap.Name -Type PSSnapin | Should -Be $true
         }
     }
