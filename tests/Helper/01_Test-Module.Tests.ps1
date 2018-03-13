@@ -31,11 +31,11 @@ Describe "Test-ModuleName" {
         }
     }
     Context "Working with PSSnapins" {
+        $loaded = $null
         It "Loading first PSSnaping should not throw " {
             $Snap = Get-PSSnapin -Registered
             $Snap | Format-List | Out-String | Write-Verbose -Verbose
             { $loaded = Test-Module -Name $Snap.Name -Type PSSnapin } | Should -Not -Throw
-            Remove-PSSnapin -Name $Snap.Name
         }
         It "Loading first PSSnaping should return true" {
             $loaded | Should -Be $true
