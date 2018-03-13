@@ -32,13 +32,34 @@ Describe "Test-ModuleName" {
     }
     Context "Working with PSSnapins" {
         It "Loading first PSSnaping should not throw " {
-            $Snap = Get-PSSnapin -Registered
             $Snap = Get-PSSnapin -Registered | Select-Object -First 1
-            { $loaded = Test-Module -Name $Snap.Name -Type PSSnapin } | Should -Not -Throw
+            { Test-Module -Name $Snap.Name -Type PSSnapin } | Should -Not -Throw
         }
         It "Loading first PSSnaping should return true" {
             $Snap = Get-PSSnapin -Registered | Select-Object -First 1
             Test-Module -Name $Snap.Name -Type PSSnapin | Should -Be $true
+        }
+        It "Not existing PSSnaping should return false" {
+            Test-Module -Name 'foobar2000' -Type PSSnapin | Should -Be $false
+        }
+        It "StopifFails switch should thrown an error" {
+            {Test-Module -Name 'foobar2000' -Type PSSnapin }| Should -Throw
+        }
+    }
+    Context "Working with modules" {
+        It "Loading first module should not throw " {
+            $Mod = Get-Module -ListAvailable | Select-Object -First 1
+            { Test-Module -Name $Mod.Name -Type Module } | Should -Not -Throw
+        }
+        It "Loading first module should return true" {
+            $Snap = Get-Module -ListAvailable | Select-Object -First 1
+            Test-Module -Name $Snap.Name -Type Module | Should -Be $true
+        }
+        It "Not existing module should return false" {
+            Test-Module -Name 'foobar2000' -Type Module | Should -Be $false
+        }
+        It "StopifFails switch should thrown an error" {
+            {Test-Module -Name 'foobar2000' -Type Module }| Should -Throw
         }
     }
 }
