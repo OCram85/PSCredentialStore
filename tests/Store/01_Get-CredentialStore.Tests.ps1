@@ -37,4 +37,11 @@ Describe "Get-CredentialStore" {
             { Get-CredentialStore -Path 'C:\foobar\CredentialStore.json' -Shared }| Should -Throw "Could not find the CredentialStore."
         }
     }
+    Context "Testing invalid json data" {
+        Mock Test-CredentialStore {return $true}
+        Mock Get-Content {return '"foo":"bar",'}
+        It "Should throw with invalid CredentialStore" {
+            { Get-Credentialstore -Path "C:\dummy.json"} | Should -Throw "Unknown CredentialStore format. Invalid JSON file."
+        }
+    }
 }
