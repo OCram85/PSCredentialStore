@@ -33,7 +33,7 @@ Describe "Test-ModuleName" {
     Context "Working with PSSnapins" {
         It "Loading first PSSnaping should not throw " {
             $Snap = Get-PSSnapin -Registered
-            $Snap
+            $Snap | Format-List | Out-String | Write-Verbose -Verbose
             { $loaded = Test-Module -Name $Snap.Name -Type PSSnapin } | Should -Not -Throw
             Remove-PSSnapin -Name $Snap.Name
         }
