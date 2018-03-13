@@ -43,7 +43,7 @@ Describe "Test-ModuleName" {
             Test-Module -Name 'foobar2000' -Type PSSnapin | Should -Be $false
         }
         It "StopifFails switch should thrown an error" {
-            {Test-Module -Name 'foobar2000' -Type PSSnapin }| Should -Throw
+            {Test-Module -Name 'foobar2000' -Type PSSnapin -StopIfFails }| Should -Throw
         }
     }
     Context "Working with modules" {
@@ -59,7 +59,7 @@ Describe "Test-ModuleName" {
             Test-Module -Name 'foobar2000' -Type Module | Should -Be $false
         }
         It "StopifFails switch should thrown an error" {
-            {Test-Module -Name 'foobar2000' -Type Module }| Should -Throw
+            {Test-Module -Name 'foobar2000' -Type Module -StopIfFails }| Should -Throw
         }
     }
 }
