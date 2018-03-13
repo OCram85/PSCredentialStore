@@ -36,5 +36,14 @@ Describe "Test-CredentialStore" {
             $res | Should Be $False
             $WarningPreference = $oWarningPreference
         }
+        It "Test4: Not existing path should return false" {
+            Test-CredentialStore -Path 'C:\foobar\CredentialStore.json' | Should -Be $false
+        }
+        It "Test5: testing private CredentialStore path" {
+            if (Test-Path -Path ("{0}\CredentialStore.json" -f $env:APPDATA) ) {
+                Remove-Item -Path ("{0}\CredentialStore.json" -f $env:APPDATA)
+            }
+            Test-CredentialStore | Should -Be $false
+        }
     }
 }

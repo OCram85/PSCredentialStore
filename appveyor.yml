@@ -20,7 +20,7 @@ image: Visual Studio 2017
 
 install:
   - ps: Import-Module .\tools\AppVeyor.psm1
-  - ps: Invoke-InstallDependencies -Verbose
+  - ps: Invoke-InstallDependencies
 
 environment:
   NuGetToken:
