@@ -34,7 +34,7 @@ Describe "Get-CredentialStore" {
             {Get-CredentialStore -Path $TestCredentialStore} | Should Not Throw
         }
         It "Test3: Not existing path should return false" {
-            Get-CredentialStore -Path 'C:\foobar\CredentialStore.json' -Shared | Should -Be $false
+            { Get-CredentialStore -Path 'C:\foobar\CredentialStore.json' -Shared }| Should -Throw "Could not find the CredentialStore."
         }
     }
 }
