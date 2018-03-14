@@ -54,7 +54,7 @@ Describe "Set-ChallengeFile" {
             if (Test-Path -Path ("{0}\PSCredentialStore" -f $env:ProgramData)) {
                 Remove-Item -Path ("{0}\PSCredentialStore" -f $env:ProgramData) -Force -Recurse
             }
-            { Set-ChallengeFile } | Should -Throw "Could not create the parent data dir*"
+            { Set-ChallengeFile } | Should -Throw "Could not create the parent data dir"
         }
     }
 }
