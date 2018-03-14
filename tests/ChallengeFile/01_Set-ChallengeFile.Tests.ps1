@@ -32,5 +32,29 @@ Describe "Set-ChallengeFile" {
             { Set-ChallengeFile } | Should -Throw
             Remove-Item -Path ("{0}\PSCredentialStore\Challenge.bin" -f $env:ProgramData)
         }
+        It "Use -Force switch should create a new challenge file" {
+            # prepare for test and clean up old data
+            if (Test-Path -Path ("{0}\PSCredentialStore\Challenge.bin" -f $env:ProgramData)) {
+                Remove-Item -Path ("{0}\PSCredentialStore\Challenge.bin" -f $env:ProgramData)
+            }
+            Set-ChallengeFile
+            { Set-ChallengeFile -Force } | Should -Not -Throw
+        }
+        It "Test directory creation for shared store" {
+            if (Test-Path -Path ("{0}\PSCredentialStore" -f $env:ProgramData)) {
+                Remove-Item -Path ("{0}\PSCredentialStore" -f $env:ProgramData)
+            }
+            Set-ChallengeFile
+            Test-Path -Path ("{0}\PSCredentialStore" -f $env:ProgramData) | Should -Be $true
+        }
+    }
+    Context "General Exception handling" {
+        Mock New-Item {throw "foobar exception"}
+        It "Test exception handling if the root directory could not be created" {
+            if (Test-Path -Path ("{0}\PSCredentialStore" -f $env:ProgramData)) {
+                Remove-Item -Path ("{0}\PSCredentialStore" -f $env:ProgramData)
+            }
+            { Set-ChallengeFile } | Should -Throw "Could not create the parent data dir*"
+        }
     }
 }
