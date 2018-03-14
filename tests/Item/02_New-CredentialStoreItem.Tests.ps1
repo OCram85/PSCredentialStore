@@ -61,5 +61,15 @@ Describe "New-CredentialStoreItem" {
             $res = Get-Member -InputObject $tmpCS -Name $RemoteHost -Membertype Properties
             $res.Name | Should Be $RemoteHost
         }
+        It "Adds Item with identifier to shared store" {
+            $tmpCS = 'C:\CredentialStore.json'
+            $UserName = "myuser"
+            $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
+            $mycreds = New-Object -TypeName PSCredential -ArgumentList $UserName, $Password
+            $RemoteHost = "foobar2"
+            New-CredentialStoreItem -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds -Identifier 'Foo'
+            $writtenItem = Get-CredentialStoreItem -Path $tmpCS -RemoteHost $RemoteHost -Identifier 'Foo'
+            ($writtenItem.UserName -eq $UserName) -and ($writtenItem.Password.Length -gt 0) | Should -Be $true
+        }
     }
 }
