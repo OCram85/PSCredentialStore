@@ -42,7 +42,7 @@ Describe "Set-ChallengeFile" {
         }
         It "Test directory creation for shared store" {
             if (Test-Path -Path ("{0}\PSCredentialStore" -f $env:ProgramData)) {
-                Remove-Item -Path ("{0}\PSCredentialStore" -f $env:ProgramData)
+                Remove-Item -Path ("{0}\PSCredentialStore" -f $env:ProgramData) -Force -Recurse
             }
             Set-ChallengeFile
             Test-Path -Path ("{0}\PSCredentialStore" -f $env:ProgramData) | Should -Be $true
@@ -52,7 +52,7 @@ Describe "Set-ChallengeFile" {
         Mock New-Item {throw "foobar exception"}
         It "Test exception handling if the root directory could not be created" {
             if (Test-Path -Path ("{0}\PSCredentialStore" -f $env:ProgramData)) {
-                Remove-Item -Path ("{0}\PSCredentialStore" -f $env:ProgramData)
+                Remove-Item -Path ("{0}\PSCredentialStore" -f $env:ProgramData) -Force -Recurse
             }
             { Set-ChallengeFile } | Should -Throw "Could not create the parent data dir*"
         }
