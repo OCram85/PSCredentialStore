@@ -95,7 +95,7 @@ Describe "New-CredentialStoreItem" {
 
         }
         It "Missing CredentialStore should throw" {
-            New-CredentialStoreItem -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' | Should -Throw "Could not add anything"
+            { New-CredentialStoreItem -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
         }
     }
 
