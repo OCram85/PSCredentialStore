@@ -88,10 +88,10 @@ function Set-CredentialStoreItem {
     }
 
     if (-not($Credential)) {
-        $Creds = Get-Credential -Message $CredentialName
+        $Credential = Get-Credential -Message $CredentialName
     }
 
-    if ($Creds.UserName) {
+    if ($Credential.UserName) {
         if ($CSContent.Type -eq "Shared") {
             $Key = Get-ChallengeFile
             $encypted = ConvertFrom-SecureString -SecureString $Creds.Password -Key $Key
