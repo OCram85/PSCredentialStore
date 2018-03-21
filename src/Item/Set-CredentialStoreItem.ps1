@@ -94,13 +94,13 @@ function Set-CredentialStoreItem {
     if ($Credential.UserName) {
         if ($CSContent.Type -eq "Shared") {
             $Key = Get-ChallengeFile
-            $encypted = ConvertFrom-SecureString -SecureString $Creds.Password -Key $Key
+            $encypted = ConvertFrom-SecureString -SecureString $Credential.Password -Key $Key
         }
         else {
-            $encypted = ConvertFrom-SecureString -SecureString $Creds.Password
+            $encypted = ConvertFrom-SecureString -SecureString $Credential.Password
         }
         if (Get-Member -InputObject $CSContent -Name $CredentialName -Membertype Properties) {
-            $CSContent.$CredentialName.User = $Creds.UserName
+            $CSContent.$CredentialName.User = $Credential.UserName
             $CSContent.$CredentialName.Password = $encypted
             $CSContent.$CredentialName.Creation = $CurrentDate
             ConvertTo-Json -InputObject $CSContent | Out-File -FilePath $Path
