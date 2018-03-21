@@ -5,79 +5,56 @@ online version: https://github.com/OCram85/PSCredentialStore
 schema: 2.0.0
 ---
 
-# New-CredentialStore
+# Get-CredentialStoreItem
 
 ## SYNOPSIS
-Creates a new credential store File
+Returns the Credential from a given remote host item.
 
 ## SYNTAX
 
 ### Private (Default)
 ```
-New-CredentialStore [-Force] [<CommonParameters>]
+Get-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [<CommonParameters>]
 ```
 
 ### Shared
 ```
-New-CredentialStore [-Shared] [-Path <String>] [-Force] [<CommonParameters>]
+Get-CredentialStoreItem [-Path <String>] -RemoteHost <String> [-Identifier <String>] [-Shared]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-You need to run this script first to create a new credential store before you try to
-save new credentials with New-CredentialStoreItem.
+Return the credential as PSCredential object.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-New-CredentialStore
+$myCreds = Get-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 ```
-
-# Creates a new private CredentialStore
-
-### EXAMPLE 2
-```
-New-CredentialStore -Force
-```
-
-# Resets an existing private CredentialStore
-
-### EXAMPLE 3
-```
-New-CredentialStore -Shared
-```
-
-# Creates a new shared CredentialStore
-
-### EXAMPLE 4
-```
-New-CredentialStore -Shared -Path "C:\TMP\CredentialStore.json"
-```
-
-# Creates a new shared CredentialStore in the given location.
 
 ## PARAMETERS
 
-### -Force
-Use this switch to reset an existing store.
-The complete content will be wiped.
+### -Identifier
+Provide a custom identifier to the given remote host key.
+This enables you to store multiple credentials
+for a single remote host entry.
+For example ad/sys1, ftp/sys1, mssql/sys1
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Path
-Define a location for the new shared CredentialStore.
-The default store will be created in
-$Env:ProgramData\PSCredentialStore dir.
+Define a custom path to a shared CredentialStore.
 
 ```yaml
 Type: String
@@ -91,11 +68,25 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -RemoteHost
+Specify the host, for which you would like to change the credentials.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Shared
-Creates a CredentialStore in the Shared mode.
-This enables you to read the CredentialStore Items on
-different systems or profiles.
-In addition you can optionally provide a custom path wit the -Path parameter.
+Switch to shared mode with this param.
+This enforces the command to work with a shared CredentialStore which
+can be decrypted across systems.
 
 ```yaml
 Type: SwitchParameter
@@ -110,8 +101,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
@@ -119,11 +109,11 @@ For more information, see about_CommonParameters (http://go.microsoft.com/fwlink
 
 ## OUTPUTS
 
-### [None]
+### [System.Management.Automation.PSCredential]
 
 ## NOTES
 \`\`\`
-File Name   : New-CredentialStore.ps1
+File Name   : Get-CredentialStoreItem.ps1
 Author      : Marco Blessing - marco.blessing@googlemail.com
 Requires    :
 \`\`\`

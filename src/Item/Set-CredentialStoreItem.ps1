@@ -53,6 +53,10 @@ function Set-CredentialStoreItem {
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [string]$Identifier,
 
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
+        [ValidateNotNullOrEmpty()]
+        [PSCredential]$Credential,
+
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [switch]$Shared
     )
@@ -83,7 +87,9 @@ function Set-CredentialStoreItem {
         $CredentialName = $RemoteHost
     }
 
-    $Creds = Get-Credential -Message $CredentialName
+    if (-not($Credential)) {
+        $Creds = Get-Credential -Message $CredentialName
+    }
 
     if ($Creds.UserName) {
         if ($CSContent.Type -eq "Shared") {

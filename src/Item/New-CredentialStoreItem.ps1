@@ -55,9 +55,9 @@ function New-CredentialStoreItem {
         [ValidateNotNullOrEmpty()]
         [string]$Identifier,
 
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false, ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]
-        [pscredential]$Credential,
+        [PSCredential]$Credential,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [switch]$Shared
