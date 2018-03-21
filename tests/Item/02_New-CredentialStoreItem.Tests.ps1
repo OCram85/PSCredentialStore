@@ -98,5 +98,16 @@ Describe "New-CredentialStoreItem" {
             { New-CredentialStoreItem -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
         }
     }
+    Context "Testing pipeline paramter" {
+        It "Add the item with credential value from pipe" {
+            $UserName = 'pipeUser'
+            $Password = ConvertTo-SecureString -String "pipePasswd" -AsPlainText -Force
+            { [PSCredential]::new($UserName, $Password) | New-CredentialStoreItem -RemoteHost 'PipeHost' } | Should -Not -Throw
+        }
+
+        It "Testing written item" {
+            (Get-CredentialStoreItem -RemoteHost 'PipeHost').UserName | Should -Be 'PipeHost'
+        }
+    }
 
 }
