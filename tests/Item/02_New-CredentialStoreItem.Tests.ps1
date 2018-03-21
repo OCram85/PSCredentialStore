@@ -88,9 +88,9 @@ Describe "New-CredentialStoreItem" {
     }
     Context "General Exception handling" {
         Mock Test-CredentialStore {return $false}
-        $UserName = 'myUser'
-        $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
         Mock Get-Credential {
+            $UserName = 'myUser'
+            $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
             return [PSCredential]::new($UserName, $Password)
 
         }
