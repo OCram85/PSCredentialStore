@@ -79,23 +79,24 @@ Describe "New-CredentialStoreItem" {
             return [PSCredential]::new($UserName, $Password)
 
         }
+        It "Test missing Credential" {
+            $tmpCS = 'C:\CredentialStore.json'
+            New-CredentialStoreItem -Path $tmpCs -Shared -RemoteHost 'foobar3'
+            $writtenItem = Get-CredentialStoreItem -Path $tmpCS -Shared -RemoteHost 'foobar3'
+            $writtenItem.UserName | Should -Be "myUser"
+        }
     }
-    It "Test missing Credential" {
-        $tmpCS = 'C:\CredentialStore.json'
-        New-CredentialStoreItem -Path $tmpCs -Shared -RemoteHost 'foobar3'
-        $writtenItem = Get-CredentialStoreItem -Path $tmpCS -Shared -RemoteHost 'foobar3'
-        $writtenItem.UserName | Should -Be "myUser"
-    }
-}
-Context "General Exception handling" {
-    Mock Test-CredentialStore {return $false}
-    $UserName = 'myUser'
-    $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
-    Mock Get-Credential {
-        return [PSCredential]::new($UserName, $Password)
+    Context "General Exception handling" {
+        Mock Test-CredentialStore {return $false}
+        $UserName = 'myUser'
+        $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
+        Mock Get-Credential {
+            return [PSCredential]::new($UserName, $Password)
 
+        }
+        It "Missing CredentialStore should throw" {
+            New-CredentialStoreItem -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' | Should -Throw "Could not add anything"
+        }
     }
-    It "Missing CredentialStore should throw" {
-        New-CredentialStoreItem -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' | Should -Throw "Could not add anything"
-    }
+
 }
