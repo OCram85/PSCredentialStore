@@ -12,35 +12,35 @@ Locale: en-US
 
 ## PSCredentialStore Cmdlets
 ### [Connect-To](Connect-To.md)
-{{Manually Enter Connect-To Description Here}}
+Connects to the given host using the stored CredentialStoreItem.
 
 ### [Disconnect-From](Disconnect-From.md)
-{{Manually Enter Disconnect-From Description Here}}
+Terminates a session established with Connect-To using a CredentialStoreItem.
 
 ### [Get-CredentialStore](Get-CredentialStore.md)
-{{Manually Enter Get-CredentialStore Description Here}}
+Reads the complete content of the credential store and returns it as a new object.
 
 ### [Get-CredentialStoreItem](Get-CredentialStoreItem.md)
-{{Manually Enter Get-CredentialStoreItem Description Here}}
+Returns the Credential from a given remote host item.
 
-### [New-CredentialStore](New-CredentialStore.md)
-{{Manually Enter New-CredentialStore Description Here}}
+### [Get-CredentialStoreItem](Get-CredentialStoreItem.md)
+Returns the Credential from a given remote host item.
 
 ### [New-CredentialStoreItem](New-CredentialStoreItem.md)
-{{Manually Enter New-CredentialStoreItem Description Here}}
+Adds a credential store item containing host, user and password to the given store.
 
 ### [Remove-CredentialStoreItem](Remove-CredentialStoreItem.md)
-{{Manually Enter Remove-CredentialStoreItem Description Here}}
+Remove the given credentials from the credential store.
 
 ### [Set-CredentialStoreItem](Set-CredentialStoreItem.md)
-{{Manually Enter Set-CredentialStoreItem Description Here}}
+Changes the credentials for the given remote host in the store.
 
 ### [Test-CredentialStore](Test-CredentialStore.md)
-{{Manually Enter Test-CredentialStore Description Here}}
+Returns the credential store state.
 
 ### [Test-CredentialStoreItem](Test-CredentialStoreItem.md)
-{{Manually Enter Test-CredentialStoreItem Description Here}}
+Checks if the given RemoteHost identifier combination exists in the credential store.
 
 ### [Test-CSConnection](Test-CSConnection.md)
-{{Manually Enter Test-CSConnection Description Here}}
+Returns the connection state of a given type to the remote host.
 
