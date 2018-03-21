@@ -92,6 +92,12 @@ Describe "New-CredentialStore" {
             {New-CredentialStore -Path $pCS -Shared -Force} | Should Not Throw
         }
     }
+    Context "Test exception handling" {
+        Mock Out-File {throw "foobar exception"}
+        It "JSON Converstion should fail and throw" {
+            { New-CredentialStore -Path "C:\dummy.json"} | Should -Throw
+        }
+    }
 }
 
 # Cleanup test stores and restore existing ones.

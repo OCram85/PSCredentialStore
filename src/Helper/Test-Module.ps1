@@ -83,14 +83,14 @@ Could not find the required {0} called {1}. Please install the required {0} to r
             }
 
             'PSSnapin' {
-                if (Get-PSSnapin -Name $Name -Registered) {
+                if (Get-PSSnapin -Name $Name -Registered -ErrorAction SilentlyContinue) {
                     return $true
                 }
                 else {
                     if ($StopIfFails) {
                         Write-Error -Message $Message -ErrorAction Stop -Category NotInstalled
-                        return $false
                     }
+                    return $false
                 }
             }
 

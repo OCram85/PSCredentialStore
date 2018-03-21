@@ -61,5 +61,42 @@ Describe "New-CredentialStoreItem" {
             $res = Get-Member -InputObject $tmpCS -Name $RemoteHost -Membertype Properties
             $res.Name | Should Be $RemoteHost
         }
+        It "Adds Item with identifier to shared store" {
+            $tmpCS = 'C:\CredentialStore.json'
+            $UserName = "myuser"
+            $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
+            $mycreds = New-Object -TypeName PSCredential -ArgumentList $UserName, $Password
+            $RemoteHost = "foobar2"
+            New-CredentialStoreItem -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds -Identifier 'Foo'
+            $writtenItem = Get-CredentialStoreItem -Path $tmpCS -RemoteHost $RemoteHost -Identifier 'Foo'
+            ($writtenItem.UserName -eq $UserName) -and ($writtenItem.Password.Length -gt 0) | Should -Be $true
+        }
     }
+    Context "Test optional parameter lookup" {
+        Mock Get-Credential {
+            $UserName = 'testuser'
+            $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
+            return [PSCredential]::new($UserName, $Password)
+
+        }
+        It "Test missing Credential" {
+            $tmpCS = 'C:\CredentialStore.json'
+            New-CredentialStoreItem -Path $tmpCs -Shared -RemoteHost 'foobar3'
+            $writtenItem = Get-CredentialStoreItem -Path $tmpCS -Shared -RemoteHost 'foobar3'
+            $writtenItem.UserName | Should -Be "testuser"
+        }
+    }
+    Context "General Exception handling" {
+        Mock Test-CredentialStore {return $false}
+        Mock Get-Credential {
+            $UserName = 'myUser'
+            $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
+            return [PSCredential]::new($UserName, $Password)
+
+        }
+        It "Missing CredentialStore should throw" {
+            { New-CredentialStoreItem -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
+        }
+    }
+
 }
