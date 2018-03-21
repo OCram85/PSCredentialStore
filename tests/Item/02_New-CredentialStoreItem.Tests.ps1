@@ -73,9 +73,9 @@ Describe "New-CredentialStoreItem" {
         }
     }
     Context "Test optional parameter lookup" {
-        $UserName = 'myUser'
-        $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
         Mock Get-Credential {
+            $UserName = 'testuser'
+            $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
             return [PSCredential]::new($UserName, $Password)
 
         }
@@ -83,7 +83,7 @@ Describe "New-CredentialStoreItem" {
             $tmpCS = 'C:\CredentialStore.json'
             New-CredentialStoreItem -Path $tmpCs -Shared -RemoteHost 'foobar3'
             $writtenItem = Get-CredentialStoreItem -Path $tmpCS -Shared -RemoteHost 'foobar3'
-            $writtenItem.UserName | Should -Be "myUser"
+            $writtenItem.UserName | Should -Be "testuser"
         }
     }
     Context "General Exception handling" {
