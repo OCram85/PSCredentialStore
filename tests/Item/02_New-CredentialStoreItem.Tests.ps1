@@ -106,7 +106,7 @@ Describe "New-CredentialStoreItem" {
         }
 
         It "Testing written item" {
-            (Get-CredentialStoreItem -RemoteHost 'PipeHost').UserName | Should -Be 'PipeHost'
+            (Get-CredentialStoreItem -RemoteHost 'PipeHost').UserName | Should -Be 'pipeUser'
         }
     }
 
