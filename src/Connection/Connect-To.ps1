@@ -182,8 +182,8 @@ function Connect-To {
                         FtpMode = 'Passive'
                     }
                     try {
-                        $FTPSessionOption = New-WinSCPSessionOption @FTPSessionOption
-                        $Global:WinSCPSession = New-WinSCPSession @WinSCPConParams
+                        $FTPSessionOption = New-WinSCPSessionOption @WinSCPConParams
+                        $Global:WinSCPSession = New-WinSCPSession @FTPSessionOption
                     }
                     catch {
                         throw "Could not connect to {0} using {1} protocol!" -f $RemoteHost, $Type
