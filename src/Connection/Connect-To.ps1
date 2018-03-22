@@ -182,6 +182,7 @@ function Connect-To {
                         FtpMode = 'Passive'
                     }
                     try {
+                        $FTPSessionOption = New-WinSCPSessionOption @FTPSessionOption
                         $Global:WinSCPSession = New-WinSCPSession @WinSCPConParams
                     }
                     catch {
