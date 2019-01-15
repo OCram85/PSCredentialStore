@@ -1,4 +1,4 @@
-function Test-CredentialStoreItem() {
+function Test-CredentialStoreItem {
     <#
     .SYNOPSIS
         Checks if the given RemoteHost identifier combination exists in the credential store.
@@ -64,32 +64,48 @@ function Test-CredentialStoreItem() {
         [switch]$Shared
     )
 
-    if ($PSCmdlet.ParameterSetName -eq "Private") {
-        $Path = "{0}\CredentialStore.json" -f $env:APPDATA
+    begin {
+        # Set the CredentialStore for private, shared or custom mode.
+        Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
+        if ($PSCmdlet.ParameterSetName -eq "Private") {
+            $Path = Get-DefaultCredentialStorePath
+        }
+        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+            if (!($PSBoundParameters.ContainsKey('Path'))) {
+                $Path = Get-DefaultCredentialStorePath -Shared
+            }
+        }
     }
 
-    if ($Identifier -ne "") {
-        $CredentialName = $RemoteHost = "{0}/{1}" -f $Identifier, $RemoteHost
-    }
-    else {
-        $CredentialName = $RemoteHost
-    }
-
-    if (Test-CredentialStore -Path $Path) {
-        $CS = Get-CredentialStore -Path $Path
-        $CSMembers = Get-Member -InputObject $CS
-        if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -eq $CredentialName)) {
-            return $true
+    process {
+        if ($Identifier -ne "") {
+            $CredentialName = $RemoteHost = "{0}/{1}" -f $Identifier, $RemoteHost
         }
         else {
-            return $false
+            $CredentialName = $RemoteHost
+        }
+
+        if (Test-CredentialStore -Shared -Path $Path) {
+            $CS = Get-CredentialStore -Shared -Path $Path
+            $CSMembers = Get-Member -InputObject $CS
+            if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
+                return $true
+            }
+            else {
+                return $false
+            }
+        }
+        else {
+            $MsgParams = @{
+                ErrorAction = "Stop"
+                Message     = "The given credential store ({0}) does not exist!" -f $Path
+            }
+            Write-Error @MsgParams
         }
     }
-    else {
-        $MsgParams = @{
-            ErrorAction = "Stop"
-            Message = "The given credential store ({0}) does not exist!" -f $Path
-        }
-        Write-Error @MsgParams
+
+    end {
+
     }
+
 }

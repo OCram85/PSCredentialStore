@@ -42,9 +42,6 @@ function New-CredentialStoreItem {
 
     [CmdletBinding(DefaultParameterSetName = "Private")]
     param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [string]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
-
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
         [Parameter(Mandatory = $true, ParameterSetName = "Private")]
         [ValidateNotNullOrEmpty()]
@@ -59,78 +56,120 @@ function New-CredentialStoreItem {
         [ValidateNotNullOrEmpty()]
         [PSCredential]$Credential,
 
+        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [switch]$Shared,
+
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [switch]$Shared
+        [ValidateNotNullOrEmpty()]
+        [string]$Path
+
+
     )
 
-    # First set a constand path for private CredentialStore mode.
-    if ($PSCmdlet.ParameterSetName -eq "Private") {
-        $Path = "{0}\CredentialStore.json" -f $env:APPDATA
-    }
-
-    # Lets do a quick test on the given CredentialStore.
-    if (-not(Test-CredentialStore -Path $Path)) {
-        $MessageParams = @{
-            Message = "Could not add anything into the given CredentailStore."
-            ErrorAction = "Stop"
+    begin {
+        # Set the CredentialStore for private, shared or custom mode.
+        Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
+        if ($PSCmdlet.ParameterSetName -eq "Private") {
+            $Path = Get-DefaultCredentialStorePath
         }
-        Write-Error @MessageParams
-    }
-
-    # Read the file content based on the given ParameterSetName
-    $CSContent = Get-CredentialStore -Path $Path
-
-    $CurrentDate = Get-Date -UFormat "%Y-%m-%d %H:%M:%S"
-
-    if ($Identifier -ne "") {
-        $CredentialName = $RemoteHost = "{0}/{1}" -f $Identifier, $RemoteHost
-    }
-    else {
-        $CredentialName = $RemoteHost
-    }
-
-    if (-not($Credential)) {
-        $Credential = Get-Credential -Message $CredentialName
-    }
-
-    if ($Credential.UserName) {
-        if ($CSContent.Type -eq "Shared") {
-            $Key = Get-ChallengeFile
-            $encypted = ConvertFrom-SecureString -SecureString $Credential.Password -Key $Key
+        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+            if (!($PSBoundParameters.ContainsKey('Path'))) {
+                $Path = Get-DefaultCredentialStorePath -Shared
+            }
         }
-        else {
-            $encypted = ConvertFrom-SecureString -SecureString $Credential.Password
-        }
-        if (Get-Member -InputObject $CSContent -Name $CredentialName -Membertype Properties) {
+    }
+
+    process {
+        # Lets do a quick test on the given CredentialStore.
+        if (-not(Test-CredentialStore -Shared -Path $Path)) {
             $MessageParams = @{
-                Message = "The given host already exists. Nothing to do here."
+                Exception   = [System.IO.FileNotFoundException]::new(
+                    'Could not add anything into the given CredentialStore.'
+                )
+                ErrorAction = "Stop"
             }
-            Write-Warning @MessageParams
+            Write-Error @MessageParams
+        }
+
+        # Read the file content based on the given ParameterSetName
+        <#
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
+            $CSContent = Get-CredentialStore
+        }
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
+            $CSContent = Get-CredentialStore -Shared -Path $Path
+        }
+        #>
+        $CSContent = Get-CredentialStore -Shared -Path $Path
+
+        $CurrentDate = Get-Date -UFormat "%Y-%m-%d %H:%M:%S"
+
+        if ($Identifier -ne "") {
+            $CredentialName = $RemoteHost = "{0}/{1}" -f $Identifier, $RemoteHost
         }
         else {
-            $CredentialHash = [ordered]@{
-                User = $Credential.UserName
-                Password = $encypted
-                Creation = $CurrentDate
-            }
-            Add-Member -InputObject $CSContent -Name $CredentialName -MemberType NoteProperty -Value $CredentialHash
+            $CredentialName = $RemoteHost
+        }
+
+        if (-not($Credential)) {
+            $Credential = Get-Credential -Message $CredentialName
+        }
+
+        if ($Credential.UserName) {
             try {
-                ConvertTo-Json -InputObject $CSContent | Out-File -FilePath $Path
+                $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
             }
-            catch [System.Exception] {
-                $MessageParams = @{
-                    Message = "Couldn't add item into credential store!"
-                    ErrorAction = "Stop"
+            catch {
+                $_.Exception.Message | Write-Error
+                $ErrorParams = @{
+                    ErrorAction = 'Stop'
+                    Exception   = [System.Security.Cryptography.CryptographicException]::new(
+                        'Could not read the given PFX certificate.'
+                    )
                 }
-                Write-Error @MessageParams
+                Write-Error @ErrorParams
+            }
+
+            if (Get-Member -InputObject $CSContent -Name $CredentialName -Membertype Properties) {
+                $MessageParams = @{
+                    Message = "The given host already exists. Nothing to do here."
+                }
+                Write-Warning @MessageParams
+            }
+            else {
+                $RSAKey = Get-RandomAESKey
+
+                $CredentialHash = [ordered]@{
+                    User         = $Credential.UserName
+                    Password     = ConvertFrom-SecureString -SecureString $Credential.Password -Key $RSAKey
+                    Created      = $CurrentDate
+                    LastChange   = $null
+                    EncryptedKey = [Convert]::ToBase64String($Cert.PublicKey.Key.Encrypt($RSAKey, [System.Security.Cryptography.RSAEncryptionPadding]::Pkcs1))
+                }
+                Add-Member -InputObject $CSContent -Name $CredentialName -MemberType NoteProperty -Value $CredentialHash
+                try {
+                    ConvertTo-Json -InputObject $CSContent | Out-File -FilePath $Path
+                }
+                catch {
+                    $MessageParams = @{
+                        Message     = "Couldn't add item into credential store!"
+                        ErrorAction = "Stop"
+                    }
+                    Write-Error @MessageParams
+                }
             }
         }
-    }
-    else {
-        $MessageParams = @{
-            Message = "Please Provide at least a valid user!"
-            ErrorAction = "Stop"
+        else {
+            $MessageParams = @{
+                Message     = "Please Provide at least a valid user!"
+                ErrorAction = "Stop"
+            }
+            Write-Error @MessageParams
         }
-        Write-Error @MessageParams
     }
+
+    end {
+
+    }
+
 }

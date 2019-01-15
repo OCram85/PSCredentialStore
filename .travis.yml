@@ -1,0 +1,43 @@
+
+language: csharp
+dotnet: 2.2.101
+mono: none
+
+git:
+  depth: 1000
+
+os:
+  - linux
+# Disable OSX bulds for now
+  #  - osx
+
+sudo: required
+
+dist: xenial
+osx_image: xcode8.1
+
+matrix:
+  fast_finish: true
+
+
+addons:
+  artifacts:
+    #paths: $(ls ./../dist/PowerShellGet.zip | tr "\n" ":")
+    paths: ./dist/PowerShellGet.zip
+
+
+install:
+  # Default 2.0.0 Ruby is buggy
+  # Default bundler version is buggy
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      rvm install ruby-2.3.3;
+      rvm --default use 2.3.3;
+    fi
+  - bash <(wget -O - https://raw.githubusercontent.com/PowerShell/PowerShell/master/tools/install-powershell.sh)
+  - pushd tools
+  - chmod +x travis.sh
+  - popd
+
+script:
+  - echo "TRAVIS_EVENT_TYPE value $TRAVIS_EVENT_TYPE"
+  - ./tools/travis.sh

@@ -35,7 +35,7 @@ function Test-Module {
 
     .NOTES
         ```
-        File Name   : Get-RandomKey.ps1
+        File Name   : Test-Module.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
         ```
@@ -51,10 +51,6 @@ function Test-Module {
         [string]$Name,
 
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Module', 'PSSnapin', 'Custom')]
-        [string]$Type = 'Module',
-
-        [Parameter(Mandatory = $false)]
         [ValidateNotNullOrEmpty()]
         [string]$MessagePattern = @"
 Could not find the required {0} called {1}. Please install the required {0} to run this function!
@@ -62,45 +58,22 @@ Could not find the required {0} called {1}. Please install the required {0} to r
         [Parameter(Mandatory = $false)]
         [switch]$StopIfFails
     )
-    begin {
-
-    }
+    begin {}
 
     process {
         $Message = $MessagePattern -f $Type, $Name
         Write-Debug $Message
-        switch ($Type) {
-            'Module' {
-                if (Get-Module -Name $Name -ListAvailable) {
-                    return $true
-                }
-                else {
-                    if ($StopIfFails) {
-                        Write-Error -Message $Message -ErrorAction Stop -Category NotInstalled
-                    }
-                    return $false
-                }
-            }
 
-            'PSSnapin' {
-                if (Get-PSSnapin -Name $Name -Registered -ErrorAction SilentlyContinue) {
-                    return $true
-                }
-                else {
-                    if ($StopIfFails) {
-                        Write-Error -Message $Message -ErrorAction Stop -Category NotInstalled
-                    }
-                    return $false
-                }
+        if (Get-Module -Name $Name -ListAvailable) {
+            return $true
+        }
+        else {
+            if ($StopIfFails) {
+                Write-Error -Message $Message -ErrorAction Stop -Category NotInstalled
             }
-
-            'Custom' {
-                Throw 'Custom tests are not implemented yet!'
-            }
+            return $false
         }
     }
 
-    end {
-
-    }
+    end {}
 }

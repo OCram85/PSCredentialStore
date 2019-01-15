@@ -7,7 +7,7 @@
     - Module name
 #>
 $CALLSIGN = 'PSCredentialStore'
-Write-Host ("Callsign is: {0}" -f $CALLSIGN) -ForegroundColor Yellow
+Write-Host ("Callsign is: {0}" -f $CALLSIGN) -ForegroundColor Black -BackgroundColor Yellow
 
 
 Function Invoke-InstallDependencies() {
@@ -16,18 +16,19 @@ Function Invoke-InstallDependencies() {
 
     Process {
         Try {
+            Get-PackageProvider -ListAvailable
             Install-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force -Verbose
             Import-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force
-            Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.0.8' -Force -SkipPublisherCheck -AllowClobber
-            Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '0.7.1' -Force -SkipPublisherCheck -AllowClobber
-            Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber
-            Import-Module -Name 'Pester', 'posh-git', 'PSCoverage'
+            Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.4.2' -Force -SkipPublisherCheck -AllowClobber
+            Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '1.0.0-beta2' -Force -SkipPublisherCheck -AllowClobber -AllowPrerelease
+            # Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber
+            Import-Module -Name 'Pester', 'posh-git' #, 'PSCoverage'
         }
         Catch {
             $MsgParams = @{
-                Message = 'Could not install the required dependencies!'
+                Message  = 'Could not install the required dependencies!'
                 Category = 'Error'
-                Details = $_.Exception.Message
+                Details  = $_.Exception.Message
             }
             Add-AppveyorMessage @MsgParams
             Throw $MsgParams.Message
@@ -39,21 +40,21 @@ Function Invoke-AppVeyorBumpVersion() {
     [CmdletBinding()]
     Param()
 
-    Write-Host "Listing Env Vars for debugging:" -ForegroundColor Yellow
+    Write-Host "Listing Env Vars for debugging:" -ForegroundColor Black -BackgroundColor Yellow
     # Filter Results to prevent exposing secure vars.
     Get-ChildItem -Path "Env:*" | Where-Object { $_.name -notmatch "(NuGetToken|CoverallsToken)"} | Sort-Object -Property Name | Format-Table
 
     Try {
         $ModManifest = Get-Content -Path (".\src\{0}.psd1" -f $CALLSIGN)
-        $BumpedManifest = $ModManifest -replace '0.0.0.9999', $Env:APPVEYOR_BUILD_VERSION
+        $BumpedManifest = $ModManifest -replace '0.0.9999', $Env:APPVEYOR_BUILD_VERSION
         Remove-Item -Path (".\src\{0}.psd1" -f $CALLSIGN)
         Out-File -FilePath (".\src\{0}.psd1" -f $CALLSIGN) -InputObject $BumpedManifest -NoClobber -Encoding utf8 -Force
     }
     Catch {
         $MsgParams = @{
-            Message = 'Could not bump current version into module manifest.'
+            Message  = 'Could not bump current version into module manifest.'
             Category = 'Error'
-            Details = $_.Exception.Message
+            Details  = $_.Exception.Message
         }
         Add-AppveyorMessage @MsgParams
         Throw $MsgParams.Message
@@ -62,27 +63,29 @@ Function Invoke-AppVeyorBumpVersion() {
 
 Function Invoke-AppVeyorBuild() {
     [CmdletBinding()]
+    [OutputType([PsCustomObject])]
     Param()
     $MsgParams = @{
-        Message = 'Creating build artifacts'
+        Message  = 'Creating build artifacts'
         Category = 'Information'
-        Details = 'Extracting source files and compressing them into zip file.'
+        Details  = 'Extracting source files and compressing them into zip file.'
     }
     Add-AppveyorMessage @MsgParams
     $CompParams = @{
-        Path = "{0}\src\*" -f $env:APPVEYOR_BUILD_FOLDER
+        Path            = "{0}\src\*" -f $env:APPVEYOR_BUILD_FOLDER
         DestinationPath = "{0}\bin\{1}.zip" -f $env:APPVEYOR_BUILD_FOLDER, $CALLSIGN
-        Update = $True
-        Verbose = $True
+        Update          = $True
+        Verbose         = $True
     }
     Compress-Archive @CompParams
     $MsgParams = @{
-        Message = 'Pushing artifacts'
+        Message  = 'Pushing artifacts'
         Category = 'Information'
-        Details = 'Pushing artifacts to AppVeyor store.'
+        Details  = 'Pushing artifacts to AppVeyor store.'
     }
     Add-AppveyorMessage @MsgParams
-    Push-AppveyorArtifact (".\bin\{0}.zip" -f $CALLSIGN)
+    $ArtifactPath = Join-Path -Path '.' -ChildPath ('bin/{0}.zip' -f $CALLSIGN)
+    Push-AppveyorArtifact $ArtifactPath
 }
 
 Function Invoke-AppVeyorTests() {
@@ -90,59 +93,84 @@ Function Invoke-AppVeyorTests() {
     Param()
 
     $MsgParams = @{
-        Message = 'Starting Pester tests'
+        Message  = 'Starting Pester tests'
         Category = 'Information'
-        Details = 'Now running all test found in .\tests\ dir.'
+        Details  = 'Now running all test found in .\tests\ dir.'
     }
     Add-AppveyorMessage @MsgParams
-    $testresults = Invoke-Pester -Path ( Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property Name ) -ExcludeTag 'Disabled' -PassThru
-    ForEach ($Item in $testresults.TestResult) {
+
+    try {
+        Write-Host '===== Preload internal private functions =====' -ForegroundColor Black -BackgroundColor Yellow
+
+        $Privates = Get-ChildItem -Path (Join-Path -Path $Env:APPVEYOR_BUILD_FOLDER -ChildPath '/src/Private/*') -Include "*.ps1" -Recurse
+        foreach ($File in $Privates) {
+            if (Test-Path -Path $File.FullName) {
+                . $File.FullName
+                Write-Verbose -Message ('Private function dot-sourced: {0}' -f $File.FullName) -Verbose
+            }
+            else {
+                Write-Warning -Message ('Could not find file: {0} !' -f $File.FullName)
+            }
+        }
+    }
+    catch {
+        $_.Exception.Message | Write-Error
+        throw 'Could not load required private functions!'
+    }
+
+    #$testresults = Invoke-Pester -Path ( Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property Name ) -ExcludeTag 'Disabled' -PassThru
+    $srcFiles = Get-ChildItem -Path ".\src\*.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
+    $testFiles = Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
+    $TestResults = Invoke-Pester -Path $testFiles -CodeCoverage $srcFiles -PassThru
+    ForEach ($Item in $TestResults.TestResult) {
         Switch ($Item.Result) {
             "Passed" {
                 $TestParams = @{
-                    Name = "{0}: {1}" -f $Item.Context, $Item.Name
+                    Name      = "{0}: {1}" -f $Item.Context, $Item.Name
                     Framework = "NUnit"
-                    Filename = $Item.Describe
-                    Outcome = "Passed"
-                    Duration = $Item.Time.Milliseconds
+                    Filename  = $Item.Describe
+                    Outcome   = "Passed"
+                    Duration  = $Item.Time.Milliseconds
                 }
                 Add-AppveyorTest @TestParams
             }
             "Failed" {
                 $TestParams = @{
-                    Name = "{0}: {1}" -f $Item.Context, $Item.Name
-                    Framework = "NUnit"
-                    Filename = $Item.Describe
-                    Outcome = "Failed"
-                    Duration = $Item.Time.Milliseconds
-                    ErrorMessage = $Item.FailureMessage
+                    Name            = "{0}: {1}" -f $Item.Context, $Item.Name
+                    Framework       = "NUnit"
+                    Filename        = $Item.Describe
+                    Outcome         = "Failed"
+                    Duration        = $Item.Time.Milliseconds
+                    ErrorMessage    = $Item.FailureMessage
                     ErrorStackTrace = $Item.StackTrace
                 }
                 Add-AppveyorTest @TestParams
             }
             Default {
                 $TestParams = @{
-                    Name = "{0}: {1}" -f $Item.Context, $Item.Name
-                    Framework = "NUnit"
-                    Filename = $Item.Describe
-                    Outcome = "None"
-                    Duration = $Item.Time.Milliseconds
-                    ErrorMessage = $Item.FailureMessage
+                    Name            = "{0}: {1}" -f $Item.Context, $Item.Name
+                    Framework       = "NUnit"
+                    Filename        = $Item.Describe
+                    Outcome         = "None"
+                    Duration        = $Item.Time.Milliseconds
+                    ErrorMessage    = $Item.FailureMessage
                     ErrorStackTrace = $Item.StackTrace
                 }
                 Add-AppveyorTest @TestParams
             }
         }
     }
-    If ($testresults.FailedCount -gt 0) {
+    If ($TestResults.FailedCount -gt 0) {
         $MsgParams = @{
-            Message = 'Pester Tests failed.'
+            Message  = 'Pester Tests failed.'
             Category = 'Error'
-            Details = "$($testresults.FailedCount) tests failed."
+            Details  = "$($TestResults.FailedCount) tests failed."
         }
         Add-AppveyorMessage @MsgParams
         Throw $MsgParams.Message
     }
+
+    return $TestResults.CodeCoverage
 
 }
 
@@ -151,13 +179,17 @@ Function Invoke-CoverageReport() {
     Param(
         [Parameter(Mandatory = $False)]
         [ValidateNotNullOrEmpty()]
-        [String]$RepoToken = $Env:CoverallsToken
+        [String]$RepoToken = $Env:CoverallsToken,
+
+        [Parameter(Mandatory = $True)]
+        [ValidateNotNullOrEmpty()]
+        [PSCustomObject]$PesterCoverageReport
     )
 
-    $FileMap = New-PesterFileMap -SourceRoot '.\src' -PesterRoot '.\tests'
-    $CoverageReport = New-CoverageReport -PesterFileMap $FileMap -RepoToken $RepoToken
+    #$CoverageReport | Format-Custom -Depth 5 | Out-String | Write-Verbose
+    $CoverageReport = New-CoverageReport -CodeCoverage $PesterCoverageReport -RepoToken $RepoToken
     Write-Host "CoverageReport JSON:" -ForegroundColor Yellow
-    $CoverageReport | Out-String | Write-Host
+    #$CoverageReport | ConvertTo-Json -Depth 5 | Out-String | Write-Verbose
     Publish-CoverageReport -CoverageReport $CoverageReport
 }
 
@@ -170,36 +202,36 @@ Function Invoke-AppVeyorPSGallery() {
     )
     Expand-Archive -Path (".\bin\{0}.zip" -f $CALLSIGN) -DestinationPath ("C:\Users\appveyor\Documents\WindowsPowerShell\Modules\{0}\" -f $CALLSIGN) -Verbose
     Import-Module -Name $CALLSIGN -Verbose -Force
-    Write-Host "Available Package Provider:" -ForegroundColor Yellow
+    Write-Host "Available Package Provider:" -ForegroundColor Black -BackgroundColor Yellow
     Get-PackageProvider -ListAvailable
-    Write-Host "Available Package Sources:" -ForegroundColor Yellow
+    Write-Host "Available Package Sources:" -ForegroundColor Black -BackgroundColor Yellow
     Get-PackageSource
     Try {
-        Write-Host "Try to get NuGet Provider:" -ForegroundColor Yellow
+        Write-Host "Try to get NuGet Provider:" -ForegroundColor Black -BackgroundColor Yellow
         Get-PackageProvider -Name NuGet -ErrorAction Stop
     }
     Catch {
-        Write-Host "Installing NuGet..." -ForegroundColor Yellow
+        Write-Host "Installing NuGet..." -ForegroundColor Black -BackgroundColor Yellow
         Install-PackageProvider -Name NuGet -MinimumVersion '2.8.5.201' -Force -Verbose
         Import-PackageProvider NuGet -MinimumVersion '2.8.5.201' -Force
     }
     Try {
         If ($env:APPVEYOR_REPO_BRANCH -eq 'master') {
-            Write-Host "try to publish module" -ForegroundColor Yellow
-            Write-Host ("Callsign is: {0}" -f $CALLSIGN) -ForegroundColor Yellow
+            Write-Host "try to publish module" -ForegroundColor Black -BackgroundColor Yellow
+            Write-Host ("Callsign is: {0}" -f $CALLSIGN) -ForegroundColor Black -BackgroundColor Yellow
             Publish-Module -Name $CALLSIGN -NuGetApiKey $env:NuGetToken -Verbose -Force
         }
         Else {
-            Write-Host "Skip publishing to PS Gallery because we are on $($env:APPVEYOR_REPO_BRANCH) branch." -ForegroundColor Yellow
+            Write-Host "Skip publishing to PS Gallery because we are on $($env:APPVEYOR_REPO_BRANCH) branch." -ForegroundColor Black -BackgroundColor Yellow
             # had to remove the publish-Module statement because it would publish although the -WhatIf is given.
             # Publish-Module -Name $CALLSIGN -NuGetApiKey $env:NuGetToken -Verbose -WhatIf
         }
     }
     Catch {
         $MsgParams = @{
-            Message = 'Could not deploy module to PSGallery.'
+            Message  = 'Could not deploy module to PSGallery.'
             Category = 'Error'
-            Details = $_.Exception.Message
+            Details  = $_.Exception.Message
         }
         Add-AppveyorMessage @MsgParams
         Throw $MsgParams.Message

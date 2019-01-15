@@ -26,37 +26,40 @@ function Test-CredentialStore {
     [CmdletBinding(DefaultParameterSetName = "Private")]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [string]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
+        [string]$Path,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
         [switch]$Shared
     )
 
-
-    if ($PSCmdlet.ParameterSetName -eq "Private") {
-        $Path = "{0}\CredentialStore.json" -f $Env:APPDATA
+    begin {
+        # Set latest Credential Store version
+        #Set-Variable -Name "CSVersion" -Value "2.0.0" -Option Constant
     }
 
-    # Set latest Credential Store version
-    Set-Variable -Name "CSVersion" -Value "1.2.0" -Option Constant
-
-    if (Test-Path $Path) {
-        Write-Verbose "CredentialStore in given path found."
-
-        # try tor read the store. Removed the Get-CredentialStore function to avoid recursive calls.
-        try {
-            $FileContent = Get-Content -Path $Path -Raw
-            $CSContent = ConvertFrom-Json $FileContent
+    process {
+        # Set the CredentialStore for private, shared or custom mode.
+        Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
+        if ($PSCmdlet.ParameterSetName -eq "Private") {
+            $Path = Get-DefaultCredentialStorePath
         }
-        catch {
-            Write-Warning "Could not read or convert the given CredentialStore."
-            Return $False
+        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+            if (!($PSBoundParameters.ContainsKey('Path'))) {
+                $Path = Get-DefaultCredentialStorePath -Shared
+            }
         }
-        Return $True
+        Write-Verbose -Message ("Path is: {0}" -f $Path)
 
+        if (Test-Path $Path) {
+            Write-Verbose "CredentialStore in given path found."
+            return $true
+        }
+        else {
+            Write-Verbose "The given CredentialStore does not exist!"
+            return $false
+        }
     }
-    Else {
-        Write-Verbose "The given CredentialStore does not exist!"
-        Return $False
-    }
+
+    end {}
+
 }

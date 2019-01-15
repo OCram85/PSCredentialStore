@@ -26,7 +26,8 @@
     "powershell.codeFormatting.whitespaceAroundOperator": true,
     "powershell.codeFormatting.whitespaceAfterSeparator": true,
     "powershell.codeFormatting.ignoreOneLineBlock": true,
-    "powershell.codeFormatting.alignPropertyValuePairs": false,
+    "powershell.codeFormatting.alignPropertyValuePairs": true,
+    "powershell.codeFormatting.preset": "Custom",
     // cspell spellchecker options
     "cSpell.enabledLanguageIds": [
         "c",

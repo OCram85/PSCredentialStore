@@ -1,15 +1,17 @@
-$RepoRoot = (Get-GitDirectory).replace('\.git', '')
+$RepoRoot = (Get-Item -Path (Get-GitDirectory) -Force).Parent | Select-Object -ExpandProperty 'FullName'
+Write-Verbose -Message ('RepoRoot: {0}' -f $RepoRoot) -Verbose
 
+$ManifestFilePath = Join-Path -Path $RepoRoot -ChildPath '/src/PSCredentialStore.psd1'
+Write-Verbose -Message ("ManifestFilePath: {0}" -f $ManifestFilePath) -Verbose
 Describe "Pre-Flight module tests" {
-    $ManifestFilePath = "{0}\src\PSCredentialstore.psd1" -f $RepoRoot
     Context "Manifest file related" {
-        It "Test the parsed file itsef" {
-            { Test-ModuleManifest -Path $ManifestFilePath } | Should -Not -Throw
+        It "Test the parsed file itself" {
+            { Test-ModuleManifest -Path $ManifestFilePath -Verbose } | Should -Not -Throw
         }
     }
     Context "Module consistency tests" {
-        IT "Importing should work" {
-            { Import-Module -Name $ManifestFilePath -Global -Force }| Should -Not -Throw
+        It "Importing should work" {
+            { Import-Module -Name $ManifestFilePath -Global -Force -Verbose } | Should -Not -Throw
         }
     }
 }
