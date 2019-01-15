@@ -39,7 +39,7 @@ function Invoke-UnitTests {
         try {
             Write-Host '===== Preload internal private functions =====' -ForegroundColor Black -BackgroundColor Yellow
 
-            $Privates = Get-ChildItem -Path (Join-Path -Path $Env:TRAVIS_BUILD_DIR -ChildPath '/src/Private/*') -Include "*.ps1" -Recurse
+            $Privates = Get-ChildItem -Path (Join-Path -Path $Env:TRAVIS_BUILD_DIR -ChildPath '/src/Private/*') -Include "*.ps1" -Recurse -ErrorAction Stop
             foreach ($File in $Privates) {
                 if (Test-Path -Path $File.FullName) {
                     . $File.FullName
