@@ -9,7 +9,7 @@ git:
 os:
   - linux
 # Disable OSX bulds for now
-  - osx
+#  - osx
 
 sudo: required
 
