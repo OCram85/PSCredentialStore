@@ -23,14 +23,24 @@ need to store credentials for non interactive usage like in scheduled tasks.
 For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStore.md) page on github or via CLI with
 `Get-Help about_PSCredentialStore`.
 
+:exclamation: Upcoming Changes :exclamation:
+================
+
+**PSCredentialStore will use PFX certificates to encrypt your credentials.** This replaces the the current encryption
+methods and you need to recreate or upgrade your pre existing stores. The changes allows the PSCredentialStore
+module to support the PowerShell `Core` editions. Yes this means, you can use the module on any PowerShell 6
+supported linux distribution. It's also possible to create a shared credential store and transfer it onto a another
+platform like: `Windoww -- to -->  Linux` and vice versa.
+
 Installation
 ============
 
 PowerShellGallery.com (Recommended Way)
 ---------------------------------------
 
-* Make sure you use PowerShell 4.0 or higher with `$PSVersionTable`.
-* Use the builtin PackageManagement and install with: `Install-Module PSCredentialStore`
+* Make sure you use PowerShell 5.1 or higher with `$PSVersionTable`.
+* Use the builtin PackageManagement and install with: `Import-Module PowerShellGet; Install-Module 'PSCredentialStore' -Repository 'PSGallery'`
+  * Additionally use the `-AllowPrerelease` switch until we publish the final release!
 * Done. Start exploring the Module with `Import-Module PSCredentialStore ; Get-Command -Module PSCredentialStore`
 
 Manual Way
