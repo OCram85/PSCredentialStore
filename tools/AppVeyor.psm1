@@ -219,7 +219,7 @@ Function Invoke-AppVeyorPSGallery() {
         If ($env:APPVEYOR_REPO_BRANCH -eq 'master') {
             Write-Host "try to publish module" -ForegroundColor Black -BackgroundColor Yellow
             Write-Host ("Callsign is: {0}" -f $CALLSIGN) -ForegroundColor Black -BackgroundColor Yellow
-            Publish-Module -Name $CALLSIGN -NuGetApiKey $env:NuGetToken -Verbose -Force
+            Publish-Module -Name $CALLSIGN -NuGetApiKey $env:NuGetToken -Verbose -Force -AllowPrerelease
         }
         Else {
             Write-Host "Skip publishing to PS Gallery because we are on $($env:APPVEYOR_REPO_BRANCH) branch." -ForegroundColor Black -BackgroundColor Yellow
