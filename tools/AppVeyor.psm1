@@ -233,6 +233,7 @@ Function Invoke-AppVeyorPSGallery() {
             Category = 'Error'
             Details  = $_.Exception.Message
         }
+        $_.Exception.Message | Write-Error
         Add-AppveyorMessage @MsgParams
         Throw $MsgParams.Message
     }
