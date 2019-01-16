@@ -63,7 +63,7 @@ Type: SwitchParameter
 Parameter Sets: Shared
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: False
 Accept pipeline input: False

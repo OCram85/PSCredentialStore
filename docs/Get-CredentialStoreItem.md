@@ -19,7 +19,7 @@ Get-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [<CommonPara
 
 ### Shared
 ```
-Get-CredentialStoreItem [-Path <String>] -RemoteHost <String> [-Identifier <String>] [-Shared]
+Get-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [-Shared] [-Path <String>]
  [<CommonParameters>]
 ```
 
@@ -93,7 +93,7 @@ Type: SwitchParameter
 Parameter Sets: Shared
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: False
 Accept pipeline input: False
