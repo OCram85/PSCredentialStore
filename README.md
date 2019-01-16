@@ -26,11 +26,15 @@ For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStor
 :exclamation: Upcoming Changes :exclamation:
 ================
 
-**PSCredentialStore will use PFX certificates to encrypt your credentials.** This replaces the the current encryption
-methods and you need to recreate or upgrade your pre existing stores. The changes allows the PSCredentialStore
-module to support the PowerShell `Core` editions. Yes this means, you can use the module on any PowerShell 6
-supported linux distribution. It's also possible to create a shared credential store and transfer it onto a another
-platform like: `Windoww -- to -->  Linux` and vice versa.
+The will be some breaking changes starting with the next release:
+
+- **PSCredentialStore will use PFX certificates to encrypt your credentials.**
+  - This replaces the the current encryption methods and you need to recreate or upgrade your pre existing stores.
+- The changes allows the PSCredentialStore module to support the PowerShell `Core` editions.
+  - Yes this means, you can use the module on any PowerShell 6 supported linux distribution.
+- It's also possible to create a shared credential store and transfer it onto a another platform like:
+`Windows -- to -->  Linux` and vice versa.
+- Automatically creates self signed certificate with 2048 bits RSA keys for encryption.
 
 Installation
 ============
@@ -107,3 +111,13 @@ Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
 Connect-To -RemoteHost "esx01.myside.local" -Type VMware
 Connect-To -RemoteHost "vcr.myside.local" -Type CisServer
 ```
+
+Credits
+-------
+
+A huge thanks to all the people who helped with their projects and indirect contributions which made this possible!
+
+- This module is inspired by the awesome work of @dlwyatt with articles like these:
+  - https://powershell.org/2013/11/24/saving-passwords-and-preventing-other-processes-from-decrypting-them/
+  - https://powershell.org/2014/02/01/revisited-powershell-and-encryption/
+- The awesome people from [LibreSSL](http://www.libressl.org/) which publishes the [portable openssl/libressl binaries](https://github.com/libressl-portable/portable)!
