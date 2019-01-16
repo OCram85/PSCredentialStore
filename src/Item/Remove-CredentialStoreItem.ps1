@@ -27,8 +27,16 @@ function Remove-CredentialStoreItem {
         [None]
 
     .EXAMPLE
-        Remove-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
-        Remove-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local" -Identifier svc
+        Remove-CredentialStoreItem -RemoteHost "esx01.myside.local"
+
+    .EXAMPLE
+        Remove-CredentialStoreItem -Shared -RemoteHost "esx01.myside.local"
+
+    .EXAMPLE
+        Remove-CredentialStoreItem -Shared -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
+
+    .EXAMPLE
+        Remove-CredentialStoreItem -RemoteHost "esx01.myside.local" -Identifier svc
 
     .NOTES
         ```
@@ -43,9 +51,6 @@ function Remove-CredentialStoreItem {
 
     [CmdletBinding(DefaultParameterSetName = "Private")]
     param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [string]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
-
         [Parameter(Mandatory = $true, ParameterSetName = "Private")]
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
         [string]$RemoteHost,
@@ -54,43 +59,62 @@ function Remove-CredentialStoreItem {
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [string]$Identifier,
 
+        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [switch]$Shared,
+
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [switch]$Shared
+        [ValidateNotNullOrEmpty()]
+        [string]$Path
     )
 
-    # First set a constand path for private CredentialStore mode.
-    if ($PSCmdlet.ParameterSetName -eq "Private") {
-        $Path = "{0}\CredentialStore.json" -f $env:APPDATA
-    }
-
-    # Lets do a quick test on the given CredentialStore.
-    if (-not(Test-CredentialStore -Path $Path)) {
-        $MessageParams = @{
-            Message = "Could not add anything into the given CredentailStore."
-            ErrorAction = "Stop"
+    begin {
+        # Set the CredentialStore for private, shared or custom mode.
+        Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
+        if ($PSCmdlet.ParameterSetName -eq "Private") {
+            $Path = Get-DefaultCredentialStorePath
         }
-        Write-Error @MessageParams
-    }
-
-    # Read the file content based on the given ParameterSetName
-    $CSContent = Get-CredentialStore -Path $Path
-
-    if ($Identifier -ne "") {
-        $CredentialName = $RemoteHost = "{0}/{1}" -f $Identifier, $RemoteHost
-    }
-    else {
-        $CredentialName = $RemoteHost
-    }
-
-    if (Get-Member -InputObject $CSContent -Name $CredentialName -Membertype Properties) {
-        # We need to use the .NET Method because there is no easier way in PowerShell.
-        $CSContent.PSObject.Properties.Remove($CredentialName)
-        ConvertTo-Json -InputObject $CSContent | Out-File -FilePath $Path
-    }
-    else {
-        $MessageParams = @{
-            Message = "The given CredentailStoreItem does not exist."
+        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+            if (!($PSBoundParameters.ContainsKey('Path'))) {
+                $Path = Get-DefaultCredentialStorePath -Shared
+            }
         }
-        Write-Warning @MessageParams
     }
+
+    process {
+        # Lets do a quick test on the given CredentialStore.
+        if (-not(Test-CredentialStore -Shared -Path $Path)) {
+            $MessageParams = @{
+                Message     = "Could not add anything into the given CredentialStore."
+                ErrorAction = "Stop"
+            }
+            Write-Error @MessageParams
+        }
+
+        # Read the file content based on the given ParameterSetName
+        $CSContent = Get-CredentialStore -Shared -Path $Path
+
+        if ($Identifier -ne "") {
+            $CredentialName = $RemoteHost = "{0}/{1}" -f $Identifier, $RemoteHost
+        }
+        else {
+            $CredentialName = $RemoteHost
+        }
+
+        if (Get-Member -InputObject $CSContent -Name $CredentialName -Membertype NoteProperty) {
+            # We need to use the .NET Method because there is no easier way in PowerShell.
+            $CSContent.PSObject.Properties.Remove($CredentialName)
+            ConvertTo-Json -InputObject $CSContent -Depth 5 | Out-File -FilePath $Path -Encoding utf8
+        }
+        else {
+            $MessageParams = @{
+                Message = "The given CredentialStoreItem does not exist."
+            }
+            Write-Warning @MessageParams
+        }
+    }
+
+    end {
+
+    }
+
 }

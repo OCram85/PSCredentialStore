@@ -93,15 +93,30 @@ function Connect-To {
         [Parameter(Mandatory = $False, ParameterSetName = "Private")]
         [PSCredential]$Credentials,
 
+        [Parameter(Mandatory = $true, ParameterSetNAme = "Shared")]
+        [switch]$Shared,
+
         [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
         [ValidateNotNullOrEmpty()]
-        [string]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
+        [string]$Path,
 
-        [Parameter(Mandatory = $false, ParameterSetNAme = "Shared")]
-        [switch]$Shared
+        [Parameter(Mandatory = $False, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
+        [switch]$PassThru
     )
 
     begin {
+        # Set the CredentialStore for private, shared or custom mode.
+        Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
+        if ($PSCmdlet.ParameterSetName -eq "Private") {
+            $Path = Get-DefaultCredentialStorePath
+        }
+        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+            if (!($PSBoundParameters.ContainsKey('Path'))) {
+                $Path = Get-DefaultCredentialStorePath -Shared
+            }
+        }
+
         # First check the optional modules
         if (-not (Resolve-Dependency -Name $Type)) {
             Write-Error -Message ("Could not resolve the optional dependencies defined for {0}" -f $Type) -ErrorAction 'Stop'
@@ -118,10 +133,6 @@ function Connect-To {
     }
 
     process {
-        # Set the correct CredentialStore Path depending on the used ParameterSetName
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
-            $Path = "{0}\CredentialStore.json" -f $env:APPDATA
-        }
         if (-not ($Credentials)) {
             # Load the credential from the CredentialStore. If the credential doesn't exist, we need to
             # return 1, so a calling if statement can handle the failure detection.
@@ -131,16 +142,16 @@ function Connect-To {
             try {
                 if ($Identifier -ne "") {
                     $RemoteHostIdentifier = "{0}/{1}" -f $Identifier, $RemoteHost
-                    $creds = Get-CredentialStoreItem -RemoteHost $RemoteHostIdentifier -Path $Path
+                    $creds = Get-CredentialStoreItem -Shared -RemoteHost $RemoteHostIdentifier -Path $Path
                 }
                 else {
-                    $creds = Get-CredentialStoreItem -RemoteHost $RemoteHost -Path $Path
+                    $creds = Get-CredentialStoreItem -Shared -RemoteHost $RemoteHost -Path $Path
                 }
             }
 
             catch {
                 $MessageParams = @{
-                    Message = "Unable to look up credential store item for RemoteHost {0}/Identifier {1}!" -f $RemoteHost, $Identifier
+                    Message     = "Unable to look up credential store item for RemoteHost {0}/Identifier {1}!" -f $RemoteHost, $Identifier
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
@@ -152,7 +163,7 @@ function Connect-To {
 
         if ($creds.UserName -eq "" -or $creds.Password.GetType().Name -ne "SecureString") {
             $MessageParams = @{
-                Message = "Please provide valid credentials for RemoteHost {0}!" -f $RemoteHost
+                Message     = "Please provide valid credentials for RemoteHost {0}!" -f $RemoteHost
                 ErrorAction = "Stop"
             }
             Write-Error @MessageParams
@@ -167,7 +178,7 @@ function Connect-To {
 
                     catch {
                         $MessageParams = @{
-                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -177,9 +188,9 @@ function Connect-To {
                     # First establish the FTP session
                     $WinSCPConParams = @{
                         Credential = $creds
-                        Hostname = $RemoteHost
-                        Protocol = 'Ftp'
-                        FtpMode = 'Passive'
+                        Hostname   = $RemoteHost
+                        Protocol   = 'Ftp'
+                        FtpMode    = 'Passive'
                     }
                     try {
                         $FTPSessionOption = New-WinSCPSessionOption @WinSCPConParams
@@ -192,7 +203,7 @@ function Connect-To {
                     if (!($WinSCPSession.Opened)) {
                         # Check the connection state and find out if the session is still open.
                         $MessageParams = @{
-                            Message = "Connection to {0} using Type {1} was established. But now it seems to be lost!" -f $RemoteHost, $Type
+                            Message     = "Connection to {0} using Type {1} was established. But now it seems to be lost!" -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -206,7 +217,7 @@ function Connect-To {
                     catch {
                         # Write a error message to the log.
                         $MessageParams = @{
-                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -220,7 +231,7 @@ function Connect-To {
                     catch {
                         # Write a error message to the log.
                         $MessageParams = @{
-                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -228,13 +239,19 @@ function Connect-To {
                 }
                 "CisServer" {
                     try {
-                        Connect-CisServer -Server $RemoteHost -Credential $creds -ErrorAction Stop | Out-Null
+                        if ($PassThru.IsPresent) {
+                            Connect-CisServer -Server $RemoteHost -Credential $creds -ErrorAction Stop
+                        }
+                        else {
+                            Connect-CisServer -Server $RemoteHost -Credential $creds -ErrorAction Stop | Out-Null
+                        }
+
                     }
 
                     catch {
                         # Write a error message to the log.
                         $MessageParams = @{
-                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -243,17 +260,17 @@ function Connect-To {
                 "ExchangeHTTP" {
                     try {
                         $ConnectionParams = @{
-                            ConnectionURI = "http://{0}/powershell" -f $RemoteHost
+                            ConnectionURI     = "http://{0}/powershell" -f $RemoteHost
                             ConfigurationName = 'Microsoft.Exchange'
-                            Credential = $creds
-                            ErrorAction = 'Stop'
+                            Credential        = $creds
+                            ErrorAction       = 'Stop'
                         }
                         $Global:PSExchangeRemote = New-PSSession @ConnectionParams
                     }
                     catch {
                         # Write a error message to the log.
                         $MessageParams = @{
-                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -262,17 +279,17 @@ function Connect-To {
                 "ExchangeHTTPS" {
                     try {
                         $ConnectionParams = @{
-                            ConnectionURI = "https://{0}/powershell" -f $RemoteHost
+                            ConnectionURI     = "https://{0}/powershell" -f $RemoteHost
                             ConfigurationName = 'Microsoft.Exchange'
-                            Credential = $creds
-                            ErrorAction = 'Stop'
+                            Credential        = $creds
+                            ErrorAction       = 'Stop'
                         }
                         $Global:PSExchangeRemote = New-PSSession @ConnectionParams
                     }
                     catch {
                         # Write a error message to the log.
                         $MessageParams = @{
-                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -280,9 +297,9 @@ function Connect-To {
                 }
                 "SCP" {
                     $WinSCPSessionParams = @{
-                        Credential = $creds
-                        Hostname = $RemoteHost
-                        Protocol = 'Scp'
+                        Credential                           = $creds
+                        Hostname                             = $RemoteHost
+                        Protocol                             = 'Scp'
                         GiveUpSecurityAndAcceptAnySshHostKey = $True
                     }
                     try {
@@ -293,7 +310,7 @@ function Connect-To {
                     catch {
                         # Write a error message to the log.
                         $MessageParams = @{
-                            Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                            Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -302,7 +319,7 @@ function Connect-To {
                     if (!($WinSCPSession.Opened)) {
                         # Check the connection state and find out if the session is still open.
                         $MessageParams = @{
-                            Message = "Connection to {0} using Type {1} was established. But now it seems to be lost!" -f $RemoteHost, $Type
+                            Message     = "Connection to {0} using Type {1} was established. But now it seems to be lost!" -f $RemoteHost, $Type
                             ErrorAction = "Stop"
                         }
                         Write-Error @MessageParams
@@ -311,7 +328,7 @@ function Connect-To {
                 default {
                     # Write a error message to the log.
                     $MessageParams = @{
-                        Message = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
+                        Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
                         ErrorAction = "Stop"
                     }
                     Write-Error @MessageParams

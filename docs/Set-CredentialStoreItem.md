@@ -14,13 +14,14 @@ Changes the credentials for the given remote host in the store.
 
 ### Private (Default)
 ```
-Set-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [<CommonParameters>]
+Set-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [-Credential <PSCredential>]
+ [<CommonParameters>]
 ```
 
 ### Shared
 ```
-Set-CredentialStoreItem [-Path <String>] -RemoteHost <String> [-Identifier <String>] [-Shared]
- [<CommonParameters>]
+Set-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [-Credential <PSCredential>] [-Shared]
+ [-Path <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -36,6 +37,21 @@ Set-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.lo
 Set-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local" -Identifier svc
 
 ## PARAMETERS
+
+### -Credential
+{{Fill Credential Description}}
+
+```yaml
+Type: PSCredential
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: True (ByValue)
+Accept wildcard characters: False
+```
 
 ### -Identifier
 Defaults to "".
@@ -94,7 +110,7 @@ Type: SwitchParameter
 Parameter Sets: Shared
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: False
 Accept pipeline input: False

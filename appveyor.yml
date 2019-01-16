@@ -1,4 +1,4 @@
-version: 0.2.3.{build}
+version: 0.5.0.{build}
 
 #branches:
 #  only:
@@ -20,6 +20,7 @@ image: Visual Studio 2017
 
 install:
   - ps: Import-Module .\tools\AppVeyor.psm1
+  - ps: Import-Module .\tools\CoverallsIO.psm1
   - ps: Invoke-InstallDependencies
 
 environment:
@@ -37,10 +38,10 @@ build_script:
   - ps: Invoke-AppVeyorBuild
 
 test_script:
-  - ps: Invoke-AppVeyorTests
   - ps: |
+      $CodeCoverage = Invoke-AppVeyorTests
       if ($null -ne $Env:CoverallsToken) {
-        Invoke-CoverageReport
+        Invoke-CoverageReport -PesterCoverageReport $CodeCoverage
       }
       else {
         Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
@@ -60,7 +61,7 @@ deploy:
       secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
     artifact: PSCredentialStore.zip     # upload all NuGet packages to release assets
     draft: false
-    prerelease: false
+    prerelease: true
     on:
       branch: master                    # build release on master branch changes
 

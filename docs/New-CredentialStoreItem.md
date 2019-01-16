@@ -20,8 +20,8 @@ New-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [-Credential
 
 ### Shared
 ```
-New-CredentialStoreItem [-Path <String>] -RemoteHost <String> [-Identifier <String>]
- [-Credential <PSCredential>] [-Shared] [<CommonParameters>]
+New-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [-Credential <PSCredential>] [-Shared]
+ [-Path <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -51,7 +51,7 @@ Aliases:
 Required: False
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -111,7 +111,7 @@ Type: SwitchParameter
 Parameter Sets: Shared
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: False
 Accept pipeline input: False
