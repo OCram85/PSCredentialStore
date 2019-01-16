@@ -26,7 +26,7 @@ For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStor
 :exclamation: Upcoming Changes :exclamation:
 ================
 
-The will be some breaking changes starting with the next release:
+The will be some breaking changes starting with the `0.5.0.xxx`:
 
 - **PSCredentialStore will use PFX certificates to encrypt your credentials.**
   - This replaces the the current encryption methods and you need to recreate or upgrade your pre existing stores.
