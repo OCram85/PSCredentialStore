@@ -1,4 +1,8 @@
-version: 0.5.0.{build}
+# release version:
+#version: 0.5.0.{build}
+
+# pre release version:
+version: 0.5.{build}
 
 #branches:
 #  only:
