@@ -21,8 +21,8 @@ Function Invoke-InstallDependencies() {
             Import-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force
             Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.4.2' -Force -SkipPublisherCheck -AllowClobber
             Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '1.0.0-beta2' -Force -SkipPublisherCheck -AllowClobber -AllowPrerelease
-            # Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber
-            Import-Module -Name 'Pester', 'posh-git' #, 'PSCoverage'
+            Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber -RequiredVersion '1.0.78'
+            Import-Module -Name 'Pester', 'posh-git' , 'PSCoverage'
         }
         Catch {
             $MsgParams = @{
