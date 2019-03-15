@@ -24,7 +24,6 @@ image: Visual Studio 2017
 
 install:
   - ps: Import-Module .\tools\AppVeyor.psm1
-  - ps: Import-Module .\tools\CoverallsIO.psm1
   - ps: Invoke-InstallDependencies
 
 environment:
