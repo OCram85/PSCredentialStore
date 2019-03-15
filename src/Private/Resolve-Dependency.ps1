@@ -70,6 +70,11 @@ function Resolve-Dependency {
 
     process {
         $SelectedDependency = $Dependency.Optional | Where-Object {$_.Name -match $Name}
+        # return true if there is no dependency defined
+        if ($null -eq $SelectedDependency) {
+            return $true
+        }
+
         $res = @()
         foreach ($Module in $SelectedDependency.Modules) {
             $res += Test-Module -Name $Module
