@@ -122,7 +122,7 @@
             ReleaseNotes = 'This is a pre-release version!. Do not use in production!'
 
             # Prerelease string of this module
-            Prerelease   = 'alpha'
+            Prerelease   = 'preview'
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
