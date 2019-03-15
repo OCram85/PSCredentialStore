@@ -19,8 +19,8 @@ Describe "Resolve-Dependency" {
             { Resolve-Dependency -Name 'awesome'} | Should -Not -Throw
         }
 
-        It "Missing dependency file should return false" {
-            Resolve-Dependency -Name 'awesome' | Should -Be $false
+        It "Missing dependency file should return true" {
+            Resolve-Dependency -Name 'awesome' | Should -Be $true
         }
     }
     Context "Testing input variations" {
