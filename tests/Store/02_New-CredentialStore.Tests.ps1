@@ -74,6 +74,20 @@ Describe "New-CredentialStore" {
             { New-CredentialStore -Path (Join-Path -Path (Get-TempDir) -ChildPath '/dummy.json') -Shared -Confirm:$false} | Should -Throw
         }
     }
+    Context "Tests for Windows certificate store" {
+        It "Create new private store and skipt certificate linkin" {
+            { New-CredentialStore -UseCertStore -Force } | Should -Not -Throw
+            $CS = Get-CredentialStore
+            $CS.PfxCertificate | Should -Be $null
+            $CS.Thumbprint | Should -Not -Be $null
+        }
+        It "Create new shared store and skipt certificate linkin" {
+            { New-CredentialStore -Shared -UseCertStore -Force } | Should -Not -Throw
+            $CS = Get-CredentialStore -Shared
+            $CS.PfxCertificate | Should -Be $null
+            $CS.Thumbprint | Should -Not -Be $null
+        }
+    }
 }
 
 # Cleanup test stores and restore existing ones.
