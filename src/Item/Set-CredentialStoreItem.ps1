@@ -103,14 +103,22 @@ function Set-CredentialStoreItem {
 
         if ($Credential.UserName) {
             try {
-                $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
+                if ($null -eq $CSContent.PfxCertificate) {
+                    $Cert = Get-ChildItem -Recurse -Path 'Cert:' | Where-Object {
+                        $_.Thumbprint -eq $CSContent.Thumbprint
+                    } | Select-Object -First 1
+                }
+                else {
+                    $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
+                }
             }
             catch {
                 $_.Exception.Message | Write-Error
                 $ErrorParams = @{
-                    Message     = 'Could not read the given PFX certificate.'
                     ErrorAction = 'Stop'
-                    Exception   = [System.Security.Cryptography.CryptographicException]::new()
+                    Exception   = [System.Security.Cryptography.CryptographicException]::new(
+                        'Could not read the given PFX certificate.'
+                    )
                 }
                 Write-Error @ErrorParams
             }

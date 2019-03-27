@@ -117,7 +117,14 @@ function New-CredentialStoreItem {
 
         if ($Credential.UserName) {
             try {
-                $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
+                if ($null -eq $CSContent.PfxCertificate) {
+                    $Cert = Get-ChildItem -Recurse -Path 'Cert:' | Where-Object {
+                        $_.Thumbprint -eq $CSContent.Thumbprint
+                    } | Select-Object -First 1
+                }
+                else {
+                    $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
+                }
             }
             catch {
                 $_.Exception.Message | Write-Error

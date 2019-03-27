@@ -63,15 +63,19 @@ function New-CredentialStore {
 
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [switch]$Force,
+        [Switch]$Force,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [switch]$PassThru,
+        [Switch]$PassThru,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Switch]$SkipPFXCertCreation
+        [Switch]$SkipPFXCertCreation,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Switch]$UseCertStore
     )
 
     begin {
@@ -112,8 +116,8 @@ function New-CredentialStore {
                 State                  = 'PSCredentialStore'
                 City                   = 'PSCredentialStore'
                 Organization           = 'PSCredentialStore'
-                OrganizationalUnitName = ' '
-                CommonName             = 'PrivateStore'
+                OrganizationalUnitName = $PSCmdlet.ParameterSetName
+                CommonName             = 'PSCredentialStore'
             }
             $CRTAttribute = New-CRTAttribute @CRTParams
 
@@ -176,8 +180,14 @@ function New-CredentialStore {
             Type           = $null
         }
         if (! $SkipPFXCertCreation.IsPresent) {
-            $ObjProperties.PfXCertificate = $PfxParams.CertName
             $ObjProperties.Thumbprint = $FreshCert.Thumbprint
+
+            if (!$UseCertStore.IsPresent) {
+                $ObjProperties.PfxCertificate = $PfxParams.CertName
+            }
+            else {
+                Write-Warning -Message ("New certificate {0} created. Please import it into your certificate store manually!" -f $PfxParams.CertName)
+            }
         }
 
         if ($PSCmdlet.ParameterSetName -eq "Shared") {

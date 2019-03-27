@@ -87,7 +87,26 @@ function Get-CredentialStoreItem {
             $CSMembers = Get-Member -InputObject $CS
             # Let's first check if the given remote host exists as object property
             if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
-                $Cert = Get-PfxCertificate -FilePath $CS.PfXCertificate -ErrorAction Stop
+                try {
+                    if ($null -eq $CS.PfxCertificate) {
+                        $Cert = Get-ChildItem -Recurse -Path 'Cert:' | Where-Object {
+                            $_.Thumbprint -eq $CS.Thumbprint
+                        } | Select-Object -First 1
+                    }
+                    else {
+                        $Cert = Get-PfxCertificate -FilePath $CS.PfxCertificate -ErrorAction Stop
+                    }
+                }
+                catch {
+                    $_.Exception.Message | Write-Error
+                    $ErrorParams = @{
+                        ErrorAction = 'Stop'
+                        Exception   = [System.Security.Cryptography.CryptographicException]::new(
+                            'Could not read the given PFX certificate.'
+                        )
+                    }
+                    Write-Error @ErrorParams
+                }
                 $DecryptedKey = $Cert.PrivateKey.Decrypt(
                     [Convert]::FromBase64String($CS.$CredentialName.EncryptedKey),
                     [System.Security.Cryptography.RSAEncryptionPadding]::Pkcs1
