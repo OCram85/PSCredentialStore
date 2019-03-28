@@ -121,6 +121,15 @@ function New-CredentialStoreItem {
                     $Cert = Get-ChildItem -Recurse -Path 'Cert:' | Where-Object {
                         $_.Thumbprint -eq $CSContent.Thumbprint
                     } | Select-Object -First 1
+                    if ($null -eq $Cert) {
+                        $ErrorParams = @{
+                            ErrorAction = 'Stop'
+                            Exception   = [System.Exception]::new(
+                                ('Could not find the linked certificate with thumbprint {0}' -f $CSContent.Thumbprint)
+                            )
+                        }
+                        Write-Error @ErrorParams
+                    }
                 }
                 else {
                     $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
