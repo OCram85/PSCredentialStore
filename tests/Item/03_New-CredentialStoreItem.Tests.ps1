@@ -81,5 +81,25 @@ Describe "New-CredentialStoreItem" {
             (Get-CredentialStoreItem -RemoteHost 'PipeHost').UserName | Should -Be 'pipeUser'
         }
     }
+    Context "Testing items with certficiate store" {
+        It "Create item in new store with cert store link" {
+            { New-CredentialStore -UseCertStore -Force } | Should -Not -Throw
+            $Path = Get-DefaultCredentialStorePath
+            $StoreHome = Split-Path -Path $Path -Parent
+            $CertFile = Join-Path -Path $StoreHome -ChildPath 'PSCredentialStore.pfx'
+            certutil.exe -Importpfx -user MY $CertFile "NoProtect, NoRoot"
+            function global:Get-Credential ([string]$Message) {
+                $UserName = 'testuser'
+                $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
+                return [PSCredential]::new($UserName, $Password)
+            }
+            New-CredentialStoreItem -RemoteHost 'foobarcerts'
+            Remove-Item -Path 'Function:\Get-Credential'
+
+            $writtenItem = Get-CredentialStoreItem -Path $tmpCS -Shared -RemoteHost 'foobarcerts'
+            $writtenItem.UserName | Should -Be "testuser"
+            $writtenItem.GetNetworkCredential().Password | Should -Be 'mypasswd'
+        }
+    }
 
 }
