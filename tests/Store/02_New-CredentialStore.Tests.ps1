@@ -46,7 +46,7 @@ Describe "New-CredentialStore" {
             Test-Path -Path $sCS | Should -Be $true
         }
         It "Test2: Try to override existing shared CS" {
-            {New-CredentialStore -Shared -Confirm:$false} | Should -Throw
+            { New-CredentialStore -Shared -Confirm:$false } | Should -Throw
         }
         It "Test3: Reset shared CredentialStore" {
             $now = Get-Date
@@ -59,33 +59,43 @@ Describe "New-CredentialStore" {
     Context "Custom Shared CS tests" {
         $cCS = Join-Path -Path (Get-TempDir) -ChildPath "CredentialStore.json"
         It "Test1: Create new custom shared" {
-            {New-CredentialStore -Path $cCS -Shared -Confirm:$false} | Should -Not -Throw
+            { New-CredentialStore -Path $cCS -Shared -Confirm:$false } | Should -Not -Throw
         }
         It "Test2: Try to override exiting one" {
-            {New-CredentialStore -Path $cCS -Shared -Confirm:$false} | Should -Throw
+            { New-CredentialStore -Path $cCS -Shared -Confirm:$false } | Should -Throw
         }
         It "Test3: Reset existing custom CredentialStore" {
-            {New-CredentialStore -Path $cCS -Shared -Force -Confirm:$false} | Should -Not -Throw
+            { New-CredentialStore -Path $cCS -Shared -Force -Confirm:$false } | Should -Not -Throw
         }
     }
     Context "Test exception handling" {
-        Mock Out-File {throw "foobar exception"}
+        Mock Out-File { throw "foobar exception" }
         It "JSON Conversion should fail and throw" {
-            { New-CredentialStore -Path (Join-Path -Path (Get-TempDir) -ChildPath '/dummy.json') -Shared -Confirm:$false} | Should -Throw
+            { New-CredentialStore -Path (Join-Path -Path (Get-TempDir) -ChildPath '/dummy.json') -Shared -Confirm:$false } | Should -Throw
         }
     }
     Context "Tests for Windows certificate store" {
-        It "Create new private store and skipt certificate linkin" {
-            { New-CredentialStore -UseCertStore -Force } | Should -Not -Throw
-            $CS = Get-CredentialStore
-            $CS.PfxCertificate | Should -Be $null
-            $CS.Thumbprint | Should -Not -Be $null
+        It "Create new private store and skip certificate linking" {
+            if (! $isLinux) {
+                { New-CredentialStore -UseCertStore -Force } | Should -Not -Throw
+                $CS = Get-CredentialStore
+                $CS.PfxCertificate | Should -Be $null
+                $CS.Thumbprint | Should -Not -Be $null
+            }
+            else {
+                { New-CredentialStore -UseCertStore -Force } | Should -Throw
+            }
         }
-        It "Create new shared store and skipt certificate linkin" {
-            { New-CredentialStore -Shared -UseCertStore -Force } | Should -Not -Throw
-            $CS = Get-CredentialStore -Shared
-            $CS.PfxCertificate | Should -Be $null
-            $CS.Thumbprint | Should -Not -Be $null
+        It "Create new shared store and skipt certificate linking" {
+            if (! $isLinux) {
+                { New-CredentialStore -Shared -UseCertStore -Force } | Should -Not -Throw
+                $CS = Get-CredentialStore -Shared
+                $CS.PfxCertificate | Should -Be $null
+                $CS.Thumbprint | Should -Not -Be $null
+            }
+            else {
+                { New-CredentialStore -Shared -UseCertStore -Force } | Should -Throw
+            }
         }
     }
 }
