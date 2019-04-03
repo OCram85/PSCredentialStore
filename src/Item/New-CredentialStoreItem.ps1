@@ -122,6 +122,9 @@ function New-CredentialStoreItem {
                         $_.Thumbprint -eq $CSContent.Thumbprint
                     } | Select-Object -First 1
                     if ($null -eq $Cert) {
+                        if ($isLinux) {
+                            throw "There is no windows certificate store on linux systems!"
+                        }
                         $ErrorParams = @{
                             ErrorAction = 'Stop'
                             Exception   = [System.Exception]::new(
