@@ -96,7 +96,7 @@ function New-CredentialStore {
                 }
                 Write-Error @ErrorParams
             }
-            elseif ( ($null -eq $Path.Extension) -or ($Path.Extension -ne '*.json')) {
+            elseif ( ($null -eq $Path.Extension) -or ($Path.Extension -ne '.json')) {
                 $ErrorParams = @{
                     ErrorAction = 'Stop'
                     Exception   = [System.IO.InvalidDataException]::new(
