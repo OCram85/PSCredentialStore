@@ -59,7 +59,20 @@ function New-CredentialStore {
 
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [ValidateNotNullOrEmpty()]
-        [string]$Path,
+        [ValidateScript(
+            {
+                if ($_.Attributes -contains 'Directory') {
+                    throw 'Please provide a full path containing the credential store file name with the .json extension!'
+                }
+                elseif ( ($null -eq $_.Extension) -or ($_.Extension -ne '*.json')) {
+                    throw 'Your provided path does not conain the required file extension .json !'
+                }
+                else {
+                    $true
+                }
+            }
+        )]
+        [System.IO.FileInfo]$Path,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
