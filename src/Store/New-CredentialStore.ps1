@@ -59,19 +59,6 @@ function New-CredentialStore {
 
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [ValidateNotNullOrEmpty()]
-        [ValidateScript(
-            {
-                if ($_.Attributes -contains 'Directory') {
-                    throw 'Please provide a full path containing the credential store file name with the .json extension!'
-                }
-                elseif ( ($null -eq $_.Extension) -or ($_.Extension -ne '*.json')) {
-                    throw 'Your provided path does not conain the required file extension .json !'
-                }
-                else {
-                    $true
-                }
-            }
-        )]
         [System.IO.FileInfo]$Path,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
@@ -97,6 +84,28 @@ function New-CredentialStore {
 
         # Set latest Credential Store version
         # Set-Variable -Name "CSVersion" -Value "2.0.0" -Option Constant -Scope
+
+        # test if the path input is a valid file path
+        if ($PSCmdlet.MyInvocation.BoundParameters.ContainsKey('Path')) {
+            if ($Path.Attributes -contains 'Directory') {
+                $ErrorParams = @{
+                    ErrorAction = 'Stop'
+                    Exception   = [System.IO.InvalidDataException]::new(
+                        'Please provide a full path containing the credential store file name with the .json extension!'
+                    )
+                }
+                Write-Error @ErrorParams
+            }
+            elseif ( ($null -eq $Path.Extension) -or ($Path.Extension -ne '*.json')) {
+                $ErrorParams = @{
+                    ErrorAction = 'Stop'
+                    Exception   = [System.IO.InvalidDataException]::new(
+                        'Your provided path does not conain the required file extension .json !'
+                    )
+                }
+                Write-Error @ErrorParams
+            }
+        }
     }
 
     process {
@@ -199,7 +208,8 @@ function New-CredentialStore {
                 $ObjProperties.PfxCertificate = $PfxParams.CertName
             }
             else {
-                Write-Warning -Message ("New certificate {0} created. Please import it into your certificate store manually!" -f $PfxParams.CertName)
+                Write-Verbose 'Importing new PFX certifiate file'
+                Import-CSCertificate -Path $PfxParams.CertName
             }
         }
 
