@@ -89,9 +89,7 @@ function Get-CredentialStoreItem {
             if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
                 try {
                     if ($null -eq $CS.PfxCertificate) {
-                        $Cert = Get-ChildItem -Recurse -Path 'Cert:' | Where-Object {
-                            $_.Thumbprint -eq $CS.Thumbprint
-                        } | Select-Object -First 1
+                        $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint
                     }
                     else {
                         $Cert = Get-PfxCertificate -FilePath $CS.PfxCertificate -ErrorAction Stop

@@ -104,9 +104,7 @@ function Set-CredentialStoreItem {
         if ($Credential.UserName) {
             try {
                 if ($null -eq $CSContent.PfxCertificate) {
-                    $Cert = Get-ChildItem -Recurse -Path 'Cert:' | Where-Object {
-                        $_.Thumbprint -eq $CSContent.Thumbprint
-                    } | Select-Object -First 1
+                    $Cert = Get-CSCertificate -Thumbprint $CSContent.Thumbprint
                 }
                 else {
                     $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
