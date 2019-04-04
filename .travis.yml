@@ -20,10 +20,9 @@ matrix:
   fast_finish: true
 
 
-addons:
-  artifacts:
-    #paths: $(ls ./../dist/PowerShellGet.zip | tr "\n" ":")
-    paths: ./dist/PowerShellGet.zip
+#addons:
+#  artifacts:
+#    paths: ./dist/PowerShellGet.zip
 
 
 install:
