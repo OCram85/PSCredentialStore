@@ -100,7 +100,7 @@ function Import-CSCertificate {
             $_.Exception.Message | Write-Error
             $ErrorParams = @{
                 ErrorAction = 'Stop'
-                Exception   = [System.Security.Cryptography.Exception]::new(
+                Exception   = [System.Exception]::new(
                     'Could not read or add the pfx certificate!'
                 )
             }
