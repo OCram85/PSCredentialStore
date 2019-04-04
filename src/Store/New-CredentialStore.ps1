@@ -159,6 +159,7 @@ function New-CredentialStore {
                 Confirm      = $false
             }
 
+            # test if there is already a cert
             if ((Test-Path $PfxParams.CertName) -and (! $Force.IsPresent)) {
                 $ErrorParams = @{
                     Exception   = [System.IO.InvalidDataException]::new(
@@ -208,8 +209,8 @@ function New-CredentialStore {
                 $ObjProperties.PfxCertificate = $PfxParams.CertName
             }
             else {
-                Write-Verbose 'Importing new PFX certifiate file'
-                Import-CSCertificate -Path $PfxParams.CertName
+                Write-Verbose 'Importing new PFX certificate file...'
+                Import-CSCertificate -Path $PfxParams.CertName -StoreName My -StoreLocation CurrentUser
             }
         }
 
