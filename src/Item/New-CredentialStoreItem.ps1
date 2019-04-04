@@ -118,16 +118,11 @@ function New-CredentialStoreItem {
         if ($Credential.UserName) {
             try {
                 if ($null -eq $CSContent.PfxCertificate) {
-                    $Cert = Get-ChildItem -Recurse -Path 'Cert:' | Where-Object {
-                        $_.Thumbprint -eq $CSContent.Thumbprint
-                    } | Select-Object -First 1
+                    $Cert = Get-CSCertificate -Thumbprint $CSContent.Thumbprint
                     if ($null -eq $Cert) {
-                        if ($isLinux) {
-                            throw "There is no windows certificate store on linux systems!"
-                        }
                         $ErrorParams = @{
                             ErrorAction = 'Stop'
-                            Exception   = [System.Exception]::new(
+                            Exception   = [System.Security.Cryptography.X509Certificates.FileNotFoundException]::new(
                                 ('Could not find the linked certificate with thumbprint {0}' -f $CSContent.Thumbprint)
                             )
                         }
