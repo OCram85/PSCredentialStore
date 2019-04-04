@@ -97,13 +97,13 @@ function Import-CSCertificate {
         }
         catch {
             $_.Exception.Message | Write-Error -ErrorAction Stop
-            #$ErrorParams = @{
-            #    ErrorAction = 'Stop'
-            #    Exception   = [System.Exception]::new(
-            #        'Could not read or add the pfx certificate!'
-            #    )
-            #}
-            #Write-Error @ErrorParams
+            $ErrorParams = @{
+                ErrorAction = 'Stop'
+                Exception   = [System.Exception]::new(
+                    'Could not read or add the pfx certificate!'
+                )
+            }
+            Write-Error @ErrorParams
         }
     }
     end {
