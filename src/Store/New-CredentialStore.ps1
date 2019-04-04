@@ -59,19 +59,23 @@ function New-CredentialStore {
 
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [ValidateNotNullOrEmpty()]
-        [string]$Path,
+        [System.IO.FileInfo]$Path,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [switch]$Force,
+        [Switch]$Force,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [switch]$PassThru,
+        [Switch]$PassThru,
 
         [Parameter(Mandatory = $false, ParameterSetName = "Private")]
         [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Switch]$SkipPFXCertCreation
+        [Switch]$SkipPFXCertCreation,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Switch]$UseCertStore
     )
 
     begin {
@@ -80,6 +84,28 @@ function New-CredentialStore {
 
         # Set latest Credential Store version
         # Set-Variable -Name "CSVersion" -Value "2.0.0" -Option Constant -Scope
+
+        # test if the path input is a valid file path
+        if ($PSCmdlet.MyInvocation.BoundParameters.ContainsKey('Path')) {
+            if ($Path.Attributes -contains 'Directory') {
+                $ErrorParams = @{
+                    ErrorAction = 'Stop'
+                    Exception   = [System.IO.InvalidDataException]::new(
+                        'Please provide a full path containing the credential store file name with the .json extension!'
+                    )
+                }
+                Write-Error @ErrorParams
+            }
+            elseif ( ($null -eq $Path.Extension) -or ($Path.Extension -ne '.json')) {
+                $ErrorParams = @{
+                    ErrorAction = 'Stop'
+                    Exception   = [System.IO.InvalidDataException]::new(
+                        'Your provided path does not conain the required file extension .json !'
+                    )
+                }
+                Write-Error @ErrorParams
+            }
+        }
     }
 
     process {
@@ -112,8 +138,8 @@ function New-CredentialStore {
                 State                  = 'PSCredentialStore'
                 City                   = 'PSCredentialStore'
                 Organization           = 'PSCredentialStore'
-                OrganizationalUnitName = ' '
-                CommonName             = 'PrivateStore'
+                OrganizationalUnitName = $PSCmdlet.ParameterSetName
+                CommonName             = 'PSCredentialStore'
             }
             $CRTAttribute = New-CRTAttribute @CRTParams
 
@@ -133,6 +159,7 @@ function New-CredentialStore {
                 Confirm      = $false
             }
 
+            # test if there is already a cert
             if ((Test-Path $PfxParams.CertName) -and (! $Force.IsPresent)) {
                 $ErrorParams = @{
                     Exception   = [System.IO.InvalidDataException]::new(
@@ -176,8 +203,15 @@ function New-CredentialStore {
             Type           = $null
         }
         if (! $SkipPFXCertCreation.IsPresent) {
-            $ObjProperties.PfXCertificate = $PfxParams.CertName
             $ObjProperties.Thumbprint = $FreshCert.Thumbprint
+
+            if (!$UseCertStore.IsPresent) {
+                $ObjProperties.PfxCertificate = $PfxParams.CertName
+            }
+            else {
+                Write-Verbose 'Importing new PFX certificate file...'
+                Import-CSCertificate -Path $PfxParams.CertName -StoreName My -StoreLocation CurrentUser
+            }
         }
 
         if ($PSCmdlet.ParameterSetName -eq "Shared") {

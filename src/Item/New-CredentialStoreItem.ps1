@@ -117,7 +117,21 @@ function New-CredentialStoreItem {
 
         if ($Credential.UserName) {
             try {
-                $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
+                if ($null -eq $CSContent.PfxCertificate) {
+                    $Cert = Get-CSCertificate -Thumbprint $CSContent.Thumbprint
+                    if ($null -eq $Cert) {
+                        $ErrorParams = @{
+                            ErrorAction = 'Stop'
+                            Exception   = [System.Security.Cryptography.X509Certificates.FileNotFoundException]::new(
+                                ('Could not find the linked certificate with thumbprint {0}' -f $CSContent.Thumbprint)
+                            )
+                        }
+                        Write-Error @ErrorParams
+                    }
+                }
+                else {
+                    $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
+                }
             }
             catch {
                 $_.Exception.Message | Write-Error

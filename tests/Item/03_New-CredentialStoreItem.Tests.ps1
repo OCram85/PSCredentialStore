@@ -4,7 +4,7 @@ Describe "New-CredentialStoreItem" {
             # Creat a fresh CredentialStore first
             New-CredentialStore -Force
 
-            [String]$tmp = (65..90) + (97..122) | Get-Random -Count 5 | % {[char]$_}
+            [String]$tmp = (65..90) + (97..122) | Get-Random -Count 5 | ForEach-Object { [char]$_ }
             $tmp = $tmp.Replace(' ', '')
             $tmpUser = "MyUser"
             $tmpPwd = "fooobarysdfsfs" | ConvertTo-SecureString -AsPlainText -Force
@@ -65,7 +65,7 @@ Describe "New-CredentialStoreItem" {
 
     }
     Context "General Exception handling" {
-        Mock Test-CredentialStore {return $false}
+        Mock Test-CredentialStore { return $false }
         It "Missing CredentialStore should throw" {
             { New-CredentialStoreItem -Shared -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
         }
@@ -79,6 +79,30 @@ Describe "New-CredentialStoreItem" {
 
         It "Testing written item" {
             (Get-CredentialStoreItem -RemoteHost 'PipeHost').UserName | Should -Be 'pipeUser'
+        }
+    }
+    Context "Testing items with certficiate store" {
+        It "Create item in new store with cert store link" {
+            New-CredentialStore -UseCertStore -Force
+
+            $Path = Get-DefaultCredentialStorePath
+            $StoreHome = Split-Path -Path $Path -Parent
+            $CertFile = Join-Path -Path $StoreHome -ChildPath 'PSCredentialStore.pfx'
+            $Cert = Get-PfxCertificate -FilePath $CertFile
+
+            $myStore = [System.Security.Cryptography.X509Certificates.X509Store]::new('My')
+            $myStore.Open("ReadWrite")
+            $myStore.Add($Cert)
+            $MyStore.Close()
+
+            $UserName = 'testuser'
+            $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
+
+            [PSCredential]::new($UserName, $Password) | New-CredentialStoreItem -RemoteHost 'foobarcerts'
+
+            $writtenItem = Get-CredentialStoreItem -RemoteHost 'foobarcerts'
+            $writtenItem.UserName | Should -Be "testuser"
+            $writtenItem.GetNetworkCredential().Password | Should -Be 'mypasswd'
         }
     }
 
