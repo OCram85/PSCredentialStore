@@ -63,8 +63,11 @@
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @(
         # Certificate
+        'Get-CSCertificate',
+        'Import-CSCertificate',
         'New-CRTAttribute',
         'New-PfxCertificate',
+        'Test-CSCertificate',
         'Use-PfxCertificate',
         # Connection
         'Connect-To',
