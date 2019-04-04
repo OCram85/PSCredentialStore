@@ -76,26 +76,23 @@ Describe "New-CredentialStore" {
     }
     Context "Tests for Windows certificate store" {
         It "Create new private store and skip certificate linking" {
-            if (! $isLinux) {
-                { New-CredentialStore -UseCertStore -Force } | Should -Not -Throw
-                $CS = Get-CredentialStore
-                $CS.PfxCertificate | Should -Be $null
-                $CS.Thumbprint | Should -Not -Be $null
-            }
-            else {
-                { New-CredentialStore -UseCertStore -Force } | Should -Throw
-            }
+            { New-CredentialStore -UseCertStore -Force } | Should -Not -Throw
+            $CS = Get-CredentialStore
+            $CS.PfxCertificate | Should -Be $null
+            $CS.Thumbprint | Should -Not -Be $null
+            $res = Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation CurrentUser
+            Write-Verbose -Message ('res: {0}' -f $res) -Verbose
+            $res | Should -Be $true
+
         }
         It "Create new shared store and skipt certificate linking" {
-            if (! $isLinux) {
-                { New-CredentialStore -Shared -UseCertStore -Force } | Should -Not -Throw
-                $CS = Get-CredentialStore -Shared
-                $CS.PfxCertificate | Should -Be $null
-                $CS.Thumbprint | Should -Not -Be $null
-            }
-            else {
-                { New-CredentialStore -Shared -UseCertStore -Force } | Should -Throw
-            }
+            { New-CredentialStore -Shared -UseCertStore -Force } | Should -Not -Throw
+            $CS = Get-CredentialStore -Shared
+            $CS.PfxCertificate | Should -Be $null
+            $CS.Thumbprint | Should -Not -Be $null
+            Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation CurrentUser
+            Write-Verbose -Message ('res: {0}' -f $res) -Verbose
+            $res | Should -Be $true
         }
     }
 }
