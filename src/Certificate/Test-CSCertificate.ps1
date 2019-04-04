@@ -71,7 +71,7 @@ function Test-CSCertificate {
     }
 
     process {
-        $Cert = $Store.Certificates | Where-Object { $_.Thumbprint -eq $Thumb }
+        $Cert = $Store.Certificates | Where-Object { $_.Thumbprint -eq $Thumbprint }
 
         if ($null -eq $Cert) {
             return $false
