@@ -79,8 +79,7 @@ function Import-CSCertificate {
     }
     process {
         try {
-            $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new()
-            $cert.Import(
+            $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new(
                 $Path,
                 $null,
                 (
