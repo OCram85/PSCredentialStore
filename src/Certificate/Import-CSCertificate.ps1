@@ -12,7 +12,7 @@ function Import-CSCertificate {
         Path to an existing *.pfx certificate file.
 
     .PARAMETER StoreName
-        Additionally you change change the store where you want the certificate into
+        Additionally you change change the store where you want the certificate into.
 
     .INPUTS
         [None]
@@ -39,7 +39,6 @@ function Import-CSCertificate {
         [string]$Path,
 
         [Parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
         [ValidateSet(
             'AddressBook',
             'AuthRoot',
@@ -50,16 +49,52 @@ function Import-CSCertificate {
             'TrustedPeople',
             'TrustedPublisher'
         )]
-        [string]$StoreName = 'My'
+        [string]$StoreName = 'My',
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet(
+            'CurrentUser',
+            'LocalMachine'
+        )]
+        [string]$StoreLocation = 'CurrentUser',
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet(
+            'ReadOnly',
+            'ReadWrite',
+            'MaxAllowed',
+            'OpenExistingOnly',
+            'InclueArchived'
+        )]
+        [string]$OpenFlags = 'ReadWrite'
     )
     begin {
-        $Store = [System.Security.Cryptography.X509Certificates.X509Store]::new('My')
-        $Store.Open('ReadWrite')
+        $Store = [System.Security.Cryptography.X509Certificates.X509Store]::new($StoreName, $StoreLocation)
+        try {
+            $Store.Open($OpenFlags)
+        }
+        catch {
+            $_.Exception.Message | Write-Error -ErrorAction Stop
+        }
     }
     process {
         try {
-            $cert = Get-PfxCertificate -FilePath $Path -ErrorAction Stop
-            $Store.Add($cert)
+            $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new()
+            $cert.Import(
+                $Path,
+                $null,
+                (
+                    [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable -bor
+                    [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet
+                )
+            )
+
+            if (Test-CSCertificate -Thumbprint $cert.Thumbprint) {
+                Write-Warning -Message ('The certificate with thumbprint {0} is already present!' -f $cert.Thumbprint)
+            }
+            else {
+                $Store.Add($cert)
+            }
         }
         catch {
             $_.Exception.Message | Write-Error
