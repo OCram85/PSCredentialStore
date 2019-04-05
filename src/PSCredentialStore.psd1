@@ -64,10 +64,13 @@
     FunctionsToExport    = @(
         # Certificate
         'Get-CSCertificate',
+        'Get-CSPfxCertificate',
         'Import-CSCertificate',
-        'New-CRTAttribute',
-        'New-PfxCertificate',
+        'Import-CSPfxCertificate',
+        'New-CSCertAttribute',
+        'New-CSCertificate',
         'Test-CSCertificate',
+        'Test-CSPfxCertificate',
         'Use-PfxCertificate',
         # Connection
         'Connect-To',

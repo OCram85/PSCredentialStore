@@ -1,32 +1,27 @@
 function Import-CSCertificate {
     <#
     .SYNOPSIS
-        adds a given pfx certificate file to current uerers personal certificate store.
+        A brief description of the function or script.
 
     .DESCRIPTION
-        This function is used to import existing pfx certificate files. The Import-PFXCertificate cmdle from the
-        PKI module imports the certficate into a deprecated store. Thus you can't read the private key afterwards or
-        using it for decrypting data.
+        Describe the function of the script using a single sentence or more.
 
-    .PARAMETER Path
-        Path to an existing *.pfx certificate file.
-
-    .PARAMETER StoreName
-        Additionally you change change the store where you want the certificate into.
+    .PARAMETER One
+        Description of the Parameter (what it does)
 
     .INPUTS
-        [None]
+        Describe the script input parameters (if any), otherwise it may also list the word "[None]".
 
     .OUTPUTS
-        [None]
+        Describe the script output parameters (if any), otherwise it may also list the word "[None]".
 
     .EXAMPLE
-        Import-CSCertificate -Path (Join-Path -Path $Env:APPDATA -ChildPath '/PSCredentialStore.pfx')
+        .\Remove-Some-Script.ps1 -One content
 
     .NOTES
         File Name   : Import-CSCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        Author      : fullname - mail
+        Requires    : ModuleNames
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -36,77 +31,38 @@ function Import-CSCertificate {
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [string]$Path,
+        [ValidateSet('Private', 'Shared')]
+        [string]$Type,
 
-        [Parameter(Mandatory = $false)]
-        [ValidateSet(
-            'AddressBook',
-            'AuthRoot',
-            'CertificateAuthority',
-            'Disallowed',
-            'My',
-            'Root',
-            'TrustedPeople',
-            'TrustedPublisher'
-        )]
-        [string]$StoreName = 'My',
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [System.IO.FileInfo]$Path
 
-        [Parameter(Mandatory = $false)]
-        [ValidateSet(
-            'CurrentUser',
-            'LocalMachine'
-        )]
-        [string]$StoreLocation = 'CurrentUser',
-
-        [Parameter(Mandatory = $false)]
-        [ValidateSet(
-            'ReadOnly',
-            'ReadWrite',
-            'MaxAllowed',
-            'OpenExistingOnly',
-            'InclueArchived'
-        )]
-        [string]$OpenFlags = 'ReadWrite'
     )
     begin {
-        $Store = [System.Security.Cryptography.X509Certificates.X509Store]::new($StoreName, $StoreLocation)
-        try {
-            $Store.Open($OpenFlags)
-        }
-        catch {
-            $_.Exception.Message | Write-Error -ErrorAction Stop
-        }
-    }
-    process {
-        try {
-            $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new(
-                $Path,
-                $null,
-                (
-                    [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::Exportable -bor
-                    [System.Security.Cryptography.X509Certificates.X509KeyStorageFlags]::PersistKeySet
-                )
-            )
-
-            if (Test-CSCertificate -Thumbprint $cert.Thumbprint) {
-                Write-Warning -Message ('The certificate with thumbprint {0} is already present!' -f $cert.Thumbprint)
-            }
-            else {
-                $Store.Add($cert)
-            }
-        }
-        catch {
-            $_.Exception.Message | Write-Error -ErrorAction Stop
+        if (! (Test-Path -Path $Path)) {
             $ErrorParams = @{
                 ErrorAction = 'Stop'
                 Exception   = [System.Exception]::new(
-                    'Could not read or add the pfx certificate!'
+                    ('File {0} not found!') -f $Path
                 )
             }
             Write-Error @ErrorParams
         }
     }
+
+    process {
+        # Import to CurrentUser\My stor for windows and linux
+        if ($Type -eq 'Private') {
+            Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'CurrentUser' -OpenFlags 'ReadWrite'
+        }
+        elseif ( (! $isLinux ) -and ($Type -eq 'Shared') ) {
+            Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'CurrentUser' -OpenFlags 'ReadWrite'
+        }
+        elseif ( ($isLinux) -and ($Type -eq 'Shared') ) {
+            Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'LocalMachine' -OpenFlags 'ReadWrite'
+        }
+    }
     end {
-        $Store.Close()
     }
 }

@@ -1,4 +1,4 @@
-function New-CRTAttribute {
+function New-CSCertAttribute {
     <#
     .SYNOPSIS
         Create required data for a certificate signing request.
@@ -35,10 +35,10 @@ function New-CRTAttribute {
         ['PSCredentialStore.Certificate.CSRDetails']
 
     .EXAMPLE
-        New-CRTAttribute -CSRSubject @{Country = 'DE'; State = 'BW'; City = 'Karlsruhe'; Organization = 'AwesomeIT'; OrganizationalUnitName = '';CommonName = 'MyPrivateCert'}
+        New-CSCertAttribute -CSRSubject @{Country = 'DE'; State = 'BW'; City = 'Karlsruhe'; Organization = 'AwesomeIT'; OrganizationalUnitName = '';CommonName = 'MyPrivateCert'}
 
     .NOTES
-        File Name   : New-CSRDetails.ps1
+        File Name   : New-CSCertAttribute.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
 

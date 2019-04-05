@@ -1,4 +1,4 @@
-function Use-PfxCertificate {
+function Use-CSCertificate {
     <#
     .SYNOPSIS
         Links an existing PFX Certifiacte to a CredentialStore.
@@ -19,7 +19,7 @@ function Use-PfxCertificate {
 
 
     .NOTES
-        File Name   : Use-PfxCertificate.ps1
+        File Name   : Use-CSCertificate.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
 
@@ -40,9 +40,13 @@ function Use-PfxCertificate {
         [string]$CredentialStore,
 
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
-        [switch]$Shared
+        [switch]$Shared,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [Switch]$UseCertStore
     )
-    begin {}
+    begin { }
 
     process {
         try {
@@ -93,10 +97,16 @@ Make sure you used the same AES keys for encrypting!
 "@
         }
 
-        $CS.PfxCertificate = $validPath.Path
-        $CS.Thumbprint = $PfxCertificate.Thumbprint
+        if ($UseCertStore) {
+            Import-CSCertificate -Type ($PSCmdlet.ParameterSetName -eq "Private") -Path $Path
+            $CS.Thumbprint = $PfxCertificate.Thumbprint
+            $CS.PfxCertificate = $null
+        }
+        else {
+            $CS.PfxCertificate = $validPath.Path
+        }
         $CS | ConvertTo-Json -Depth 5 | Out-File -FilePath $StorePath -Force -Encoding utf8
     }
 
-    end {}
+    end { }
 }

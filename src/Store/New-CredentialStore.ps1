@@ -202,22 +202,6 @@ function New-CredentialStore {
             Thumbprint     = $null
             Type           = $null
         }
-        if (! $SkipPFXCertCreation.IsPresent) {
-            $ObjProperties.Thumbprint = $FreshCert.Thumbprint
-
-            if (!$UseCertStore.IsPresent) {
-                $ObjProperties.PfxCertificate = $PfxParams.CertName
-            }
-            else {
-                Write-Verbose 'Importing new PFX certificate file...'
-                if ($PSCmdlet.ParameterSetName -eq 'Private') {
-                    Import-CSCertificate -Path $PfxParams.CertName -StoreName My -StoreLocation CurrentUser -ErrorAction Stop
-                }
-                elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
-                    Import-CSCertificate -Path $PfxParams.CertName -StoreName My -StoreLocation LocalMachine -ErrorAction Stop
-                }
-            }
-        }
 
         if ($PSCmdlet.ParameterSetName -eq "Shared") {
             $ObjProperties.Type = "Shared"
@@ -225,6 +209,20 @@ function New-CredentialStore {
         else {
             $ObjProperties.Type = "Private"
         }
+
+        if (! $SkipPFXCertCreation.IsPresent) {
+            $ObjProperties.Thumbprint = $FreshCert.Thumbprint
+
+            if ($UseCertStore.IsPresent) {
+                Write-Verbose 'Importing new PFX certificate file...'
+                Import-CSCertificate -Type $ObjProperties.Type -Path $PfxParams.CertName
+            }
+            else {
+                $ObjProperties.PfxCertificate = $PfxParams.CertName
+
+            }
+        }
+
 
         $CredentialStoreObj = [PSCustomObject]$ObjProperties
         try {
