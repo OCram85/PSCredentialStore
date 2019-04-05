@@ -57,10 +57,10 @@ function Import-CSCertificate {
             Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'CurrentUser' -OpenFlags 'ReadWrite'
         }
         elseif ( (! $isLinux ) -and ($Type -eq 'Shared') ) {
-            Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'CurrentUser' -OpenFlags 'ReadWrite'
+            Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'LocalMachine' -OpenFlags 'ReadWrite'
         }
         elseif ( ($isLinux) -and ($Type -eq 'Shared') ) {
-            Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'LocalMachine' -OpenFlags 'ReadWrite'
+            Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'CurrentUser' -OpenFlags 'ReadWrite'
         }
     }
     end {
