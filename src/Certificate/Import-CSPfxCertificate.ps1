@@ -88,7 +88,7 @@ function Import-CSPfxCertificate {
                 )
             )
 
-            if (Test-CSCertificate -Thumbprint $cert.Thumbprint) {
+            if (Test-CSPfxCertificate -Thumbprint $cert.Thumbprint) {
                 Write-Warning -Message ('The certificate with thumbprint {0} is already present!' -f $cert.Thumbprint)
             }
             else {
