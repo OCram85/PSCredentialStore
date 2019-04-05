@@ -90,7 +90,7 @@ Describe "New-CredentialStore" {
             $CS = Get-CredentialStore -Shared
             $CS.PfxCertificate | Should -Be $null
             $CS.Thumbprint | Should -Not -Be $null
-            $res = Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation CurrentUser
+            $res = Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation LocalMachine
             #Write-Verbose -Message ('res: {0}' -f $res) -Verbose
             $res | Should -Be $true
         }
