@@ -89,7 +89,26 @@ function Get-CredentialStoreItem {
             if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
                 try {
                     if ($null -eq $CS.PfxCertificate) {
-                        $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint
+                        if ($CS.Type -eq 'Private') {
+                            $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint
+                        }
+                        elseif ($CS.Type -eq 'Shard') {
+                            if (Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation LocalMachine) {
+                                $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation LocalMachine
+                            }
+                            elseif (Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName Root -StoreLocation LocalMachine) {
+                                $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint -StoreName Root -StoreLocation LocalMachine
+                            }
+                            else {
+                                $ErrorParams = @{
+                                    ErrorAction = 'Stop'
+                                    Exception   = [System.Exception]::new(
+                                        ('Could not find any certificate with thumbprint {0}' -f $CS.Thumbprint)
+                                    )
+                                }
+                                Write-Error @ErrorParams
+                            }
+                        }
                     }
                     else {
                         $Cert = Get-PfxCertificate -FilePath $CS.PfxCertificate -ErrorAction Stop

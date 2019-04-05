@@ -210,7 +210,12 @@ function New-CredentialStore {
             }
             else {
                 Write-Verbose 'Importing new PFX certificate file...'
-                Import-CSCertificate -Path $PfxParams.CertName -StoreName My -StoreLocation CurrentUser
+                if ($PSCmdlet.ParameterSetName -eq 'Private') {
+                    Import-CSCertificate -Path $PfxParams.CertName -StoreName My -StoreLocation CurrentUser -ErrorAction Stop
+                }
+                elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
+                    Import-CSCertificate -Path $PfxParams.CertName -StoreName My -StoreLocation LocalMachine -ErrorAction Stop
+                }
             }
         }
 

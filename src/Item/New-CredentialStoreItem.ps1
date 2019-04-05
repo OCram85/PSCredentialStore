@@ -118,15 +118,25 @@ function New-CredentialStoreItem {
         if ($Credential.UserName) {
             try {
                 if ($null -eq $CSContent.PfxCertificate) {
-                    $Cert = Get-CSCertificate -Thumbprint $CSContent.Thumbprint
-                    if ($null -eq $Cert) {
-                        $ErrorParams = @{
-                            ErrorAction = 'Stop'
-                            Exception   = [System.Security.Cryptography.X509Certificates.FileNotFoundException]::new(
-                                ('Could not find the linked certificate with thumbprint {0}' -f $CSContent.Thumbprint)
-                            )
+                    if ($CSContent.Type -eq 'Private') {
+                        $Cert = Get-CSCertificate -Thumbprint $CSContent.Thumbprint
+                    }
+                    elseif ($CSContent.Type -eq 'Shard') {
+                        if (Test-CSCertificate -Thumbprint $CSContent.Thumbprint -StoreName My -StoreLocation LocalMachine) {
+                            $Cert = Get-CSCertificate -Thumbprint $CSContent.Thumbprint -StoreName My -StoreLocation LocalMachine
                         }
-                        Write-Error @ErrorParams
+                        elseif (Test-CSCertificate -Thumbprint $CSContent.Thumbprint -StoreName Root -StoreLocation LocalMachine) {
+                            $Cert = Get-CSCertificate -Thumbprint $CSContent.Thumbprint -StoreName Root -StoreLocation LocalMachine
+                        }
+                        else {
+                            $ErrorParams = @{
+                                ErrorAction = 'Stop'
+                                Exception   = [System.Exception]::new(
+                                    ('Could not find any certificate with thumbprint {0}' -f $CSContent.Thumbprint)
+                                )
+                            }
+                            Write-Error @ErrorParams
+                        }
                     }
                 }
                 else {
