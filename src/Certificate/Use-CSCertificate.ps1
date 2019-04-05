@@ -42,8 +42,8 @@ function Use-CSCertificate {
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
         [switch]$Shared,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Private")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
         [Switch]$UseCertStore
     )
     begin { }
