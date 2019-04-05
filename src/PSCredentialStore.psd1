@@ -71,7 +71,7 @@
         'New-CSCertificate',
         'Test-CSCertificate',
         'Test-CSPfxCertificate',
-        'Use-PfxCertificate',
+        'Use-CSCertificate',
         # Connection
         'Connect-To',
         'Disconnect-From',
