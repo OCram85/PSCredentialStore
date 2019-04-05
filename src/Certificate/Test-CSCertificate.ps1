@@ -48,19 +48,19 @@ function Test-CSCertificate {
     }
     process {
         if ($Type -eq 'Private') {
-            $cert = Get-CSPfXCertificate -Thumbprint $Thumbprint -StoreName 'My' -StoreLocation 'CurrentUser'
+            $cert = Get-CSPfXCertificate -Thumbprint $CS.Thumbprint -StoreName 'My' -StoreLocation 'CurrentUser'
         }
         elseif ($Type -eq 'Shared') {
             if ( $isLinux) {
-                $cert = Get-CSPfxCertificate -Thumbprint $Thumbprint -StoreName 'My' -StoreLocation 'CurrentUser'
+                $cert = Get-CSPfxCertificate -Thumbprint $CS.Thumbprint -StoreName 'My' -StoreLocation 'CurrentUser'
                 if ($null -eq $cert) {
-                    $cert = Get-CSPfxCertificate -Thumbprint $Thumbprint -StoreName 'Root' -StoreLocation 'LocalMachine'
+                    $cert = Get-CSPfxCertificate -Thumbprint $CS.Thumbprint -StoreName 'Root' -StoreLocation 'LocalMachine'
                 }
             }
             elseif ( (! $isLinux) -or ($isWindows) ) {
-                $cert = Get-CSPfxCertificate -Thumbprint $Thumbprint -StoreName 'My' -StoreLocation 'LocalMachine'
+                $cert = Get-CSPfxCertificate -Thumbprint $CS.Thumbprint -StoreName 'My' -StoreLocation 'LocalMachine'
                 if ($null -eq $cert) {
-                    $cert = Get-CSPfxCertificate -Thumbprint $Thumbprint -StoreName 'Root' -StoreLocation 'LocalMachine'
+                    $cert = Get-CSPfxCertificate -Thumbprint $CS.Thumbprint -StoreName 'Root' -StoreLocation 'LocalMachine'
                 }
             }
         }
