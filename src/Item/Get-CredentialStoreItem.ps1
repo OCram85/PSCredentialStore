@@ -87,43 +87,7 @@ function Get-CredentialStoreItem {
             $CSMembers = Get-Member -InputObject $CS
             # Let's first check if the given remote host exists as object property
             if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
-                try {
-                    if ($null -eq $CS.PfxCertificate) {
-                        if ($CS.Type -eq 'Private') {
-                            $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint
-                        }
-                        elseif ($CS.Type -eq 'Shard') {
-                            if (Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation LocalMachine) {
-                                $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation LocalMachine
-                            }
-                            elseif (Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName Root -StoreLocation LocalMachine) {
-                                $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint -StoreName Root -StoreLocation LocalMachine
-                            }
-                            else {
-                                $ErrorParams = @{
-                                    ErrorAction = 'Stop'
-                                    Exception   = [System.Exception]::new(
-                                        ('Could not find any certificate with thumbprint {0}' -f $CS.Thumbprint)
-                                    )
-                                }
-                                Write-Error @ErrorParams
-                            }
-                        }
-                    }
-                    else {
-                        $Cert = Get-PfxCertificate -FilePath $CS.PfxCertificate -ErrorAction Stop
-                    }
-                }
-                catch {
-                    $_.Exception.Message | Write-Error
-                    $ErrorParams = @{
-                        ErrorAction = 'Stop'
-                        Exception   = [System.Security.Cryptography.CryptographicException]::new(
-                            'Could not read the given PFX certificate.'
-                        )
-                    }
-                    Write-Error @ErrorParams
-                }
+                $Cert = Get-CSCertificate -Type $CS.Type -Thumbprint $CS.Thumbprint
                 $DecryptedKey = $Cert.PrivateKey.Decrypt(
                     [Convert]::FromBase64String($CS.$CredentialName.EncryptedKey),
                     [System.Security.Cryptography.RSAEncryptionPadding]::Pkcs1

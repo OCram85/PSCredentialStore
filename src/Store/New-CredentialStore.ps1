@@ -141,7 +141,7 @@ function New-CredentialStore {
                 OrganizationalUnitName = $PSCmdlet.ParameterSetName
                 CommonName             = 'PSCredentialStore'
             }
-            $CRTAttribute = New-CRTAttribute @CRTParams
+            $CRTAttribute = New-CSCertAttribute @CRTParams
 
             # If we are working with a ne shared store we have to create the location first.
             # Otherwise openssl fails with unknown path
@@ -171,7 +171,7 @@ function New-CredentialStore {
             }
 
             try {
-                New-PfxCertificate @PfxParams
+                New-CSCertificate @PfxParams
             }
             catch {
                 $_.Exception.Message | Write-Error
