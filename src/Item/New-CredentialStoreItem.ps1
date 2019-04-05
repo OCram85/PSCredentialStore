@@ -116,7 +116,12 @@ function New-CredentialStoreItem {
         }
 
         if ($Credential.UserName) {
-            $Cert = Get-CSCertificate -Type $CSContent.Type -Thumbprint $CSContent.Thumbprint
+            if ($null -eq $CSContent.PfxCertificate) {
+                $Cert = Get-CSCertificate -Type $CSContent.Type -Thumbprint $CSContent.Thumbprint
+            }
+            else {
+                $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
+            }
 
             if (Get-Member -InputObject $CSContent -Name $CredentialName -Membertype Properties) {
                 $MessageParams = @{
