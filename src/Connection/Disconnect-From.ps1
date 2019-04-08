@@ -51,9 +51,9 @@ function Disconnect-From {
         Disconnect-From -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
 
     .NOTES
-        File Name   : Disconnect-From.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Disconnect-From.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -95,7 +95,7 @@ function Disconnect-From {
             catch {
                 # Write a error message to the log.
                 $MessageParams = @{
-                    Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
@@ -114,7 +114,7 @@ function Disconnect-From {
             catch {
                 # Write a error message to the log.
                 $MessageParams = @{
-                    Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
@@ -127,7 +127,7 @@ function Disconnect-From {
             }
             else {
                 $MessageParams = @{
-                    Message = "There is no open WinSCP Session"
+                    Message     = "There is no open WinSCP Session"
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
@@ -138,7 +138,7 @@ function Disconnect-From {
         "NetAppFAS" {
             try {
                 $MessageParams = @{
-                    Message = "Setting {0} to `$null, which will disconnect NetAppFAS" -f $Global:CurrentNcController
+                    Message     = "Setting {0} to `$null, which will disconnect NetAppFAS" -f $Global:CurrentNcController
                     ErrorAction = "Continue"
                 }
                 Write-Verbose @MessageParams
@@ -148,7 +148,7 @@ function Disconnect-From {
             catch {
                 # Write a error message to the log.
                 $MessageParams = @{
-                    Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
@@ -163,7 +163,7 @@ function Disconnect-From {
             catch {
                 # Write a error message to the log.
                 $MessageParams = @{
-                    Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
@@ -176,7 +176,7 @@ function Disconnect-From {
             }
             catch {
                 $MessageParams = @{
-                    Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
@@ -188,7 +188,7 @@ function Disconnect-From {
             }
             else {
                 $MessageParams = @{
-                    Message = "There is no open WinSCP Session"
+                    Message     = "There is no open WinSCP Session"
                     ErrorAction = "Stop"
                 }
                 Write-Error @MessageParams
@@ -197,7 +197,7 @@ function Disconnect-From {
         default {
             # Write a error message to the log.
             $MessageParams = @{
-                Message = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
                 ErrorAction = "Stop"
             }
             Write-Error @MessageParams

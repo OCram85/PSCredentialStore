@@ -57,9 +57,9 @@ function Connect-To {
         Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
 
     .NOTES
-        File Name   : Connect-To.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Connect-To.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

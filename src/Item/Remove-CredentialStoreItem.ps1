@@ -39,11 +39,9 @@ function Remove-CredentialStoreItem {
         Remove-CredentialStoreItem -RemoteHost "esx01.myside.local" -Identifier svc
 
     .NOTES
-        ```
-        File Name   : Remove-CredentialStoreItem.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-        ```
+        - File Name   : Remove-CredentialStoreItem.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

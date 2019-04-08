@@ -15,9 +15,9 @@ function Get-TempDir {
         Get-TempDir
 
     .NOTES
-        File Name   : Get-TempDir.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Get-TempDir.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

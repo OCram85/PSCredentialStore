@@ -16,9 +16,9 @@ function Get-RandomAESKey {
         .\Get-RandomAESKey
 
     .NOTES
-        File Name   : Get-RandomAESKey.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Get-RandomAESKey.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -28,7 +28,7 @@ function Get-RandomAESKey {
     [OutputType([byte[]])]
     param()
 
-    begin {}
+    begin { }
 
     process {
         $key = [byte[]]::new(32)
@@ -40,5 +40,5 @@ function Get-RandomAESKey {
         }
 
     }
-    end {}
+    end { }
 }
