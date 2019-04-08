@@ -25,9 +25,9 @@ function New-CSCertificate {
         New-CSCertificate -CRTAttribute $CRTAttribute -KeyName './myprivate.key' -CertName './mycert.pfx'
 
     .NOTES
-        File Name   : New-CSCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : New-CSCertificate.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

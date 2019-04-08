@@ -7,7 +7,7 @@ function Get-CSPfxCertificate {
         You can use this function to get a stored certificate. Search for the object by its unique thumbprint.
 
     .PARAMETER Thumbprint
-        Provide one or more thumprints.
+        Provide one or more thumbprints.
 
     .PARAMETER StoreName
         Select the store name in which you want to search the certificates.
@@ -25,9 +25,9 @@ function Get-CSPfxCertificate {
         Get-CSPfxCertificate -Thumbprint '12345678' -StoreName 'My' -StoreLocation 'CurrentUser'
 
     .NOTES
-        File Name   : Get-CSPfxCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Get-CSPfxCertificate.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

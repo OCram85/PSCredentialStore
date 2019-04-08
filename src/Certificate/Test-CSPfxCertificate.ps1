@@ -7,7 +7,7 @@ function Test-CSPfxCertificate {
         Use this function to ensure if a certificate is already imported into a given store.
 
     .PARAMETER Thumbprint
-        Provide one or more thumprints.
+        Provide one or more thumbprints.
 
     .PARAMETER StoreName
         Select the store name in which you want to search the certificates.
@@ -22,10 +22,10 @@ function Test-CSPfxCertificate {
         [bool]
 
     .EXAMPLE
-        Test-CSPfxCertificat -Thumbprint '12345678' -StoreName 'My' -StoreLocation 'CurrentUser'
+        Test-CSPfxCertificate -Thumbprint '12345678' -StoreName 'My' -StoreLocation 'CurrentUser'
 
     .NOTES
-        File Name   : Test-CSPfxCertificat.ps1
+        File Name   : Test-CSPfxCertificate.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
 

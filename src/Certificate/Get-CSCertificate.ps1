@@ -1,16 +1,16 @@
 function Get-CSCertificate {
     <#
     .SYNOPSIS
-        Returns the current used valid PfX Certificate.
+        Returns the current used valid PfX certificate.
 
     .DESCRIPTION
-        Use this function to get the available pfx certficate respecting the config hierarchy.
+        Use this function to get the available pfx certificate respecting the config hierarchy.
 
     .PARAMETER Type
         Select the current credential store type.
 
     .PARAMETER Thumbprint
-        Provice the crednetials thumbprint for the search.
+        Provide the credentials thumbprint for the search.
 
     .INPUTS
         [None]
@@ -22,9 +22,9 @@ function Get-CSCertificate {
         Get-CSCertificate -Type 'Shared' -Thumbprint '12334456'
 
     .NOTES
-        File Name   : Get-CSCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Get-CSCertificate.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

@@ -1,11 +1,11 @@
 function Import-CSPfxCertificate {
     <#
     .SYNOPSIS
-        adds a given pfx certificate file to current uerers personal certificate store.
+        Adds a given pfx certificate file to current user's personal certificate store.
 
     .DESCRIPTION
-        This function is used to import existing pfx certificate files. The Import-PFXCertificate cmdle from the
-        PKI module imports the certficate into a deprecated store. Thus you can't read the private key afterwards or
+        This function is used to import existing pfx certificate files. The Import-PFXCertificate cmdlet from the
+        PKI module imports the certificate into a deprecated store. Thus you can't read the private key afterwards or
         using it for decrypting data.
 
     .PARAMETER Path
@@ -64,7 +64,7 @@ function Import-CSPfxCertificate {
             'ReadWrite',
             'MaxAllowed',
             'OpenExistingOnly',
-            'InclueArchived'
+            'IncludeArchived'
         )]
         [string]$OpenFlags = 'ReadWrite'
     )

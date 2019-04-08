@@ -1,10 +1,10 @@
 function Test-CSCertificate {
     <#
     .SYNOPSIS
-        Tests if the linked certificate is stor ein the specified cert stores.
+        Tests if the linked certificate is store ein the specified cert stores.
 
     .DESCRIPTION
-        Test-CSCertficate should be an easy high level test for the linked certificate.
+        Test-CSCertificate should be an easy high level test for the linked certificate.
 
     .PARAMETER Type
         Select between 'Private' or 'Shared'.
@@ -16,12 +16,12 @@ function Test-CSCertificate {
         [bool]
 
     .EXAMPLE
-        .\Remove-Some-Script.ps1 -One content
+        Test-CSCertificate -Type 'Shared'
 
     .NOTES
-        File Name   : Test-CSCertificate.ps1
-        Author      : Marco Blessin - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Test-CSCertificate.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -42,7 +42,7 @@ function Test-CSCertificate {
             $CS = Get-CredentialStore -Shared
         }
         if ($null -ne $CS.PfxCertificate) {
-            Write-Warning 'There is a Pfx certificate file linked in the store. Certifcates saved in the Cert store will be ignored!'
+            Write-Warning 'There is a Pfx certificate file linked in the store. Certificates saved in the Cert store will be ignored!'
         }
 
     }

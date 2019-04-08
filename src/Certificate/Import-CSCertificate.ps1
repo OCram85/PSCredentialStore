@@ -1,13 +1,17 @@
 function Import-CSCertificate {
     <#
     .SYNOPSIS
-        A brief description of the function or script.
+        Imports a linked certificate to the valid store location.
 
     .DESCRIPTION
-        Describe the function of the script using a single sentence or more.
+        Import-CSCertificate takes a pfx certificate file and imports it to the supposed certificate store for
+        private and shared credential stores.
 
-    .PARAMETER One
-        Description of the Parameter (what it does)
+    .PARAMETER Type
+        Select between the a private and shared credential store.
+
+    .PARAMETER Path
+        Provide a valid path to pfx certificate file.
 
     .INPUTS
         Describe the script input parameters (if any), otherwise it may also list the word "[None]".
@@ -19,9 +23,9 @@ function Import-CSCertificate {
         .\Remove-Some-Script.ps1 -One content
 
     .NOTES
-        File Name   : Import-CSCertificate.ps1
-        Author      : fullname - mail
-        Requires    : ModuleNames
+        - File Name   : Import-CSCertificate.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -52,7 +56,7 @@ function Import-CSCertificate {
     }
 
     process {
-        # Import to CurrentUser\My stor for windows and linux
+        # Import to CurrentUser\My store for windows and linux
         if ($Type -eq 'Private') {
             Import-CSPfxCertificate -Path $Path -StoreName 'My' -StoreLocation 'CurrentUser' -OpenFlags 'ReadWrite'
         }

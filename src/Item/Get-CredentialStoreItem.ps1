@@ -11,8 +11,8 @@ function Get-CredentialStoreItem {
         Specify the host, for which you would like to change the credentials.
 
     .PARAMETER Identifier
-            Provide a custom identifier to the given remote host key. This enables you to store multiple credentials
-            for a single remote host entry. For example ad/sys1, ftp/sys1, mssql/sys1
+        Provide a custom identifier to the given remote host key. This enables you to store multiple credentials
+        for a single remote host entry. For example ad/sys1, ftp/sys1, mssql/sys1
 
     .PARAMETER Path
         Define a custom path to a shared CredentialStore.
@@ -31,11 +31,10 @@ function Get-CredentialStoreItem {
         $myCreds = Get-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 
     .NOTES
-        ```
-        File Name   : Get-CredentialStoreItem.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-        ```
+        - File Name   : Get-CredentialStoreItem.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    : dfgdfg
+
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>
