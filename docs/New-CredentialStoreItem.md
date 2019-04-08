@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # New-CredentialStoreItem
 
 ## SYNOPSIS
@@ -40,18 +33,18 @@ New-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.lo
 
 ## PARAMETERS
 
-### -RemoteHost
-The identifier or rather name for the given credentials.
+### -Credential
+You can provide credentials optionally as pre existing pscredential object.
 
 ```yaml
-Type: String
+Type: PSCredential
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -73,18 +66,33 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Credential
-You can provide credentials optionally as pre existing pscredential object.
+### -Path
+Define the store in which you would like to add a new item.
 
 ```yaml
-Type: PSCredential
-Parameter Sets: (All)
+Type: String
+Parameter Sets: Shared
 Aliases:
 
 Required: False
 Position: Named
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RemoteHost
+The identifier or rather name for the given credentials.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -99,21 +107,6 @@ Aliases:
 Required: True
 Position: Named
 Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Path
-Define the store in which you would like to add a new item.
-
-```yaml
-Type: String
-Parameter Sets: Shared
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

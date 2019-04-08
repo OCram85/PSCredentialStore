@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # Disconnect-From
 
 ## SYNOPSIS
@@ -63,6 +56,21 @@ Disconnect-From -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
 
 ## PARAMETERS
 
+### -Force
+Force the disconnect, even if the disconnect would fail.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -RemoteHost
 Specify the remote endpoint, whose session you would like to terminate.
 
@@ -91,21 +99,6 @@ Aliases:
 Required: True
 Position: 2
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Force
-Force the disconnect, even if the disconnect would fail.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

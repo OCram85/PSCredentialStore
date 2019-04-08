@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # Get-CSCertificate
 
 ## SYNOPSIS
@@ -28,21 +21,6 @@ Get-CSCertificate -Type 'Shared' -Thumbprint '12334456'
 
 ## PARAMETERS
 
-### -Type
-Select the current credential store type.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Thumbprint
 Provide the credentials thumbprint for the search.
 
@@ -53,6 +31,21 @@ Aliases:
 
 Required: True
 Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Type
+Select the current credential store type.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

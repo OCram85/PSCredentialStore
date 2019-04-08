@@ -14,13 +14,13 @@ function Import-CSCertificate {
         Provide a valid path to pfx certificate file.
 
     .INPUTS
-        Describe the script input parameters (if any), otherwise it may also list the word "[None]".
+        [None]
 
     .OUTPUTS
-        Describe the script output parameters (if any), otherwise it may also list the word "[None]".
+        [None]
 
     .EXAMPLE
-        .\Remove-Some-Script.ps1 -One content
+        Import-CSCertificate -Type 'Private' -Path (Join-Path -Path $Env:APPDATA -ChildItem 'PfxCertificate.pfx')
 
     .NOTES
         - File Name   : Import-CSCertificate.ps1

@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # Connect-To
 
 ## SYNOPSIS
@@ -66,15 +59,19 @@ Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
 
 ## PARAMETERS
 
-### -RemoteHost
-Specify the host, for which you would like to change the credentials.
+### -Credentials
+Use this parameter to bypass the stored credentials.
+Without this parameter Connect-To tries to read the
+needed credentials from the CredentialStore.
+If you provide this parameter you skip this lookup behavior.
+So you can use it to enable credentials without preparing any user interaction.
 
 ```yaml
-Type: String
+Type: PSCredential
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -98,10 +95,38 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Type
-Specify the host type of the target.
-Currently implemented targets are: Possible connection values are:
-CiscoUcs, FTP, NetAppFAS, VMware, CisServer, ExchangeHTTP, ExchangeHTTPS, SCP.
+### -PassThru
+Returns the value from the underlying connection type function.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Define a custom path to a shared CredentialStore.
+
+```yaml
+Type: String
+Parameter Sets: Shared
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RemoteHost
+Specify the host, for which you would like to change the credentials.
 
 ```yaml
 Type: String
@@ -109,25 +134,6 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Credentials
-Use this parameter to bypass the stored credentials.
-Without this parameter Connect-To tries to read the
-needed credentials from the CredentialStore.
-If you provide this parameter you skip this lookup behavior.
-So you can use it to enable credentials without preparing any user interaction.
-
-```yaml
-Type: PSCredential
-Parameter Sets: (All)
-Aliases:
-
-Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
@@ -151,32 +157,19 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Path
-Define a custom path to a shared CredentialStore.
+### -Type
+Specify the host type of the target.
+Currently implemented targets are: Possible connection values are:
+CiscoUcs, FTP, NetAppFAS, VMware, CisServer, ExchangeHTTP, ExchangeHTTPS, SCP.
 
 ```yaml
 Type: String
-Parameter Sets: Shared
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -PassThru
-{{ Fill PassThru Description }}
-
-```yaml
-Type: SwitchParameter
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

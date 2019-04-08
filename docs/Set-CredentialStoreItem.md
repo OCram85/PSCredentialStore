@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # Set-CredentialStoreItem
 
 ## SYNOPSIS
@@ -38,18 +31,18 @@ Set-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.lo
 
 ## PARAMETERS
 
-### -RemoteHost
-Specify the host you for which you would like to change the credentials.
+### -Credential
+{{ Fill Credential Description }}
 
 ```yaml
-Type: String
+Type: PSCredential
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: Named
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
@@ -70,18 +63,33 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Credential
-{{ Fill Credential Description }}
+### -Path
+Define the store in which your given host entry already exists.
 
 ```yaml
-Type: PSCredential
-Parameter Sets: (All)
+Type: String
+Parameter Sets: Shared
 Aliases:
 
 Required: False
 Position: Named
 Default value: None
-Accept pipeline input: True (ByValue)
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -RemoteHost
+Specify the host you for which you would like to change the credentials.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -98,21 +106,6 @@ Aliases:
 Required: True
 Position: Named
 Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Path
-Define the store in which your given host entry already exists.
-
-```yaml
-Type: String
-Parameter Sets: Shared
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # New-CSCertAttribute
 
 ## SYNOPSIS
@@ -29,6 +22,36 @@ New-CSCertAttribute -Country 'DE' -State 'BW' -City 'Karlsruhe' -Organization 'A
 
 ## PARAMETERS
 
+### -City
+Certificate city value.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -CommonName
+The certificate common name.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 6
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Country
 County code like EN, DE, IT, FR...
 
@@ -44,32 +67,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -State
-Certificate state value.
+### -Days
+{{ Fill Days Description }}
 
 ```yaml
-Type: String
+Type: Int32
 Parameter Sets: (All)
 Aliases:
 
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -City
-Certificate city value.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 3
-Default value: None
+Required: False
+Position: 7
+Default value: 365
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -104,8 +112,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -CommonName
-The certificate common name.
+### -State
+Certificate state value.
 
 ```yaml
 Type: String
@@ -113,23 +121,8 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: 6
+Position: 2
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Days
-{{ Fill Days Description }}
-
-```yaml
-Type: Int32
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 7
-Default value: 365
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

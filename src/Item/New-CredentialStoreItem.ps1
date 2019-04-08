@@ -21,6 +21,10 @@ function New-CredentialStoreItem {
     .PARAMETER Credential
         You can provide credentials optionally as pre existing pscredential object.
 
+    .PARAMETER Shared
+        Define the CredentialStore where you want to add the new item. Default is always personal but can be
+        changed to shared, or even shared with custom path.
+
     .INPUTS
         [None]
 

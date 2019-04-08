@@ -10,31 +10,25 @@
 General
 =======
 
-The PSCredentialStore is a simple credential manager for PSCredentials. It stores PSCredentials in a simple json
+The PSCredentialStore is a simple credential manager for `PSCredential` objects. It stores PSCredentials in a simple json
 file. You can choose between a private and shared credential store. The private one exists in your profile and can
 ony accessed by your account on the same machine. The shared store enables you to use different credentials for your
 scripts without exposing them as plain text.
 
-**The shared store isn't 100% secure and I don't recommend using it in production!**
-
 PSCredentialStore was developed to simplify the delegation of complex powershell scripts. In this case you often
 need to store credentials for non interactive usage like in scheduled tasks.
+
+Starting with version `1.0.0` PSCredential uses Pfx certificates fo encryption. You can use Pfx certification files
+or certificates stored in the certification store.
 
 For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStore.md) page on github or via CLI with
 `Get-Help about_PSCredentialStore`.
 
-:exclamation: Upcoming Changes :exclamation:
-================
+Requirements
+============
 
-The will be some breaking changes starting with the `0.5.0.xxx`:
-
-- **PSCredentialStore will use PFX certificates to encrypt your credentials.**
-  - This replaces the the current encryption methods and you need to recreate or upgrade your pre existing stores.
-- The changes allows the PSCredentialStore module to support the PowerShell `Core` editions.
-  - Yes this means, you can use the module on any PowerShell 6 supported linux distribution.
-- It's also possible to create a shared credential store and transfer it onto a another platform like:
-`Windows -- to -->  Linux` and vice versa.
-- Automatically creates self signed certificate with 2048 bits RSA keys for encryption.
+- PowerShell >= `5.1`
+- .NET Framework >= `4.6` or .NET Core >= `1.0`
 
 Installation
 ============
@@ -61,9 +55,17 @@ Quick Start
 
 **1.** First we need a blank credential store. You can decide between a *private* or *shared* store. The private
 Credential Store can only be accessed with your profile on the machine you created it.
+
+Starting with version `1.0.0` you can decide the storage type of your fresh created certificate. As default
+PSCredentialStore creates a new pfx certificate file beside the credential store itself. Optionally you can provide
+the parameter `-UseCertStore`. This imports the new certificate in the user or machine certification store as well.
+
 ```powershell
 # Private credential store
 New-CredentialStore
+
+# Private credential store with certification store usage
+New-CredentialStore -UseCertStore
 
 # Shared credential rtore
 New-CredentialStore -Shared
@@ -110,6 +112,9 @@ Connect-To -RemoteHost "ftp.myside.local" -Type FTP
 Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
 Connect-To -RemoteHost "esx01.myside.local" -Type VMware
 Connect-To -RemoteHost "vcr.myside.local" -Type CisServer
+Connect-To -RemoteHost "exchange1.myside.local" -Type ExchangeHTTP
+Connect-To -RemoteHost "exchange1.myside.local" -Type ExchangeHTTPS
+Connect-To -RemoteHost "ubuntu.myside.local" -Type SCP
 ```
 
 Credits

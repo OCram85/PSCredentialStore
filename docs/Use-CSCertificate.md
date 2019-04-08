@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # Use-CSCertificate
 
 ## SYNOPSIS
@@ -34,21 +27,6 @@ Use-CSCertificate -Path 'C:\cert.pfx'
 
 ## PARAMETERS
 
-### -Path
-Specify the path to the PFX Certificate you want to link for usage.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -CredentialStore
 Specify a custom path for a shared credential store.
 
@@ -58,6 +36,21 @@ Parameter Sets: Shared
 Aliases:
 
 Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+Specify the path to the PFX Certificate you want to link for usage.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
 Position: Named
 Default value: None
 Accept pipeline input: False

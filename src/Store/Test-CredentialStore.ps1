@@ -14,6 +14,9 @@ function Test-CredentialStore {
         Switch to shared mode with this param. This enforces the command to work with a shared CredentialStore which
         can be decrypted across systems.
 
+    .EXAMPLE
+        Test-CredentialStore -eq $true
+
     .NOTES
         - File Name   : Test-CredentialStore.ps1
         - Author      : Marco Blessing - marco.blessing@googlemail.com

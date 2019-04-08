@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # New-CSCertificate
 
 ## SYNOPSIS
@@ -28,6 +21,22 @@ New-CSCertificate -CRTAttribute $CRTAttribute -KeyName './myprivate.key' -CertNa
 ```
 
 ## PARAMETERS
+
+### -CertName
+Provide a custom full path and name for the PFX certificate file.
+The file extension has to be \`*.pfx\`
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 3
+Default value: ./certificate.pfx
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -CRTAttribute
 Provide certificate related attributes provided by function New-CRTAttribute.
@@ -60,18 +69,17 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -CertName
-Provide a custom full path and name for the PFX certificate file.
-The file extension has to be \`*.pfx\`
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: String
+Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: cf
 
 Required: False
-Position: 3
-Default value: ./certificate.pfx
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -84,21 +92,6 @@ The cmdlet is not run.
 Type: SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
 
 Required: False
 Position: Named

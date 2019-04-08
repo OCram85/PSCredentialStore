@@ -18,6 +18,15 @@ function New-CredentialStore {
     .PARAMETER Force
         Use this switch to reset an existing store. The complete content will be wiped.
 
+    .PARAMETER SkipPFXCertCreation
+        You can skip the pfx certification process. This makes sense if you have a previously created cert or want to
+        import a cert in cross-platform environments.
+
+    .Parameter UseCertStore
+        Instead of using a plain pfx file beside your CredentialStore file you can import it into the user or machine
+        certification store. In this case the system itself secures the cert and you don't hat to set custom NTFS
+        permissions so secure your shared certificate.
+
     .INPUTS
         [None]
 

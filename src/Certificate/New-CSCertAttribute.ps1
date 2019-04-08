@@ -24,15 +24,14 @@ function New-CSCertAttribute {
     .PARAMETER CommonName
         The certificate common name.
 
-    .PARAMETER CSRSubject
-        you can provide the needed certificate properties with in one hashtable. This hashtable has to contain the
-        following keys: 'Country', 'State', 'City', 'Organization', 'OrganizationalUnitName', 'CommonName'.
+    .PARAMETER Days
+        The validation time itself.
 
     .INPUTS
         [None]
 
     .OUTPUTS
-        ['PSCredentialStore.Certificate.CSRDetails']
+        [PSCredentialStore.Certificate.CSRDetails]
 
     .EXAMPLE
         New-CSCertAttribute -Country 'DE' -State 'BW' -City 'Karlsruhe' -Organization 'AwesomeIT' -OrganizationalUnitName '' -CommonName 'MyPrivateCert'

@@ -15,7 +15,7 @@ function Use-CSCertificate {
     .PARAMETER Shared
         Use the credential store in shared mode.
 
-    .PARAMETER UserCertStore
+    .PARAMETER UseCertStore
         Use the given certificate and import it into the corresponding certificate store.
 
     .INPUTS

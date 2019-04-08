@@ -29,6 +29,9 @@ function Connect-To {
         Switch to shared mode with this param. This enforces the command to work with a shared CredentialStore which
         can be decrypted across systems.
 
+    .PARAMETER PassThru
+        Returns the value from the underlying connection type function.
+
     .INPUTS
         [None]
 

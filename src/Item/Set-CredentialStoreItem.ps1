@@ -4,6 +4,7 @@ function Set-CredentialStoreItem {
         Changes the credentials for the given remote host in the store.
 
     .DESCRIPTION
+        Use this function to update your already stored RemoteHost items.
 
     .PARAMETER Path
         Define the store in which your given host entry already exists.
@@ -19,6 +20,9 @@ function Set-CredentialStoreItem {
         Switch to shared mode with this param. This enforces the command to work with a shared CredentialStore which
         can be decrypted across systems.
 
+    .PARAMETER Credential
+        Provided the new credentials you want to update inside the RemoteHost item.
+
     .INPUTS
         [None]
 
@@ -27,6 +31,8 @@ function Set-CredentialStoreItem {
 
     .EXAMPLE
         Set-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
+
+    .EXAMPLE
         Set-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local" -Identifier svc
 
     .NOTES

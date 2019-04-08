@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # Test-CredentialStoreItem
 
 ## SYNOPSIS
@@ -43,6 +36,23 @@ Else {
 
 ## PARAMETERS
 
+### -Identifier
+Adds an optional identifier to the given RemoteHost.
+Makes it possible to store multiple credentials
+for a single host.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Path
 Define a custom credential store you try to read from.
 Without the \`-Path\` parameter
@@ -69,23 +79,6 @@ Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Identifier
-Adds an optional identifier to the given RemoteHost.
-Makes it possible to store multiple credentials
-for a single host.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False
