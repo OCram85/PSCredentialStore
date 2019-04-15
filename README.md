@@ -24,6 +24,8 @@ or certificates stored in the certification store.
 For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStore.md) page on github or via CLI with
 `Get-Help about_PSCredentialStore`.
 
+You can find the [reference](/docs/PSCredentialStore.md) in the /docs/ path as well.
+
 Requirements
 ============
 
