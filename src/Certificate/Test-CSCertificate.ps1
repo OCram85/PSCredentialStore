@@ -1,19 +1,13 @@
 function Test-CSCertificate {
     <#
     .SYNOPSIS
-        Tests if the given certificate exists in a store.
+        Tests if the linked certificate is store ein the specified cert stores.
 
     .DESCRIPTION
-        Use this function to ensure if a certificate is already imported into a given store.
+        Test-CSCertificate should be an easy high level test for the linked certificate.
 
-    .PARAMETER Thumbprint
-        Provide one or more thumprints.
-
-    .PARAMETER StoreName
-        Select the store name in which you want to search the certificates.
-
-    .PARAMETER StoreLocation
-        Select between the both available locations CurrentUser odr LocalMachine.
+    .PARAMETER Type
+        Select between 'Private' or 'Shared'.
 
     .INPUTS
         [None]
@@ -22,12 +16,12 @@ function Test-CSCertificate {
         [bool]
 
     .EXAMPLE
-        Test-CSCertificate -Thumbprint '12345678' -StoreName 'My' -StoreLocation 'CurrentUser'
+        Test-CSCertificate -Type 'Shared'
 
     .NOTES
-        File Name   : Test-CSCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Test-CSCertificate.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -35,45 +29,42 @@ function Test-CSCertificate {
     [CmdletBinding()]
     [OutputType([bool])]
     param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [string]$Thumbprint,
-
-        [Parameter(Mandatory = $false)]
-        [ValidateSet(
-            'AddressBook',
-            'AuthRoot',
-            'CertificateAuthority',
-            'Disallowed',
-            'My',
-            'Root',
-            'TrustedPeople',
-            'TrustedPublisher'
-        )]
-        [string]$StoreName = 'My',
-
-        [Parameter(Mandatory = $false)]
-        [ValidateSet(
-            'CurrentUser',
-            'LocalMachine'
-        )]
-        [string]$StoreLocation = 'CurrentUser'
+        [ValidateSet('Private', 'Shared')]
+        [string]$Type
     )
-
     begin {
-        $Store = [System.Security.Cryptography.X509Certificates.X509Store]::New($StoreName, $StoreLocation)
-        try {
-            $Store.Open('ReadOnly')
+        if ($Type -eq 'Private') {
+            $CS = Get-CredentialStore
         }
-        catch {
-            $_.Exception.Message | Write-Error -ErrorAction Stop
+        elseif ($Type -eq 'Shared') {
+            $CS = Get-CredentialStore -Shared
         }
+        if ($null -ne $CS.PfxCertificate) {
+            Write-Warning 'There is a Pfx certificate file linked in the store. Certificates saved in the Cert store will be ignored!'
+        }
+
     }
-
     process {
-        $Cert = $Store.Certificates | Where-Object { $_.Thumbprint -eq $Thumbprint }
-
-        if ($null -eq $Cert) {
+        if ($Type -eq 'Private') {
+            $cert = Get-CSPfXCertificate -Thumbprint $CS.Thumbprint -StoreName 'My' -StoreLocation 'CurrentUser'
+        }
+        elseif ($Type -eq 'Shared') {
+            if ( $isLinux) {
+                $cert = Get-CSPfxCertificate -Thumbprint $CS.Thumbprint -StoreName 'My' -StoreLocation 'CurrentUser'
+                if ($null -eq $cert) {
+                    $cert = Get-CSPfxCertificate -Thumbprint $CS.Thumbprint -StoreName 'Root' -StoreLocation 'LocalMachine'
+                }
+            }
+            elseif ( (! $isLinux) -or ($isWindows) ) {
+                $cert = Get-CSPfxCertificate -Thumbprint $CS.Thumbprint -StoreName 'My' -StoreLocation 'LocalMachine'
+                if ($null -eq $cert) {
+                    $cert = Get-CSPfxCertificate -Thumbprint $CS.Thumbprint -StoreName 'Root' -StoreLocation 'LocalMachine'
+                }
+            }
+        }
+        if ($null -eq $cert) {
             return $false
         }
         else {
@@ -81,6 +72,5 @@ function Test-CSCertificate {
         }
     }
     end {
-        $Store.Close()
     }
 }

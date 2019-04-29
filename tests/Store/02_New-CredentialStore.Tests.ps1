@@ -80,7 +80,7 @@ Describe "New-CredentialStore" {
             $CS = Get-CredentialStore
             $CS.PfxCertificate | Should -Be $null
             $CS.Thumbprint | Should -Not -Be $null
-            $res = Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation CurrentUser
+            $res = Test-CSCertificate -Type Private
             #Write-Verbose -Message ('res: {0}' -f $res) -Verbose
             $res | Should -Be $true
 
@@ -90,7 +90,7 @@ Describe "New-CredentialStore" {
             $CS = Get-CredentialStore -Shared
             $CS.PfxCertificate | Should -Be $null
             $CS.Thumbprint | Should -Not -Be $null
-            $res = Test-CSCertificate -Thumbprint $CS.Thumbprint -StoreName My -StoreLocation CurrentUser
+            $res = Test-CSCertificate -Type Shared
             #Write-Verbose -Message ('res: {0}' -f $res) -Verbose
             $res | Should -Be $true
         }

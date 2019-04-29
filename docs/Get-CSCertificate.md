@@ -1,62 +1,52 @@
-# Test-CredentialStore
+# Get-CSCertificate
 
 ## SYNOPSIS
-Returns the credential store state.
+Returns the current used valid PfX certificate.
 
 ## SYNTAX
 
-### Private (Default)
 ```
-Test-CredentialStore [<CommonParameters>]
-```
-
-### Shared
-```
-Test-CredentialStore [-Path <String>] [-Shared] [<CommonParameters>]
+Get-CSCertificate [-Type] <String> [-Thumbprint] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this script to test your credential store.
-For now it only checks if
-the file exists.
+Use this function to get the available pfx certificate respecting the config hierarchy.
 
 ## EXAMPLES
 
 ### BEISPIEL 1
 ```
-Test-CredentialStore -eq $true
+Get-CSCertificate -Type 'Shared' -Thumbprint '12334456'
 ```
 
 ## PARAMETERS
 
-### -Path
-Define a custom path to a shared CredentialStore.
+### -Thumbprint
+Provide the credentials thumbprint for the search.
 
 ```yaml
 Type: String
-Parameter Sets: Shared
+Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: Named
+Required: True
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Shared
-Switch to shared mode with this param.
-This enforces the command to work with a shared CredentialStore which
-can be decrypted across systems.
+### -Type
+Select the current credential store type.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: Shared
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
-Default value: False
+Position: 1
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -66,10 +56,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### [None]
 ## OUTPUTS
 
+### [System.Security.Cryptography.X509Certificates.X509Certificate2]
 ## NOTES
-- File Name   : Test-CredentialStore.ps1
+- File Name   : Get-CSCertificate.ps1
 - Author      : Marco Blessing - marco.blessing@googlemail.com
 - Requires    :
 

@@ -1,28 +1,28 @@
-# Test-CSConnection
+# Test-CSCertificate
 
 ## SYNOPSIS
-Returns the connection state of a given type to the remote host.
+Tests if the linked certificate is store ein the specified cert stores.
 
 ## SYNTAX
 
 ```
-Test-CSConnection [-RemoteHost] <String> [-Type] <String> [<CommonParameters>]
+Test-CSCertificate [-Type] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this script to check a connection which was established with the \`Connect-To\` cmdlet.
+Test-CSCertificate should be an easy high level test for the linked certificate.
 
 ## EXAMPLES
 
 ### BEISPIEL 1
 ```
-Test-CMConnection -RemoteHost "vcr01.internal.net" -Type VMware
+Test-CSCertificate -Type 'Shared'
 ```
 
 ## PARAMETERS
 
-### -RemoteHost
-Define the remote host you would like to check.
+### -Type
+Select between 'Private' or 'Shared'.
 
 ```yaml
 Type: String
@@ -31,23 +31,6 @@ Aliases:
 
 Required: True
 Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Type
-Define the connection type you would like to check.
-See the \`Connect-To\` documentation
-for valid type values.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -63,7 +46,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### [bool]
 ## NOTES
-- File Name   : Test-CSConnection.ps1
+- File Name   : Test-CSCertificate.ps1
 - Author      : Marco Blessing - marco.blessing@googlemail.com
 - Requires    :
 

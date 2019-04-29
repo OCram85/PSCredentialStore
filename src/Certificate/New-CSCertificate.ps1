@@ -1,7 +1,7 @@
-function New-PfxCertificate {
+function New-CSCertificate {
     <#
     .SYNOPSIS
-        Creates new PFX certificate for the CredentialStore encryption.
+        Creates a new PFX certificate for the CredentialStore encryption.
 
     .DESCRIPTION
         Use this function to create a custom self signed certificate used by the PSCredentialStore module.
@@ -22,12 +22,12 @@ function New-PfxCertificate {
         [None]
 
     .EXAMPLE
-        New-PfxCertificate -CRTAttribute $CRTAttribute -KeyName './myprivate.key' -CertName './mycert.pfx'
+        New-CSCertificate -CRTAttribute $CRTAttribute -KeyName './myprivate.key' -CertName './mycert.pfx'
 
     .NOTES
-        File Name   : New-PfxCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : New-CSCertificate.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore

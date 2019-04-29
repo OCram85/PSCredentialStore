@@ -17,22 +17,22 @@ function Test-CSConnection {
         [None]
 
     .OUTPUTS
-        [Boolean]
+        [bool]
 
     .EXAMPLE
-        .\Test-CMConnection -RemoteHost "r0-i01-vcr01.p0r.kivbf-cloud.net" -Type VMware
+        Test-CMConnection -RemoteHost "vcr01.internal.net" -Type VMware
 
     .NOTES
-        File Name   : Test-CSConnection.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Test-CSConnection.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>
 
     [CmdletBinding()]
-    [OutputType([boolean])]
+    [OutputType([bool])]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -77,7 +77,7 @@ function Test-CSConnection {
         'CiscoUcs' {
             $MsgParams = @{
                 ErrorAction = "Stop"
-                Message = "CiscoUCS connection test is not implemented yet!"
+                Message     = "CiscoUCS connection test is not implemented yet!"
             }
             Write-Error @MsgParams
             return $false
@@ -86,7 +86,7 @@ function Test-CSConnection {
         'FTP' {
             $MsgParams = @{
                 ErrorAction = "Stop"
-                Message = "FTP connection test is not implemented yet!"
+                Message     = "FTP connection test is not implemented yet!"
             }
             Write-Error @MsgParams
             return $false
@@ -95,7 +95,7 @@ function Test-CSConnection {
         'NetAppFAS' {
             $MsgParams = @{
                 ErrorAction = "Stop"
-                Message = "NetAppFAS connection test is not implemented yet!"
+                Message     = "NetAppFAS connection test is not implemented yet!"
             }
             Write-Error @MsgParams
             return $false
@@ -105,7 +105,7 @@ function Test-CSConnection {
         Default {
             $MsgParams = @{
                 ErrorAction = "Stop"
-                Message = "Panic: There is an invalid type value! This error should never be thrown."
+                Message     = "Panic: There is an invalid type value! This error should never be thrown."
             }
             Write-Error @MsgParams
             return $false

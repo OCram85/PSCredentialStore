@@ -1,4 +1,4 @@
-﻿# PSCredentialStore
+# PSCredentialStore
 ## about_PSCredentialStore
 
 
@@ -7,24 +7,30 @@ PSCredentialStore enables managing multiple PSCredential objects.
 
 
 # LONG DESCRIPTION
-The PSCredentialStore is an simple credential manager for PSCredentials. It stores multiple credential objects in a
-simple json file. You can choose between a private and shared store. The private one exists in your profile and can
+The PSCredentialStore is a simple credential manager for `PSCredential` objects. It stores PSCredentials in a simple json
+file. You can choose between a private and shared credential store. The private one exists in your profile and can
 ony accessed by your account on the same machine. The shared store enables you to use different credentials for your
-script without exposing them as plain text.
-
-**The shared store isn't 100% secure and I don't recommend using it in production!**
+scripts without exposing them as plain text.
 
 PSCredentialStore was developed to simplify the delegation of complex powershell scripts. In this case you often
 need to store credentials for non interactive usage like in scheduled tasks.
 
-To get started read the [about_PSCredentialStore](/src/en-US/about_PSCredential.help.txt) page.
+Starting with version `1.0.0` PSCredential uses Pfx certificates fo encryption. You can use Pfx certificate files
+or certificates stored in the certificate store.
 
+For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStore.md) page on github or via CLI with
+`Get-Help about_PSCredentialStore`.
+
+## Requirements
+
+- PowerShell >= `5.1`
+- .NET Framework >= `4.6` or .NET Core >= `1.0`
 
 ## Installation
 
 ## PowerShellGallery.com (Recommended Way)
 
-* Make sure you use PowerShell 4.0 or higher with `$PSVersionTable`.
+* Make sure you use PowerShell 5.1 or higher with `$PSVersionTable`.
 * Use the builtin PackageManagement and install with: `Install-Module PSCredentialStore`
 * Done. Start exploring the Module with `Import-Module PSCredentialStore ; Get-Command -Module PSCredentialStore`
 
@@ -36,18 +42,27 @@ To get started read the [about_PSCredentialStore](/src/en-US/about_PSCredential.
   * Don't forget to change the NTFS permission flag in the context menu.
 * Start with `Import-Module PSCredentialStore`
 
-**1.** First we need a blank CredentialStore. You can decide between a *private* or *shared* store. The private
+**1.** First we need a blank credential store. You can decide between a *private* or *shared* store. The private
 Credential Store can only be accessed with your profile on the machine you created it.
+
+Starting with version `1.0.0` you can decide the storage type of your fresh created certificate. As default
+PSCredentialStore creates a new pfx certificate file beside the credential store itself. Optionally you can provide
+the parameter `-UseCertStore`. This imports the new certificate in the user or machine certificate store as well.
+
 ```powershell
-# Private Credential Store
+# Private credential store
 New-CredentialStore
 
-# Shared Credential Store
+# Private credential store with certificate store usage
+New-CredentialStore -UseCertStore
+
+# Shared credential rtore
 New-CredentialStore -Shared
 
-#Shared CredentialStore in custom Location
+#Shared credential store in custom Location
 New-CredentialStore -Shared -Path 'C:\CredentialStore.json'
 ```
+
 
 **2.** Now you can manage your CredentialStoreItems:
 ```powershell

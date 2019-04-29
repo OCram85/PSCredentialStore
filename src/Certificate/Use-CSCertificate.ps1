@@ -1,13 +1,22 @@
-function Use-PfxCertificate {
+function Use-CSCertificate {
     <#
     .SYNOPSIS
-        Links an existing PFX Certifiacte to a CredentialStore.
+        Links an existing PFX Certificate to a CredentialStore.
 
     .DESCRIPTION
         Linking a certificate is needed if you plan to use the same CredentialStore in cross platform scenarios.
 
     .PARAMETER Path
         Specify the path to the PFX Certificate you want to link for usage.
+
+    .PARAMETER CredentialStore
+        Specify a custom path for a shared credential store.
+
+    .PARAMETER Shared
+        Use the credential store in shared mode.
+
+    .PARAMETER UseCertStore
+        Use the given certificate and import it into the corresponding certificate store.
 
     .INPUTS
         [None]
@@ -16,10 +25,10 @@ function Use-PfxCertificate {
         [None]
 
     .EXAMPLE
-
+        Use-CSCertificate -Path 'C:\cert.pfx'
 
     .NOTES
-        File Name   : Use-PfxCertificate.ps1
+        File Name   : Use-CSCertificate.ps1
         Author      : Marco Blessing - marco.blessing@googlemail.com
         Requires    :
 
@@ -40,9 +49,13 @@ function Use-PfxCertificate {
         [string]$CredentialStore,
 
         [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
-        [switch]$Shared
+        [switch]$Shared,
+
+        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Switch]$UseCertStore
     )
-    begin {}
+    begin { }
 
     process {
         try {
@@ -93,10 +106,16 @@ Make sure you used the same AES keys for encrypting!
 "@
         }
 
-        $CS.PfxCertificate = $validPath.Path
-        $CS.Thumbprint = $PfxCertificate.Thumbprint
+        if ($UseCertStore) {
+            Import-CSCertificate -Type $PSCmdlet.ParameterSetName -Path $Path
+            $CS.Thumbprint = $PfxCertificate.Thumbprint
+            $CS.PfxCertificate = $null
+        }
+        else {
+            $CS.PfxCertificate = $validPath.Path
+        }
         $CS | ConvertTo-Json -Depth 5 | Out-File -FilePath $StorePath -Force -Encoding utf8
     }
 
-    end {}
+    end { }
 }

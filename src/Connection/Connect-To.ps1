@@ -29,6 +29,9 @@ function Connect-To {
         Switch to shared mode with this param. This enforces the command to work with a shared CredentialStore which
         can be decrypted across systems.
 
+    .PARAMETER PassThru
+        Returns the value from the underlying connection type function.
+
     .INPUTS
         [None]
 
@@ -57,9 +60,9 @@ function Connect-To {
         Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
 
     .NOTES
-        File Name   : Connect-To.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Connect-To.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -194,7 +197,7 @@ function Connect-To {
                     }
                     try {
                         $FTPSessionOption = New-WinSCPSessionOption @WinSCPConParams
-                        $Global:WinSCPSession = New-WinSCPSession @FTPSessionOption
+                        $Global:WinSCPSession = New-WinSCPSession -SessionOption $FTPSessionOption
                     }
                     catch {
                         throw "Could not connect to {0} using {1} protocol!" -f $RemoteHost, $Type

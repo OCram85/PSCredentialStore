@@ -13,11 +13,11 @@ Describe "Get-CredentialStore" {
             { Get-CredentialStore } | Should -Not -Throw
         }
         It "Test2: Read Credential Store with testing data" {
-            { Use-PfxCertificate -Shared -CredentialStore $TestCredentialStore -Path $TestPfxCert } | Should -Not -Throw
+            { Use-CSCertificate -Shared -CredentialStore $TestCredentialStore -Path $TestPfxCert } | Should -Not -Throw
             { Get-CredentialStore -Shared -Path $TestCredentialStore } | Should -Not -Throw
         }
         It "Test3: Not existing path should return false" {
-            { Get-CredentialStore -Shared -Path './CredentialStore.json'  }| Should -Throw "Could not find the CredentialStore."
+            { Get-CredentialStore -Shared -Path './CredentialStore.json' } | Should -Throw "Could not find the CredentialStore."
         }
     }
     Context "Testing invalid json data" {

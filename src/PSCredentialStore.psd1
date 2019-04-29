@@ -55,7 +55,10 @@
     # TypesToProcess = @()
 
     # Format files (.ps1xml) to be loaded when importing this module
-    # FormatsToProcess = @()
+    FormatsToProcess     = @(
+        'Formats/PSCredential.Store.Format.ps1xml',
+        'Formats/PSCredentialStore.Certificate.Attribute.ps1xml'
+    )
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     # NestedModules = @()
@@ -65,10 +68,14 @@
         # Certificate
         'Get-CSCertificate',
         'Import-CSCertificate',
-        'New-CRTAttribute',
-        'New-PfxCertificate',
+        'New-CSCertAttribute',
+        'New-CSCertificate',
         'Test-CSCertificate',
-        'Use-PfxCertificate',
+        'Use-CSCertificate',
+        # Pfx Certificate
+        # 'Get-CSPfxCertificate',
+        # 'Import-CSPfxCertificate',
+        # 'Test-CSPfxCertificate',
         # Connection
         'Connect-To',
         'Disconnect-From',
@@ -121,10 +128,10 @@
             IconUri      = 'https://raw.githubusercontent.com/OCram85/PSCredentialStore/master/assets/logo256.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'This is a pre-release version!. Do not use in production!'
+            ReleaseNotes = 'See https://github.com/OCram85/PSCredentialStore/releases page for details.'
 
             # Prerelease string of this module
-            Prerelease   = 'preview'
+            #Prerelease   = 'preview'
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false

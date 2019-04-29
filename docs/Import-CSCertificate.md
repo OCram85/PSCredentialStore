@@ -1,62 +1,53 @@
-# Test-CredentialStore
+# Import-CSCertificate
 
 ## SYNOPSIS
-Returns the credential store state.
+Imports a linked certificate to the valid store location.
 
 ## SYNTAX
 
-### Private (Default)
 ```
-Test-CredentialStore [<CommonParameters>]
-```
-
-### Shared
-```
-Test-CredentialStore [-Path <String>] [-Shared] [<CommonParameters>]
+Import-CSCertificate [-Type] <String> [-Path] <FileInfo> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Use this script to test your credential store.
-For now it only checks if
-the file exists.
+Import-CSCertificate takes a pfx certificate file and imports it to the supposed certificate store for
+private and shared credential stores.
 
 ## EXAMPLES
 
 ### BEISPIEL 1
 ```
-Test-CredentialStore -eq $true
+Import-CSCertificate -Type 'Private' -Path (Join-Path -Path $Env:APPDATA -ChildItem 'PfxCertificate.pfx')
 ```
 
 ## PARAMETERS
 
 ### -Path
-Define a custom path to a shared CredentialStore.
+Provide a valid path to pfx certificate file.
 
 ```yaml
-Type: String
-Parameter Sets: Shared
+Type: FileInfo
+Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: Named
+Required: True
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Shared
-Switch to shared mode with this param.
-This enforces the command to work with a shared CredentialStore which
-can be decrypted across systems.
+### -Type
+Select between the a private and shared credential store.
 
 ```yaml
-Type: SwitchParameter
-Parameter Sets: Shared
+Type: String
+Parameter Sets: (All)
 Aliases:
 
 Required: True
-Position: Named
-Default value: False
+Position: 1
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -66,10 +57,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### [None]
 ## OUTPUTS
 
+### [None]
 ## NOTES
-- File Name   : Test-CredentialStore.ps1
+- File Name   : Import-CSCertificate.ps1
 - Author      : Marco Blessing - marco.blessing@googlemail.com
 - Requires    :
 

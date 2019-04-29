@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # Connect-To
 
 ## SYNOPSIS
@@ -14,14 +7,14 @@ Connects to the given host using the stored CredentialStoreItem.
 
 ### Private (Default)
 ```
-Connect-To -RemoteHost <String> [-Identifier <String>] -Type <String> [-Credentials <PSCredential>]
+Connect-To -RemoteHost <String> [-Identifier <String>] -Type <String> [-Credentials <PSCredential>] [-PassThru]
  [<CommonParameters>]
 ```
 
 ### Shared
 ```
-Connect-To -RemoteHost <String> [-Identifier <String>] -Type <String> [-Credentials <PSCredential>]
- [-Path <String>] [-Shared] [<CommonParameters>]
+Connect-To -RemoteHost <String> [-Identifier <String>] -Type <String> [-Credentials <PSCredential>] [-Shared]
+ [-Path <String>] [-PassThru] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,37 +22,37 @@ Establish a connection to the selected host using a stored CredentialStoreItem.
 
 ## EXAMPLES
 
-### EXAMPLE 1
+### BEISPIEL 1
 ```
 Connect-To -RemoteHost "ucs.myside.local" -Type CiscoUcs
 ```
 
-### EXAMPLE 2
+### BEISPIEL 2
 ```
 Connect-To -RemoteHost "ftp.myside.local" -Type FTP
 ```
 
-### EXAMPLE 3
+### BEISPIEL 3
 ```
 Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
 ```
 
-### EXAMPLE 4
+### BEISPIEL 4
 ```
 Connect-To -RemoteHost "esx01.myside.local" -Type VMware
 ```
 
-### EXAMPLE 5
+### BEISPIEL 5
 ```
 Connect-To -RemoteHost "vCenter.myside.local" -Type CisServer
 ```
 
-### EXAMPLE 6
+### BEISPIEL 6
 ```
 Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTP
 ```
 
-### EXAMPLE 7
+### BEISPIEL 7
 ```
 Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
 ```
@@ -102,6 +95,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -PassThru
+Returns the value from the underlying connection type function.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Path
 Define a custom path to a shared CredentialStore.
 
@@ -112,7 +120,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -142,7 +150,7 @@ Type: SwitchParameter
 Parameter Sets: Shared
 Aliases:
 
-Required: False
+Required: True
 Position: Named
 Default value: False
 Accept pipeline input: False
@@ -167,20 +175,18 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### [None]
-
 ## OUTPUTS
 
 ### [None]
-
 ## NOTES
-File Name   : Connect-To.ps1
-Author      : Marco Blessing - marco.blessing@googlemail.com
-Requires    :
+- File Name   : Connect-To.ps1
+- Author      : Marco Blessing - marco.blessing@googlemail.com
+- Requires    :
 
 ## RELATED LINKS
 

@@ -21,6 +21,10 @@ function New-CredentialStoreItem {
     .PARAMETER Credential
         You can provide credentials optionally as pre existing pscredential object.
 
+    .PARAMETER Shared
+        Define the CredentialStore where you want to add the new item. Default is always personal but can be
+        changed to shared, or even shared with custom path.
+
     .INPUTS
         [None]
 
@@ -31,11 +35,10 @@ function New-CredentialStoreItem {
         New-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 
     .NOTES
-        ```
-        File Name   : New-CredentialStoreItem.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-        ```
+        - File Name   : New-CredentialStoreItem.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
+
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>
@@ -91,15 +94,6 @@ function New-CredentialStoreItem {
             Write-Error @MessageParams
         }
 
-        # Read the file content based on the given ParameterSetName
-        <#
-        if ($PSCmdlet.ParameterSetName -eq 'Private') {
-            $CSContent = Get-CredentialStore
-        }
-        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
-            $CSContent = Get-CredentialStore -Shared -Path $Path
-        }
-        #>
         $CSContent = Get-CredentialStore -Shared -Path $Path
 
         $CurrentDate = Get-Date -UFormat "%Y-%m-%d %H:%M:%S"
@@ -116,32 +110,11 @@ function New-CredentialStoreItem {
         }
 
         if ($Credential.UserName) {
-            try {
-                if ($null -eq $CSContent.PfxCertificate) {
-                    $Cert = Get-CSCertificate -Thumbprint $CSContent.Thumbprint
-                    if ($null -eq $Cert) {
-                        $ErrorParams = @{
-                            ErrorAction = 'Stop'
-                            Exception   = [System.Security.Cryptography.X509Certificates.FileNotFoundException]::new(
-                                ('Could not find the linked certificate with thumbprint {0}' -f $CSContent.Thumbprint)
-                            )
-                        }
-                        Write-Error @ErrorParams
-                    }
-                }
-                else {
-                    $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
-                }
+            if ($null -eq $CSContent.PfxCertificate) {
+                $Cert = Get-CSCertificate -Type $CSContent.Type -Thumbprint $CSContent.Thumbprint
             }
-            catch {
-                $_.Exception.Message | Write-Error
-                $ErrorParams = @{
-                    ErrorAction = 'Stop'
-                    Exception   = [System.Security.Cryptography.CryptographicException]::new(
-                        'Could not read the given PFX certificate.'
-                    )
-                }
-                Write-Error @ErrorParams
+            else {
+                $Cert = Get-PfxCertificate -FilePath $CSContent.PfxCertificate -ErrorAction Stop
             }
 
             if (Get-Member -InputObject $CSContent -Name $CredentialName -Membertype Properties) {

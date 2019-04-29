@@ -18,6 +18,15 @@ function New-CredentialStore {
     .PARAMETER Force
         Use this switch to reset an existing store. The complete content will be wiped.
 
+    .PARAMETER SkipPFXCertCreation
+        You can skip the pfx certificate creation process. This makes sense if you have a previously created cert or want to
+        import a cert in cross-platform environments.
+
+    .Parameter UseCertStore
+        Instead of using a plain pfx file beside your CredentialStore file you can import it into the user or machine
+        certificate store. In this case the system itself secures the cert and you don't hat to set custom NTFS
+        permissions so secure your shared certificate.
+
     .INPUTS
         [None]
 
@@ -42,11 +51,10 @@ function New-CredentialStore {
         # Creates a new shared CredentialStore in the given location.
 
     .NOTES
-        ```
-        File Name   : New-CredentialStore.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-        ```
+        - File Name   : New-CredentialStore.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
+
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>
@@ -100,7 +108,7 @@ function New-CredentialStore {
                 $ErrorParams = @{
                     ErrorAction = 'Stop'
                     Exception   = [System.IO.InvalidDataException]::new(
-                        'Your provided path does not conain the required file extension .json !'
+                        'Your provided path does not contain the required file extension .json !'
                     )
                 }
                 Write-Error @ErrorParams
@@ -141,7 +149,7 @@ function New-CredentialStore {
                 OrganizationalUnitName = $PSCmdlet.ParameterSetName
                 CommonName             = 'PSCredentialStore'
             }
-            $CRTAttribute = New-CRTAttribute @CRTParams
+            $CRTAttribute = New-CSCertAttribute @CRTParams
 
             # If we are working with a ne shared store we have to create the location first.
             # Otherwise openssl fails with unknown path
@@ -171,7 +179,7 @@ function New-CredentialStore {
             }
 
             try {
-                New-PfxCertificate @PfxParams
+                New-CSCertificate @PfxParams
             }
             catch {
                 $_.Exception.Message | Write-Error
@@ -202,17 +210,6 @@ function New-CredentialStore {
             Thumbprint     = $null
             Type           = $null
         }
-        if (! $SkipPFXCertCreation.IsPresent) {
-            $ObjProperties.Thumbprint = $FreshCert.Thumbprint
-
-            if (!$UseCertStore.IsPresent) {
-                $ObjProperties.PfxCertificate = $PfxParams.CertName
-            }
-            else {
-                Write-Verbose 'Importing new PFX certificate file...'
-                Import-CSCertificate -Path $PfxParams.CertName -StoreName My -StoreLocation CurrentUser
-            }
-        }
 
         if ($PSCmdlet.ParameterSetName -eq "Shared") {
             $ObjProperties.Type = "Shared"
@@ -220,6 +217,20 @@ function New-CredentialStore {
         else {
             $ObjProperties.Type = "Private"
         }
+
+        if (! $SkipPFXCertCreation.IsPresent) {
+            $ObjProperties.Thumbprint = $FreshCert.Thumbprint
+
+            if ($UseCertStore.IsPresent) {
+                Write-Verbose 'Importing new PFX certificate file...'
+                Import-CSCertificate -Type $ObjProperties.Type -Path $PfxParams.CertName
+            }
+            else {
+                $ObjProperties.PfxCertificate = $PfxParams.CertName
+
+            }
+        }
+
 
         $CredentialStoreObj = [PSCustomObject]$ObjProperties
         try {

@@ -40,11 +40,9 @@ function Resolve-Dependency {
         }
 
     .NOTES
-        ```
-        File Name   : ResolveDependency.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-        ```
+        - File Name   : ResolveDependency.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -69,7 +67,7 @@ function Resolve-Dependency {
     }
 
     process {
-        $SelectedDependency = $Dependency.Optional | Where-Object {$_.Name -match $Name}
+        $SelectedDependency = $Dependency.Optional | Where-Object { $_.Name -match $Name }
         # return true if there is no dependency defined
         if ($null -eq $SelectedDependency) {
             return $true

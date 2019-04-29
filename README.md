@@ -1,45 +1,42 @@
-[![AppVeyor branch](https://img.shields.io/appveyor/ci/OCram85/PSCredentialStore/master.svg?style=plastic "Master Banch Build Status")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master)
+[![AppVeyor branch](https://img.shields.io/appveyor/ci/OCram85/PSCredentialStore/master.svg?style=plastic "Master Branch Build Status")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master)
 [![AppVeyor tests branch](https://img.shields.io/appveyor/tests/OCram85/PSCredentialStore/master.svg?style=plastic "Pester Tests Results")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master/tests)
 [![Coveralls github](https://img.shields.io/coveralls/github/OCram85/PSCredentialStore.svg?style=plastic "Coveralls.io Coverage Report")](https://coveralls.io/github/OCram85/PSCredentialStore?branch=master)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PSCredentialStore.svg?style=plastic "PowershellGallery Published Version")](https://www.powershellgallery.com/packages/PSCredentialStore)
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/vpre/PSCredentialStore.svg?label=latest%20preview&style=plastic "PowershellGallery Latest Preview Version")](https://www.powershellgallery.com/packages/PSCredentialStore)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCredentialStore.svg?style=plastic "PowershellGallery Downloads")](https://www.powershellgallery.com/packages/PSCredentialStore)
 
 ![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)
 ![forthebadge](http://forthebadge.com/images/badges/for-you.svg)
 
-General
+:key: General
 =======
 
-The PSCredentialStore is a simple credential manager for PSCredentials. It stores PSCredentials in a simple json
+The PSCredentialStore is a simple credential manager for `PSCredential` objects. It stores PSCredentials in a simple json
 file. You can choose between a private and shared credential store. The private one exists in your profile and can
 ony accessed by your account on the same machine. The shared store enables you to use different credentials for your
 scripts without exposing them as plain text.
 
-**The shared store isn't 100% secure and I don't recommend using it in production!**
-
 PSCredentialStore was developed to simplify the delegation of complex powershell scripts. In this case you often
 need to store credentials for non interactive usage like in scheduled tasks.
+
+Starting with version `1.0.0` PSCredential uses Pfx certificates fo encryption. You can use Pfx certificate files
+or certificates stored in the certificate store.
 
 For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStore.md) page on github or via CLI with
 `Get-Help about_PSCredentialStore`.
 
-:exclamation: Upcoming Changes :exclamation:
-================
+You can find the [reference](/docs/PSCredentialStore.md) in the /docs/ path as well.
 
-The will be some breaking changes starting with the `0.5.0.xxx`:
-
-- **PSCredentialStore will use PFX certificates to encrypt your credentials.**
-  - This replaces the the current encryption methods and you need to recreate or upgrade your pre existing stores.
-- The changes allows the PSCredentialStore module to support the PowerShell `Core` editions.
-  - Yes this means, you can use the module on any PowerShell 6 supported linux distribution.
-- It's also possible to create a shared credential store and transfer it onto a another platform like:
-`Windows -- to -->  Linux` and vice versa.
-- Automatically creates self signed certificate with 2048 bits RSA keys for encryption.
-
-Installation
+:vulcan_salute: Requirements
 ============
 
-PowerShellGallery.com (Recommended Way)
+- PowerShell >= `5.1`
+- .NET Framework >= `4.6` or .NET Core >= `1.0`
+
+:hammer_and_wrench: Installation
+============
+
+:artificial_satellite: PowerShellGallery.com (Recommended Way)
 ---------------------------------------
 
 * Make sure you use PowerShell 5.1 or higher with `$PSVersionTable`.
@@ -47,7 +44,7 @@ PowerShellGallery.com (Recommended Way)
   * Additionally use the `-AllowPrerelease` switch until we publish the final release!
 * Done. Start exploring the Module with `Import-Module PSCredentialStore ; Get-Command -Module PSCredentialStore`
 
-Manual Way
+:building_construction: Manual Way
 ----------
 
 * Take a look at the [Latest Release](https://github.com/OCram85/PSCredentialStore/releases/latest) page.
@@ -56,19 +53,27 @@ Manual Way
   * Don't forget to change the NTFS permission flag in the context menu.
 * Start with `Import-Module PSCredentialStore`
 
-Quick Start
+:sparkles: Quick Start
 -----------
 
 **1.** First we need a blank credential store. You can decide between a *private* or *shared* store. The private
 Credential Store can only be accessed with your profile on the machine you created it.
+
+Starting with version `1.0.0` you can decide the storage type of your fresh created certificate. As default
+PSCredentialStore creates a new pfx certificate file beside the credential store itself. Optionally you can provide
+the parameter `-UseCertStore`. This imports the new certificate in the user or machine certificate store as well.
+
 ```powershell
 # Private credential store
 New-CredentialStore
 
-# Shared credential rtore
+# Private credential store with certificate store usage
+New-CredentialStore -UseCertStore
+
+# Shared credential store
 New-CredentialStore -Shared
 
-#Shared credential store in custom Location
+#Shared credential store in custom location
 New-CredentialStore -Shared -Path 'C:\CredentialStore.json'
 ```
 
@@ -110,14 +115,17 @@ Connect-To -RemoteHost "ftp.myside.local" -Type FTP
 Connect-To -RemoteHost "fas.myside.local" -Type NetAppFAS
 Connect-To -RemoteHost "esx01.myside.local" -Type VMware
 Connect-To -RemoteHost "vcr.myside.local" -Type CisServer
+Connect-To -RemoteHost "exchange1.myside.local" -Type ExchangeHTTP
+Connect-To -RemoteHost "exchange1.myside.local" -Type ExchangeHTTPS
+Connect-To -RemoteHost "ubuntu.myside.local" -Type SCP
 ```
 
-Credits
+:pushpin: Credits
 -------
 
 A huge thanks to all the people who helped with their projects and indirect contributions which made this possible!
 
-- This module is inspired by the awesome work of @dlwyatt with articles like these:
+- This module is inspired by the awesome work of Dave Wyatt ([@dlwyatt](https://github.com/dlwyatt)) with articles like these:
   - https://powershell.org/2013/11/24/saving-passwords-and-preventing-other-processes-from-decrypting-them/
   - https://powershell.org/2014/02/01/revisited-powershell-and-encryption/
 - The awesome people from [LibreSSL](http://www.libressl.org/) which publishes the [portable openssl/libressl binaries](https://github.com/libressl-portable/portable)!

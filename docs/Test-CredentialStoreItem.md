@@ -1,10 +1,3 @@
----
-external help file: PSCredentialStore-help.xml
-Module Name: PSCredentialStore
-online version: https://github.com/OCram85/PSCredentialStore
-schema: 2.0.0
----
-
 # Test-CredentialStoreItem
 
 ## SYNOPSIS
@@ -30,7 +23,7 @@ you try to interact with it.
 
 ## EXAMPLES
 
-### EXAMPLE 1
+### BEISPIEL 1
 ```
 If (Test-CredentialStoreItem -RemoteHost "Default") {
 ```
@@ -110,22 +103,18 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### [None]
-
 ## OUTPUTS
 
 ### [None]
-
 ## NOTES
-\`\`\`
-File Name   : Test-CredentialStoreItem.ps1
-Author      : Marco Blessing - marco.blessing@googlemail.com
-Requires    :
-\`\`\`
+- File Name   : Test-CredentialStoreItem.ps1
+- Author      : Marco Blessing - marco.blessing@googlemail.com
+- Requires    :
 
 ## RELATED LINKS
 

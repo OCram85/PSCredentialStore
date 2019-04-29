@@ -31,11 +31,10 @@ function Get-CredentialStoreItem {
         $myCreds = Get-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 
     .NOTES
-        ```
-        File Name   : Get-CredentialStoreItem.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-        ```
+        - File Name   : Get-CredentialStoreItem.ps1
+        - Author      : Messing - marco.blessing@googlemail.com
+        - Requires    :
+
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>
@@ -87,23 +86,11 @@ function Get-CredentialStoreItem {
             $CSMembers = Get-Member -InputObject $CS
             # Let's first check if the given remote host exists as object property
             if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
-                try {
-                    if ($null -eq $CS.PfxCertificate) {
-                        $Cert = Get-CSCertificate -Thumbprint $CS.Thumbprint
-                    }
-                    else {
-                        $Cert = Get-PfxCertificate -FilePath $CS.PfxCertificate -ErrorAction Stop
-                    }
+                if ($null -eq $CS.PfxCertificate) {
+                    $Cert = Get-CSCertificate -Type $CS.Type -Thumbprint $CS.Thumbprint
                 }
-                catch {
-                    $_.Exception.Message | Write-Error
-                    $ErrorParams = @{
-                        ErrorAction = 'Stop'
-                        Exception   = [System.Security.Cryptography.CryptographicException]::new(
-                            'Could not read the given PFX certificate.'
-                        )
-                    }
-                    Write-Error @ErrorParams
+                else {
+                    $Cert = Get-PfxCertificate -FilePath $CS.PfxCertificate -ErrorAction Stop
                 }
                 $DecryptedKey = $Cert.PrivateKey.Decrypt(
                     [Convert]::FromBase64String($CS.$CredentialName.EncryptedKey),

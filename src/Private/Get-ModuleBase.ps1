@@ -11,9 +11,9 @@ function Get-ModuleBase {
         Returns the base path as string
 
     .NOTES
-        File Name   : Get-ModuleBase.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
+        - File Name   : Get-ModuleBase.ps1
+        - Author      : Marco Blessing - marco.blessing@googlemail.com
+        - Requires    :
 
     .LINK
         https://github.com/OCram85/PSCredentialStore
@@ -21,9 +21,9 @@ function Get-ModuleBase {
     [CmdletBinding()]
     [OutputType()]
     param()
-    begin {}
+    begin { }
     process {
         return $MyInvocation.MyCommand.Module.ModuleBase
     }
-    end {}
+    end { }
 }
