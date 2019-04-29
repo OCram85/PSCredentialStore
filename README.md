@@ -8,7 +8,7 @@
 ![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)
 ![forthebadge](http://forthebadge.com/images/badges/for-you.svg)
 
-General
+:key: General
 =======
 
 The PSCredentialStore is a simple credential manager for `PSCredential` objects. It stores PSCredentials in a simple json
@@ -27,16 +27,16 @@ For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStor
 
 You can find the [reference](/docs/PSCredentialStore.md) in the /docs/ path as well.
 
-Requirements
+:vulcan_salute: Requirements
 ============
 
 - PowerShell >= `5.1`
 - .NET Framework >= `4.6` or .NET Core >= `1.0`
 
-Installation
+:hammer_and_wrench: Installation
 ============
 
-PowerShellGallery.com (Recommended Way)
+:artificial_satellite: PowerShellGallery.com (Recommended Way)
 ---------------------------------------
 
 * Make sure you use PowerShell 5.1 or higher with `$PSVersionTable`.
@@ -44,7 +44,7 @@ PowerShellGallery.com (Recommended Way)
   * Additionally use the `-AllowPrerelease` switch until we publish the final release!
 * Done. Start exploring the Module with `Import-Module PSCredentialStore ; Get-Command -Module PSCredentialStore`
 
-Manual Way
+:building_construction: Manual Way
 ----------
 
 * Take a look at the [Latest Release](https://github.com/OCram85/PSCredentialStore/releases/latest) page.
@@ -53,7 +53,7 @@ Manual Way
   * Don't forget to change the NTFS permission flag in the context menu.
 * Start with `Import-Module PSCredentialStore`
 
-Quick Start
+:sparkles: Quick Start
 -----------
 
 **1.** First we need a blank credential store. You can decide between a *private* or *shared* store. The private
@@ -120,7 +120,7 @@ Connect-To -RemoteHost "exchange1.myside.local" -Type ExchangeHTTPS
 Connect-To -RemoteHost "ubuntu.myside.local" -Type SCP
 ```
 
-Credits
+:pushpin: Credits
 -------
 
 A huge thanks to all the people who helped with their projects and indirect contributions which made this possible!
