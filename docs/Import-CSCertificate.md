@@ -17,7 +17,7 @@ private and shared credential stores.
 
 ### BEISPIEL 1
 ```
-.\Remove-Some-Script.ps1 -One content
+Import-CSCertificate -Type 'Private' -Path (Join-Path -Path $Env:APPDATA -ChildItem 'PfxCertificate.pfx')
 ```
 
 ## PARAMETERS
@@ -53,14 +53,14 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-### Describe the script input parameters (if any), otherwise it may also list the word "[None]".
+### [None]
 ## OUTPUTS
 
-### Describe the script output parameters (if any), otherwise it may also list the word "[None]".
+### [None]
 ## NOTES
 - File Name   : Import-CSCertificate.ps1
 - Author      : Marco Blessing - marco.blessing@googlemail.com

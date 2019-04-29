@@ -18,7 +18,7 @@ Set-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [-Credential
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Use this function to update your already stored RemoteHost items.
 
 ## EXAMPLES
 
@@ -27,12 +27,15 @@ Set-CredentialStoreItem -RemoteHost <String> [-Identifier <String>] [-Credential
 Set-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
 ```
 
+### BEISPIEL 2
+```
 Set-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local" -Identifier svc
+```
 
 ## PARAMETERS
 
 ### -Credential
-{{ Fill Credential Description }}
+Provided the new credentials you want to update inside the RemoteHost item.
 
 ```yaml
 Type: PSCredential
@@ -111,7 +114,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

@@ -68,7 +68,7 @@ Accept wildcard characters: False
 ```
 
 ### -Days
-{{ Fill Days Description }}
+The validation time itself.
 
 ```yaml
 Type: Int32
@@ -128,14 +128,14 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
 ### [None]
 ## OUTPUTS
 
-### ['PSCredentialStore.Certificate.CSRDetails']
+### [PSCredentialStore.Certificate.CSRDetails]
 ## NOTES
 - File Name   : New-CSCertAttribute.ps1
 - Author      : Marco Blessing - marco.blessing@googlemail.com

@@ -120,7 +120,9 @@ Accept wildcard characters: False
 ```
 
 ### -SkipPFXCertCreation
-{{ Fill SkipPFXCertCreation Description }}
+You can skip the pfx certification process.
+This makes sense if you have a previously created cert or want to
+import a cert in cross-platform environments.
 
 ```yaml
 Type: SwitchParameter
@@ -135,7 +137,10 @@ Accept wildcard characters: False
 ```
 
 ### -UseCertStore
-{{ Fill UseCertStore Description }}
+Instead of using a plain pfx file beside your CredentialStore file you can import it into the user or machine
+certification store.
+In this case the system itself secures the cert and you don't hat to set custom NTFS
+permissions so secure your shared certificate.
 
 ```yaml
 Type: SwitchParameter
@@ -181,7 +186,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
