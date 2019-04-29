@@ -128,10 +128,10 @@
             IconUri      = 'https://raw.githubusercontent.com/OCram85/PSCredentialStore/master/assets/logo256.png'
 
             # ReleaseNotes of this module
-            ReleaseNotes = 'This is a pre-release version!. Do not use in production!'
+            ReleaseNotes = 'See https://github.com/OCram85/PSCredentialStore/releases page for details.'
 
             # Prerelease string of this module
-            Prerelease   = 'preview'
+            #Prerelease   = 'preview'
 
             # Flag to indicate whether the module requires explicit user acceptance for install/update
             # RequireLicenseAcceptance = $false
