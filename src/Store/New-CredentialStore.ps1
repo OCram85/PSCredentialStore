@@ -108,7 +108,7 @@ function New-CredentialStore {
                 $ErrorParams = @{
                     ErrorAction = 'Stop'
                     Exception   = [System.IO.InvalidDataException]::new(
-                        'Your provided path does not conain the required file extension .json !'
+                        'Your provided path does not contain the required file extension .json !'
                     )
                 }
                 Write-Error @ErrorParams
