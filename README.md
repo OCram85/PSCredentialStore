@@ -1,4 +1,4 @@
-[![AppVeyor branch](https://img.shields.io/appveyor/ci/OCram85/PSCredentialStore/master.svg?style=plastic "Master Banch Build Status")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master)
+[![AppVeyor branch](https://img.shields.io/appveyor/ci/OCram85/PSCredentialStore/master.svg?style=plastic "Master Branch Build Status")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master)
 [![AppVeyor tests branch](https://img.shields.io/appveyor/tests/OCram85/PSCredentialStore/master.svg?style=plastic "Pester Tests Results")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master/tests)
 [![Coveralls github](https://img.shields.io/coveralls/github/OCram85/PSCredentialStore.svg?style=plastic "Coveralls.io Coverage Report")](https://coveralls.io/github/OCram85/PSCredentialStore?branch=master)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PSCredentialStore.svg?style=plastic "PowershellGallery Published Version")](https://www.powershellgallery.com/packages/PSCredentialStore)
@@ -70,10 +70,10 @@ New-CredentialStore
 # Private credential store with certification store usage
 New-CredentialStore -UseCertStore
 
-# Shared credential rtore
+# Shared credential store
 New-CredentialStore -Shared
 
-#Shared credential store in custom Location
+#Shared credential store in custom location
 New-CredentialStore -Shared -Path 'C:\CredentialStore.json'
 ```
 
@@ -125,7 +125,7 @@ Connect-To -RemoteHost "ubuntu.myside.local" -Type SCP
 
 A huge thanks to all the people who helped with their projects and indirect contributions which made this possible!
 
-- This module is inspired by the awesome work of @dlwyatt with articles like these:
+- This module is inspired by the awesome work of Dave Wyatt ([@dlwyatt](https://github.com/dlwyatt)) with articles like these:
   - https://powershell.org/2013/11/24/saving-passwords-and-preventing-other-processes-from-decrypting-them/
   - https://powershell.org/2014/02/01/revisited-powershell-and-encryption/
 - The awesome people from [LibreSSL](http://www.libressl.org/) which publishes the [portable openssl/libressl binaries](https://github.com/libressl-portable/portable)!
