@@ -15,8 +15,8 @@ scripts without exposing them as plain text.
 PSCredentialStore was developed to simplify the delegation of complex powershell scripts. In this case you often
 need to store credentials for non interactive usage like in scheduled tasks.
 
-Starting with version `1.0.0` PSCredential uses Pfx certificates fo encryption. You can use Pfx certification files
-or certificates stored in the certification store.
+Starting with version `1.0.0` PSCredential uses Pfx certificates fo encryption. You can use Pfx certificate files
+or certificates stored in the certificate store.
 
 For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStore.md) page on github or via CLI with
 `Get-Help about_PSCredentialStore`.
@@ -47,13 +47,13 @@ Credential Store can only be accessed with your profile on the machine you creat
 
 Starting with version `1.0.0` you can decide the storage type of your fresh created certificate. As default
 PSCredentialStore creates a new pfx certificate file beside the credential store itself. Optionally you can provide
-the parameter `-UseCertStore`. This imports the new certificate in the user or machine certification store as well.
+the parameter `-UseCertStore`. This imports the new certificate in the user or machine certificate store as well.
 
 ```powershell
 # Private credential store
 New-CredentialStore
 
-# Private credential store with certification store usage
+# Private credential store with certificate store usage
 New-CredentialStore -UseCertStore
 
 # Shared credential rtore

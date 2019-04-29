@@ -120,7 +120,7 @@ Accept wildcard characters: False
 ```
 
 ### -SkipPFXCertCreation
-You can skip the pfx certification process.
+You can skip the pfx certificate creation process.
 This makes sense if you have a previously created cert or want to
 import a cert in cross-platform environments.
 
@@ -138,7 +138,7 @@ Accept wildcard characters: False
 
 ### -UseCertStore
 Instead of using a plain pfx file beside your CredentialStore file you can import it into the user or machine
-certification store.
+certificate store.
 In this case the system itself secures the cert and you don't hat to set custom NTFS
 permissions so secure your shared certificate.
 
