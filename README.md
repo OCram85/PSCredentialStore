@@ -8,6 +8,8 @@
 ![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)
 ![forthebadge](http://forthebadge.com/images/badges/for-you.svg)
 
+![social-logo](/assets/social-logo.png)
+
 :key: General
 =======
 
