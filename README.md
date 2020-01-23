@@ -40,16 +40,16 @@ You can find the [reference](/docs/PSCredentialStore.md) in the /docs/ path as w
 
 >This section explains some security topics and the the design decisions we made to balance the usage and security needs.
 
-To be able to delegate `PSCredentials` objects we can't exclusively rely on the `SecureString` cmdlets. If you try
-to reuse a password encrypted in default `SecureString` with another user account or machine the password can't be
-decrypted. This is caused automatically generated encryption key which is used to secure the string.
+To be able to delegate `PSCredentials` objects we can't exclusively rely on the `SecureString` cmdlets. You can't
+decrypt and reuse such credentials from a different user account or even machine. This is caused by automatically
+generated encryption key which, is used create a `Secure String` based encrypted string.
 
-In order to delegate a password while still using the underlying security framework we have to provide a custom
+In order to delegate a password, while still using the underlying security framework, we have to provide a custom
 encryption key. This leads to the fact, that everyone who has access to the key could encrypt or decrypt your data.
 
-So de decided to use the certificate's public and private keys with custom encryption keys to encrypt your data.
+So we decided to use the public and private keys from valid certificates as part of the custom encryption keys to encrypt your data.
 
-This means everyone who has access to the `CredentialStore` needs also access to the certificate file to work with it.
+This means clearly: Everyone who has access to the `CredentialStore` needs also access to the certificate file to work with it.
 
 Keep in mind you need to secure the access with your NTFS file permissions to avoid unwanted usage. Another option is
 to import the certificate into your certification vaults of you operating system. In this case you can grand the
