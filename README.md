@@ -35,6 +35,38 @@ You can find the [reference](/docs/PSCredentialStore.md) in the /docs/ path as w
 - PowerShell >= `5.1`
 - .NET Framework >= `4.6` or .NET Core >= `1.0`
 
+:bomb: About Security
+============
+
+>This section explains some security topics and the the design decisions we made to balance the usage and security needs.
+
+To be able to delegate `PSCredentials` objects we can't exclusively rely on the `SecureString` cmdlets. You can't
+decrypt and reuse such credentials from a different user account or even machine. This is caused by automatically
+generated encryption key which, is used create a `Secure String` based encrypted string.
+
+In order to delegate a password, while still using the underlying security framework, we have to provide a custom
+encryption key. This leads to the fact, that everyone who has access to the key could encrypt or decrypt your data.
+
+So we decided to use the public and private keys from valid certificates as part of the custom encryption keys to encrypt your data.
+
+This means clearly: Everyone who has access to the `CredentialStore` needs also access to the certificate file to work with it.
+
+Keep in mind you need to secure the access with your NTFS file permissions to avoid unwanted usage. Another option is
+to import the certificate into your certification vaults of you operating system. In this case you can grand the
+permission to the certificates itself.
+
+Here is s brief hierarchy description of the certificate location: *(First match wins)*
+
+| CredentialStore Type | Certificate Location   |
+| -------------------- | ---------------------- |
+| Private              | `CurrentUser`\\`My`    |
+| Shared (Windows)     | `CurrentUser`\\`My`    |
+|                      | `LocalMachine`\\`Root` |
+| Shared (Linux)       | `LocalMachine`\\`My`   |
+|                      | `LocalMachine`\\`Root` |
+
+
+
 :hammer_and_wrench: Installation
 ============
 
