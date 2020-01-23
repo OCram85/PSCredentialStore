@@ -108,6 +108,21 @@ function Connect-To {
         [switch]$PassThru
     )
 
+    DynamicParam {
+        if ($Type -eq 'FTP') {
+            $Attributes = [System.Management.Automation.ParameterAttribute]@{ }
+            $AttributeCollection = [System.Collections.ObjectModel.Collection[System.Attribute]]@{ }
+            $AttributeCollection.Add($Attributes)
+            $SessionDynParam = [System.Management.Automation.RuntimeDefinedParameter]@{
+                Name          = 'SessionOptions'
+                ParameterType = [WinSCP.SessionOptions]
+                $Attributes   = $AttributeCollection
+            }
+            $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]@{ }
+            $ParamDictionary.Add('SessionOptions', $SessionDynParam)
+            return $ParamDictionary
+        }
+    }
     begin {
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
@@ -188,16 +203,21 @@ function Connect-To {
                     }
                 }
                 "FTP" {
-                    # First establish the FTP session
-                    $WinSCPConParams = @{
-                        Credential = $creds
-                        Hostname   = $RemoteHost
-                        Protocol   = 'Ftp'
-                        FtpMode    = 'Passive'
-                    }
                     try {
-                        $FTPSessionOption = New-WinSCPSessionOption @WinSCPConParams
-                        $Global:WinSCPSession = New-WinSCPSession -SessionOption $FTPSessionOption
+                        # First establish the FTP session
+                        if ($null -ne $PSBoundParameters.SessionOptions) {
+                            $Global:WinSCPSession = New-WinSCPSession -SessionOption $PSBoundParameters.SessionOptions
+                        }
+                        else {
+                            $WinSCPConParams = @{
+                                Credential = $creds
+                                Hostname   = $RemoteHost
+                                Protocol   = 'Ftp'
+                                FtpMode    = 'Passive'
+                            }
+                            $FTPSessionOption = New-WinSCPSessionOption @WinSCPConParams
+                            $Global:WinSCPSession = New-WinSCPSession -SessionOption $FTPSessionOption
+                        }
                     }
                     catch {
                         throw "Could not connect to {0} using {1} protocol!" -f $RemoteHost, $Type
