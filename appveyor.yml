@@ -28,6 +28,8 @@ environment:
     secure: 835qfZIkC9mE7QhkYfOZVAdR8rZhPvxG8BO4CbeaelRQOhlqmaSr8G1DWRJzZ/bS
   CoverallsToken:
     secure: eTjWqHL48MBr8wp1rSgLrXHdtpfDV/uClacP3svlWJfCvn/zVokpuaMnWM5RoyIY
+  CodeCovToken:
+    secure: LJOvamWIlVORDE7120KcmWVkHxOFYBSN99linyICXXmXLtYm81K/31YeMGiPlgTm
 
 build: false
 
@@ -38,14 +40,19 @@ build_script:
   - ps: Invoke-AppVeyorBuild
 
 test_script:
+  #- ps: |
+  #    $CodeCoverage = Invoke-AppVeyorTests
+  #    if ($null -ne $Env:CoverallsToken) {
+  #      Invoke-CoverageReport -PesterCoverageReport $CodeCoverage
+  #    }
+  #    else {
+  #      Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
+  #    }
   - ps: |
-      $CodeCoverage = Invoke-AppVeyorTests
-      if ($null -ne $Env:CoverallsToken) {
-        Invoke-CoverageReport -PesterCoverageReport $CodeCoverage
-      }
-      else {
-        Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
-      }
+      Invoke-CodeCoveTests
+      $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
+      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
+      bash codecov.sh -f "coverage.xml" -t $Env:CodeCovToken
 
 deploy:
   #- provider: GitHub
@@ -59,15 +66,14 @@ deploy:
   - provider: GitHub
     auth_token:
       secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
-    artifact: PSCredentialStore.zip     # upload all NuGet packages to release assets
+    artifact: PSCredentialStore.zip # upload all NuGet packages to release assets
     draft: false
     prerelease: false
     on:
-      branch: master                    # build release on master branch changes
+      branch: master # build release on master branch changes
 
 after_deploy:
   - ps: Invoke-AppVeyorPSGallery -OnBranch 'master'
-
 # Pause build until `lock` on desktop is deleted.
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

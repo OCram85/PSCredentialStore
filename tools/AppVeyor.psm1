@@ -16,13 +16,19 @@ Function Invoke-InstallDependencies() {
 
     Process {
         Try {
+            Write-Host 'Available PS modules are:' -ForegroundColor Green -BackgroundColor Black
+            Get-Module -ListAvailable -Name Pester | Format-Table | Out-String
             Get-PackageProvider -ListAvailable
             Install-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force -Verbose
             Import-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force
-            Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.4.2' -Force -SkipPublisherCheck -AllowClobber
+            Write-Host 'Installing build deps...' -ForegroundColor Red -BackgroundColor Black
+            Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.10.1' -Force -SkipPublisherCheck -AllowClobber -Verbose
             Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '1.0.0-beta2' -Force -SkipPublisherCheck -AllowClobber -AllowPrerelease
-            Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber -RequiredVersion '1.0.78'
-            Import-Module -Name 'Pester', 'posh-git' , 'PSCoverage'
+            #Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber -RequiredVersion '1.0.78'
+            Import-Module -Name 'posh-git'
+            #Import-Module -Name 'PSCoverage'
+            Remove-Module -Name 'Pester' -Force -ErrorAction SilentlyContinue
+            Import-Module -Name 'Pester' -RequiredVersion '4.10.1' -Verbose
         }
         Catch {
             $MsgParams = @{
@@ -33,7 +39,8 @@ Function Invoke-InstallDependencies() {
             Add-AppveyorMessage @MsgParams
             Throw $MsgParams.Message
         }
-
+        Write-Host 'Loaded PS modules are:' -ForegroundColor Green -BackgroundColor Black
+        Get-Module -Name Pester | Format-Table | Out-String
     }
 }
 Function Invoke-AppVeyorBumpVersion() {
@@ -42,7 +49,7 @@ Function Invoke-AppVeyorBumpVersion() {
 
     Write-Host "Listing Env Vars for debugging:" -ForegroundColor Black -BackgroundColor Yellow
     # Filter Results to prevent exposing secure vars.
-    Get-ChildItem -Path "Env:*" | Where-Object { $_.name -notmatch "(NuGetToken|CoverallsToken)"} | Sort-Object -Property Name | Format-Table
+    Get-ChildItem -Path "Env:*" | Where-Object { $_.name -notmatch "(NuGetToken|CoverallsToken)" } | Sort-Object -Property Name | Format-Table
 
     Try {
         $ModManifest = Get-Content -Path (".\src\{0}.psd1" -f $CALLSIGN)
@@ -174,6 +181,41 @@ Function Invoke-AppVeyorTests() {
 
 }
 
+Function Invoke-CodeCoveTests() {
+    [CmdletBinding()]
+    Param()
+
+    $MsgParams = @{
+        Message  = 'Starting Pester tests'
+        Category = 'Information'
+        Details  = 'Now running all test found in .\tests\ dir.'
+    }
+    Add-AppveyorMessage @MsgParams
+
+    try {
+        Write-Host '===== Preload internal private functions =====' -ForegroundColor Black -BackgroundColor Yellow
+
+        $Privates = Get-ChildItem -Path (Join-Path -Path $Env:APPVEYOR_BUILD_FOLDER -ChildPath '/src/Private/*') -Include "*.ps1" -Recurse
+        foreach ($File in $Privates) {
+            if (Test-Path -Path $File.FullName) {
+                . $File.FullName
+                Write-Verbose -Message ('Private function dot-sourced: {0}' -f $File.FullName) -Verbose
+            }
+            else {
+                Write-Warning -Message ('Could not find file: {0} !' -f $File.FullName)
+            }
+        }
+    }
+    catch {
+        $_.Exception.Message | Write-Error
+        throw 'Could not load required private functions!'
+    }
+
+    #$testresults = Invoke-Pester -Path ( Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property Name ) -ExcludeTag 'Disabled' -PassThru
+    $srcFiles = Get-ChildItem -Path ".\src\*.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
+    $testFiles = Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
+    $PesterRes = Invoke-Pester -Path $testFiles -CodeCoverage $srcFiles -CodeCoverageOutputFile ".\coverage.xml" -CodeCoverageOutputFileEncoding ascii -CodeCoverageOutputFileFormat JaCoCo
+}
 Function Invoke-CoverageReport() {
     [CmdletBinding()]
     Param(
