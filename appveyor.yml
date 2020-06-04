@@ -1,6 +1,8 @@
 # pre release version:
 version: 1.0.{build}
 
+cache:
+
 #branches:
 #  only:
 #    - master
@@ -40,6 +42,17 @@ build_script:
   - ps: Invoke-AppVeyorBuild
 
 test_script:
+  - ps: |
+      $CodeCoverage = Invoke-AppVeyorTests
+      if ($null -ne $Env:CoverallsToken) {
+        Invoke-CoverageReport -PesterCoverageReport $CodeCoverage
+      }
+      else {
+        Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
+      }
+      $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
+      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
+      bash codecov.sh -f "coverage.xml" -t $Env:CodeCovToken
   #- ps: |
   #    $CodeCoverage = Invoke-AppVeyorTests
   #    if ($null -ne $Env:CoverallsToken) {
@@ -48,11 +61,11 @@ test_script:
   #    else {
   #      Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
   #    }
-  - ps: |
-      Invoke-CodeCoveTests
-      $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
-      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
-      bash codecov.sh -f "coverage.xml" -t $Env:CodeCovToken
+  #- ps: |
+  #    Invoke-CodeCoveTests
+  #    $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
+  #    Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
+  #    bash codecov.sh -f "coverage.xml" -t $Env:CodeCovToken
 
 deploy:
   #- provider: GitHub

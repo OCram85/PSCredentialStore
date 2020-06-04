@@ -23,12 +23,12 @@ Function Invoke-InstallDependencies() {
             Import-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force
             Write-Host 'Installing build deps...' -ForegroundColor Red -BackgroundColor Black
             Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.10.1' -Force -SkipPublisherCheck -AllowClobber -Verbose
-            Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '1.0.0-beta2' -Force -SkipPublisherCheck -AllowClobber -AllowPrerelease
-            #Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber -RequiredVersion '1.0.78'
+            Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '0.7.3' -Force -SkipPublisherCheck -AllowClobber -AllowPrerelease
+            Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber -RequiredVersion '1.1.89' -Verbose
             Import-Module -Name 'posh-git'
-            #Import-Module -Name 'PSCoverage'
             Remove-Module -Name 'Pester' -Force -ErrorAction SilentlyContinue
-            Import-Module -Name 'Pester' -RequiredVersion '4.10.1' -Verbose
+            Import-Module -Name 'Pester' -RequiredVersion '4.10.1' -Verbose -Force
+            Import-Module -Name 'PSCoverage' -RequiredVersion '1.1.89' -Verbose -Force
         }
         Catch {
             $MsgParams = @{
@@ -119,6 +119,7 @@ Function Invoke-AppVeyorTests() {
                 Write-Warning -Message ('Could not find file: {0} !' -f $File.FullName)
             }
         }
+        Write-Host '===== Preload done. =====' -ForegroundColor Black -BackgroundColor Yellow
     }
     catch {
         $_.Exception.Message | Write-Error
@@ -128,7 +129,7 @@ Function Invoke-AppVeyorTests() {
     #$testresults = Invoke-Pester -Path ( Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property Name ) -ExcludeTag 'Disabled' -PassThru
     $srcFiles = Get-ChildItem -Path ".\src\*.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
     $testFiles = Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
-    $TestResults = Invoke-Pester -Path $testFiles -CodeCoverage $srcFiles -PassThru
+    $TestResults = Invoke-Pester -Path $testFiles -CodeCoverage $srcFiles -PassThru -CodeCoverageOutputFile ".\coverage.xml" -CodeCoverageOutputFileEncoding ascii -CodeCoverageOutputFileFormat JaCoCo
     ForEach ($Item in $TestResults.TestResult) {
         Switch ($Item.Result) {
             "Passed" {
