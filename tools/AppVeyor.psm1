@@ -23,7 +23,7 @@ Function Invoke-InstallDependencies() {
             Import-PackageProvider -Name NuGet -RequiredVersion '2.8.5.208' -Force
             Write-Host 'Installing build deps...' -ForegroundColor Red -BackgroundColor Black
             Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.10.1' -Force -SkipPublisherCheck -AllowClobber -Verbose
-            Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '0.7.3' -Force -SkipPublisherCheck -AllowClobber -AllowPrerelease
+            Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '0.7.3' -Force -SkipPublisherCheck -AllowClobber
             Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber -RequiredVersion '1.1.89' -Verbose
             Import-Module -Name 'posh-git'
             Remove-Module -Name 'Pester' -Force -ErrorAction SilentlyContinue
