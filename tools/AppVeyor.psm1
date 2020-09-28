@@ -28,7 +28,7 @@ Function Invoke-InstallDependencies() {
             Import-Module -Name 'posh-git'
             Remove-Module -Name 'Pester' -Force -ErrorAction SilentlyContinue
             Import-Module -Name 'Pester' -RequiredVersion '4.10.1' -Verbose -Force
-            Import-Module -Name 'PSCoverage' -RequiredVersion '1.1.89' -Verbose -Force
+            Import-Module -Name 'PSCoverage' -RequiredVersion '1.2.108' -Verbose -Force
         }
         Catch {
             $MsgParams = @{
