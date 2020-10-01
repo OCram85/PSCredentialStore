@@ -11,9 +11,7 @@ cache:
 
 skip_tags: true
 
-#image: WMF 5
-# Test ne build image:
-image: Visual Studio 2013
+image: Visual Studio 2017
 
 # Install pester module and init the Appveyor support.
 
@@ -50,22 +48,12 @@ test_script:
       else {
         Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
       }
-      $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
-      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
-      Invoke-Expression "bash codecov.sh -f 'coverage.xml' -t $Env:CodeCovToken" 2>&1
-  #- ps: |
-  #    $CodeCoverage = Invoke-AppVeyorTests
-  #    if ($null -ne $Env:CoverallsToken) {
-  #      Invoke-CoverageReport -PesterCoverageReport $CodeCoverage
-  #    }
-  #    else {
-  #      Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
-  #    }
-  #- ps: |
-  #    Invoke-CodeCoveTests
-  #    $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
-  #    Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
-  #    bash codecov.sh -f "coverage.xml" -t $Env:CodeCovToken
+      if ($null -neq $Env:CodeCovToken) {
+        Invoke-CodeCove
+      }
+      else {
+        Write-Warning "No CodeCovToken found. This build seems to be triggered by a PR. Skipping this step..."
+      }
 
 deploy:
   #- provider: GitHub

@@ -182,41 +182,6 @@ Function Invoke-AppVeyorTests() {
 
 }
 
-Function Invoke-CodeCoveTests() {
-    [CmdletBinding()]
-    Param()
-
-    $MsgParams = @{
-        Message  = 'Starting Pester tests'
-        Category = 'Information'
-        Details  = 'Now running all test found in .\tests\ dir.'
-    }
-    Add-AppveyorMessage @MsgParams
-
-    try {
-        Write-Host '===== Preload internal private functions =====' -ForegroundColor Black -BackgroundColor Yellow
-
-        $Privates = Get-ChildItem -Path (Join-Path -Path $Env:APPVEYOR_BUILD_FOLDER -ChildPath '/src/Private/*') -Include "*.ps1" -Recurse
-        foreach ($File in $Privates) {
-            if (Test-Path -Path $File.FullName) {
-                . $File.FullName
-                Write-Verbose -Message ('Private function dot-sourced: {0}' -f $File.FullName) -Verbose
-            }
-            else {
-                Write-Warning -Message ('Could not find file: {0} !' -f $File.FullName)
-            }
-        }
-    }
-    catch {
-        $_.Exception.Message | Write-Error
-        throw 'Could not load required private functions!'
-    }
-
-    #$testresults = Invoke-Pester -Path ( Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property Name ) -ExcludeTag 'Disabled' -PassThru
-    $srcFiles = Get-ChildItem -Path ".\src\*.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
-    $testFiles = Get-ChildItem -Path ".\tests\*.Tests.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
-    $PesterRes = Invoke-Pester -Path $testFiles -CodeCoverage $srcFiles -CodeCoverageOutputFile ".\coverage.xml" -CodeCoverageOutputFileEncoding ascii -CodeCoverageOutputFileFormat JaCoCo
-}
 Function Invoke-CoverageReport() {
     [CmdletBinding()]
     Param(
@@ -234,6 +199,21 @@ Function Invoke-CoverageReport() {
     Write-Host "CoverageReport JSON:" -ForegroundColor Yellow
     #$CoverageReport | ConvertTo-Json -Depth 5 | Out-String | Write-Verbose
     Publish-CoverageReport -CoverageReport $CoverageReport
+}
+
+
+Function Invoke-CodeCove() {
+    [CmdletBinding()]
+    Param()
+
+    $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
+    Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile 'codecov.sh' -ErrorAction 'Stop'
+    if (Test-Path -Path 'coverage.xml') {
+        Invoke-Expression "bash codecov.sh -f 'coverage.xml' -t $Env:CodeCovToken" 2>&1
+    }
+    else {
+        Write-Error -Message 'Could not find pester coverage report!' -ErrorAction 'Stop'
+    }
 }
 
 Function Invoke-AppVeyorPSGallery() {
