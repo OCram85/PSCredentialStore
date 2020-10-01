@@ -48,7 +48,7 @@ test_script:
       else {
         Write-Warning "No CoverallsToken found. This build seems to be triggered by a PR. Skipping this step..."
       }
-      if ($null -neq $Env:CodeCovToken) {
+      if ($null -ne $Env:CodeCovToken) {
         Invoke-CodeCove
       }
       else {
