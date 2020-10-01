@@ -1,7 +1,7 @@
 # pre release version:
 version: 1.0.{build}
 
-cache:
+#cache:
 
 #branches:
 #  only:
