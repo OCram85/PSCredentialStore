@@ -11,7 +11,7 @@ cache:
 
 skip_tags: true
 
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 # Install pester module and init the Appveyor support.
 
