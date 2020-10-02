@@ -23,4 +23,5 @@ steps:
     commands:
       - pwsh -NonInteractive -c "& {Import-Module './tools/DroneIO.psm1'; Invoke-InstallDependencies}"
       - pwsh -NonInteractive -c "& {Import-Module './tools/DroneIO.psm1'; Invoke-UnitTests}"
-      - bash <(curl -s https://codecov.io/bash)
+      - bash curl -s https://codecov.io/bash -o codecov.sh
+      - bash codecov.sh -f 'coverage.xml'
