@@ -41,15 +41,15 @@ function Invoke-Linter () {
 
     process {
         $LintRes = Invoke-ScriptAnalyzer -Path './src/' -Recurse
-        if (-not ($Env:CI_COMMIT_MESSAGE -match 'SkipLint')) {
-            if ($LintRes ) {
-                $LintRes | Format-List
-                Write-Error -Message 'Lint Errors found!' -ErrorAction Stop
-            }
-            else {
-                Write-Host '== No Lint Errors found! =='
-            }
+        #if (-not ($Env:CI_COMMIT_MESSAGE -match 'SkipLint')) {
+        if ($LintRes ) {
+            $LintRes | Format-List
+            Write-Error -Message 'Lint Errors found!' -ErrorAction Stop
         }
+        else {
+            Write-Host '== No Lint Errors found! =='
+        }
+        #}
     }
 }
 
