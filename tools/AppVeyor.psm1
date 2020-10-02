@@ -202,20 +202,6 @@ Function Invoke-CoverageReport() {
 }
 
 
-Function Invoke-CodeCove() {
-    [CmdletBinding()]
-    Param()
-
-    $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
-    Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile 'codecov.sh' -ErrorAction 'Stop'
-    if (Test-Path -Path 'coverage.xml') {
-        Invoke-Expression "bash codecov.sh -f 'coverage.xml' -t $Env:CodeCovToken" 2>&1
-    }
-    else {
-        Write-Error -Message 'Could not find pester coverage report!' -ErrorAction 'Stop'
-    }
-}
-
 Function Invoke-AppVeyorPSGallery() {
     [CmdletBinding()]
     Param(
