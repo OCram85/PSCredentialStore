@@ -79,6 +79,7 @@ function Invoke-UnitTests {
         }
 
         Write-Host '===== Running Pester =====' -ForegroundColor Black -BackgroundColor Yellow
+        $srcFiles = Get-ChildItem -Path "./src/*.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
         $TestFiles = Get-ChildItem -Path (Join-Path -Path '.' -ChildPath './tests/*.Tests.ps1') -Recurse | Sort-Object -Property Name
         $TestResults = Invoke-Pester -Path $testFiles -CodeCoverage $srcFiles -PassThru -CodeCoverageOutputFile "./coverage.xml" -CodeCoverageOutputFileEncoding ascii -CodeCoverageOutputFileFormat JaCoCo
 
