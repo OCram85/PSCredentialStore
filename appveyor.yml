@@ -1,6 +1,8 @@
 # pre release version:
 version: 1.0.{build}
 
+#cache:
+
 #branches:
 #  only:
 #    - master
@@ -9,9 +11,7 @@ version: 1.0.{build}
 
 skip_tags: true
 
-#image: WMF 5
-# Test ne build image:
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 # Install pester module and init the Appveyor support.
 
@@ -28,6 +28,8 @@ environment:
     secure: 835qfZIkC9mE7QhkYfOZVAdR8rZhPvxG8BO4CbeaelRQOhlqmaSr8G1DWRJzZ/bS
   CoverallsToken:
     secure: eTjWqHL48MBr8wp1rSgLrXHdtpfDV/uClacP3svlWJfCvn/zVokpuaMnWM5RoyIY
+  CodeCovToken:
+    secure: LJOvamWIlVORDE7120KcmWVkHxOFYBSN99linyICXXmXLtYm81K/31YeMGiPlgTm
 
 build: false
 
@@ -59,15 +61,14 @@ deploy:
   - provider: GitHub
     auth_token:
       secure: M+bBX5/nKdJB0eViP7xtrLVTwf3vGDUA9N2MMprZp2i+9ZR3CBVcJnSzJWUmalhB
-    artifact: PSCredentialStore.zip     # upload all NuGet packages to release assets
+    artifact: PSCredentialStore.zip # upload all NuGet packages to release assets
     draft: false
     prerelease: false
     on:
-      branch: master                    # build release on master branch changes
+      branch: master # build release on master branch changes
 
 after_deploy:
   - ps: Invoke-AppVeyorPSGallery -OnBranch 'master'
-
 # Pause build until `lock` on desktop is deleted.
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
