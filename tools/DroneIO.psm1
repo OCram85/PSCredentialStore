@@ -80,7 +80,7 @@ function Invoke-UnitTests {
 
         Write-Host '===== Running Pester =====' -ForegroundColor Black -BackgroundColor Yellow
         $TestFiles = Get-ChildItem -Path (Join-Path -Path '.' -ChildPath './tests/*.Tests.ps1') -Recurse | Sort-Object -Property Name
-        $TestResults = Invoke-Pester -Script $TestFiles -ExcludeTag 'Disabled' -PassThru
+        $TestResults = Invoke-Pester -Path $testFiles -CodeCoverage $srcFiles -PassThru -CodeCoverageOutputFile "./coverage.xml" -CodeCoverageOutputFileEncoding ascii -CodeCoverageOutputFileFormat JaCoCo
 
         if ($TestResults.FailedCount -gt 0) {
             throw ('{0} tests failed!' -f $TestResults.FailedCount)
