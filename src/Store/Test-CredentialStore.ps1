@@ -25,39 +25,46 @@ function Test-CredentialStore {
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>
-    [CmdletBinding(DefaultParameterSetName = "Private")]
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
     param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [string]$Path,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
         [switch]$Shared
     )
 
     begin {
         # Set latest Credential Store version
-        #Set-Variable -Name "CSVersion" -Value "2.0.0" -Option Constant
+        #Set-Variable -Name 'CSVersion' -Value '2.0.0' -Option Constant
     }
 
     process {
         # Set the CredentialStore for private, shared or custom mode.
-        Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
-            $Path = Get-DefaultCredentialStorePath
-        }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
-            if (!($PSBoundParameters.ContainsKey('Path'))) {
-                $Path = Get-DefaultCredentialStorePath -Shared
+        Write-Debug ('ParameterSetName: {0}' -f $PSCmdlet.ParameterSetName)
+
+        # Construct a empty splatting.
+        $params = @{}
+
+        # Check if the user did not supply a custom path.
+        if (-not $PSBoundParameters.ContainsKey('Path')) {
+            # If the user supplied the -Shared parameter, add -Shared to the splatting.
+            if ($PSCmdlet.ParameterSetName -eq 'Shared') {
+                $params.Add('Shared', $true)
             }
+
+            # Get the default CredentialStorePath.
+            $Path = Get-DefaultCredentialStorePath @params
         }
-        Write-Verbose -Message ("Path is: {0}" -f $Path)
+
+        Write-Verbose -Message ('Path is: {0}' -f $Path)
 
         if (Test-Path $Path) {
-            Write-Verbose "CredentialStore in given path found."
+            Write-Verbose 'CredentialStore in given path found.'
             return $true
         }
         else {
-            Write-Verbose "The given CredentialStore does not exist!"
+            Write-Verbose 'The given CredentialStore does not exist!'
             return $false
         }
     }
