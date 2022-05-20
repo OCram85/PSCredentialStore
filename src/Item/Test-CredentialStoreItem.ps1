@@ -29,11 +29,11 @@ function Test-CredentialStoreItem {
         [None]
 
     .EXAMPLE
-        If (Test-CredentialStoreItem -RemoteHost "Default") {
-            Get-CredentialStoreItem -RemoteHost "Default"
+        If (Test-CredentialStoreItem -RemoteHost 'Default') {
+            Get-CredentialStoreItem -RemoteHost 'Default'
         }
         Else {
-            Write-Warning ("The given Remote Host {0} does not exist in the credential Store!" -f $RemoteHost)
+            Write-Warning ('The given Remote Host {0} does not exist in the credential Store!' -f $RemoteHost)
         }
 
     .NOTES
@@ -44,11 +44,13 @@ function Test-CredentialStoreItem {
     .LINK
         https://github.com/OCram85/PSCredentialStore
     #>
-    [CmdletBinding(DefaultParameterSetName = "Private")]
+
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
     [OutputType([Boolean])]
+
     param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [string]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [string]$Path = '{0}\PSCredentialStore\CredentialStore.json' -f $env:ProgramData,
 
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
@@ -58,17 +60,17 @@ function Test-CredentialStoreItem {
         [ValidateNotNullOrEmpty()]
         [string]$Identifier,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [switch]$Shared
     )
 
     begin {
         # Set the CredentialStore for private, shared or custom mode.
-        Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
+        Write-Debug ('ParameterSetName: {0}' -f $PSCmdlet.ParameterSetName)
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
             $Path = Get-DefaultCredentialStorePath
         }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
             if (!($PSBoundParameters.ContainsKey('Path'))) {
                 $Path = Get-DefaultCredentialStorePath -Shared
             }
@@ -76,17 +78,29 @@ function Test-CredentialStoreItem {
     }
 
     process {
-        if ($Identifier -ne "") {
-            $CredentialName = $RemoteHost = "{0}/{1}" -f $Identifier, $RemoteHost
+        if ($Identifier -ne '') {
+            $CredentialName = $RemoteHost = '{0}/{1}' -f $Identifier, $RemoteHost
         }
         else {
             $CredentialName = $RemoteHost
         }
 
-        if (Test-CredentialStore -Shared -Path $Path) {
-            $CS = Get-CredentialStore -Shared -Path $Path
+        # Construct the splatting for Test-CredentialStore
+        $params = @{
+            Path = $Path
+        }
+
+        if ($PSBoundParameters.ContainsKey('Shared')) {
+            $params.Add('Shared', $true)
+        }
+
+        # Check if the CredentialStore exists, and if it exists try and load the elements from the CredentialStore.
+        if (Test-CredentialStore @params) {
+            $CS = Get-CredentialStore @params
             $CSMembers = Get-Member -InputObject $CS
-            if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
+
+            # Now check if the CredentialStore element exists.
+            if (($CSMembers.MemberType -eq 'NoteProperty') -and ($CSMembers.Name -contains $CredentialName)) {
                 return $true
             }
             else {
@@ -94,16 +108,7 @@ function Test-CredentialStoreItem {
             }
         }
         else {
-            $MsgParams = @{
-                ErrorAction = "Stop"
-                Message     = "The given credential store ({0}) does not exist!" -f $Path
-            }
-            Write-Error @MsgParams
+            return $false
         }
     }
-
-    end {
-
-    }
-
 }
