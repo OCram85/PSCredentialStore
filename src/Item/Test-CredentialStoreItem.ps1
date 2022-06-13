@@ -35,19 +35,11 @@ function Test-CredentialStoreItem {
         Else {
             Write-Warning ("The given Remote Host {0} does not exist in the credential Store!" -f $RemoteHost)
         }
-
-    .NOTES
-        - File Name   : Test-CredentialStoreItem.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
-    [CmdletBinding(DefaultParameterSetName = "Private")]
-    [OutputType([Boolean])]
-    param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
+    [OutputType([boolean])]
+    param (
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [string]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
 
         [Parameter(Mandatory = $true)]
@@ -58,17 +50,17 @@ function Test-CredentialStoreItem {
         [ValidateNotNullOrEmpty()]
         [string]$Identifier,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [switch]$Shared
     )
 
     begin {
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
             $Path = Get-DefaultCredentialStorePath
         }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
             if (!($PSBoundParameters.ContainsKey('Path'))) {
                 $Path = Get-DefaultCredentialStorePath -Shared
             }
@@ -86,7 +78,7 @@ function Test-CredentialStoreItem {
         if (Test-CredentialStore -Shared -Path $Path) {
             $CS = Get-CredentialStore -Shared -Path $Path
             $CSMembers = Get-Member -InputObject $CS
-            if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
+            if (($CSMembers.MemberType -eq 'NoteProperty') -and ($CSMembers.Name -contains $CredentialName)) {
                 return $true
             }
             else {
@@ -95,15 +87,13 @@ function Test-CredentialStoreItem {
         }
         else {
             $MsgParams = @{
-                ErrorAction = "Stop"
+                ErrorAction = 'Stop'
                 Message     = "The given credential store ({0}) does not exist!" -f $Path
             }
             Write-Error @MsgParams
         }
     }
 
-    end {
-
-    }
+    end {}
 
 }
