@@ -20,18 +20,11 @@ function Get-CSCertificate {
 
     .EXAMPLE
         Get-CSCertificate -Type 'Shared' -Thumbprint '12334456'
-
-    .NOTES
-        - File Name   : Get-CSCertificate.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+    
     [CmdletBinding()]
     [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2])]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet('Private', 'Shared')]
@@ -42,8 +35,8 @@ function Get-CSCertificate {
         [string]$Thumbprint
     )
 
-    begin {
-    }
+    begin {}
+
     process {
         if ($Type -eq 'Private') {
             Get-CSPfXCertificate -Thumbprint $Thumbprint -StoreName 'My' -StoreLocation 'CurrentUser'
@@ -69,6 +62,5 @@ function Get-CSCertificate {
             }
         }
     }
-    end {
-    }
+    end {}
 }

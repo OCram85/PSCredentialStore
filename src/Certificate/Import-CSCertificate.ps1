@@ -21,18 +21,10 @@ function Import-CSCertificate {
 
     .EXAMPLE
         Import-CSCertificate -Type 'Private' -Path (Join-Path -Path $Env:APPDATA -ChildItem 'PfxCertificate.pfx')
-
-    .NOTES
-        - File Name   : Import-CSCertificate.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding()]
-    [OutputType()]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet('Private', 'Shared')]

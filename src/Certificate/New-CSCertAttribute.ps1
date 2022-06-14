@@ -35,18 +35,11 @@ function New-CSCertAttribute {
 
     .EXAMPLE
         New-CSCertAttribute -Country 'DE' -State 'BW' -City 'Karlsruhe' -Organization 'AwesomeIT' -OrganizationalUnitName '' -CommonName 'MyPrivateCert'
-
-    .NOTES
-        - File Name   : New-CSCertAttribute.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding()]
     [OutputType('PSCredentialStore.Certificate.Attribute')]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateLength(2, 2)]
         [ValidateNotNull()]
@@ -76,9 +69,8 @@ function New-CSCertAttribute {
         [ValidateNotNull()]
         [int]$Days = 365
     )
-    begin {
+    begin {}
 
-    }
     process {
         return [PSCustomObject]@{
             PSTypeName = 'PSCredentialStore.Certificate.Attribute'
@@ -94,6 +86,5 @@ function New-CSCertAttribute {
             Days       = $Days
         }
     }
-    end {
-    }
+    end {}
 }

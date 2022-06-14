@@ -23,18 +23,11 @@ function New-CSCertificate {
 
     .EXAMPLE
         New-CSCertificate -CRTAttribute $CRTAttribute -KeyName './myprivate.key' -CertName './mycert.pfx'
-
-    .NOTES
-        - File Name   : New-CSCertificate.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding(SupportsShouldProcess = $true)]
     [OutputType()]
-    param(
+    param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]
         [PSTypeName('PSCredentialStore.Certificate.Attribute')]$CRTAttribute,
@@ -70,6 +63,7 @@ function New-CSCertificate {
 
         $Env:OPENSSL_CONF = Join-Path $ModuleBase -ChildPath '/openssl.conf'
     }
+
     process {
         $SubjPattern = "/C={0}/ST={1}/L={2}/O={3}/OU={4}/CN={5}"
         $SubjValues = @(

@@ -26,36 +26,28 @@ function Use-CSCertificate {
 
     .EXAMPLE
         Use-CSCertificate -Path 'C:\cert.pfx'
-
-    .NOTES
-        File Name   : Use-CSCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
-    [CmdletBinding(DefaultParameterSetName = "Private")]
-    [OutputType()]
+
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
     [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
-    param(
-        [Parameter(Mandatory = $true, ParameterSetName = "Private")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+    param (
+        [Parameter(Mandatory = $true, ParameterSetName = 'Private')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
         [ValidateNotNullOrEmpty()]
         [string]$Path,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [ValidateNotNullOrEmpty()]
         [string]$CredentialStore,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
         [switch]$Shared,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Switch]$UseCertStore
+        [Parameter(Mandatory = $false, ParameterSetName = 'Private')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [switch]$UseCertStore
     )
-    begin { }
+    begin {}
 
     process {
         try {
@@ -74,11 +66,11 @@ function Use-CSCertificate {
         }
 
         try {
-            if ($PSCmdlet.ParameterSetName -eq "Private") {
+            if ($PSCmdlet.ParameterSetName -eq 'Private') {
                 $StorePath = Get-DefaultCredentialStorePath
                 $CS = Get-CredentialStore
             }
-            elseif ($PSCmdlet.ParameterSetName -eq "Shared" ) {
+            elseif ($PSCmdlet.ParameterSetName -eq 'Shared' ) {
                 if (!($PSBoundParameters.ContainsKey('CredentialStore'))) {
                     $StorePath = Get-DefaultCredentialStorePath -Shared
                     $CS = Get-CredentialStore -Shared
@@ -117,5 +109,5 @@ Make sure you used the same AES keys for encrypting!
         $CS | ConvertTo-Json -Depth 5 | Out-File -FilePath $StorePath -Force -Encoding utf8
     }
 
-    end { }
+    end {}
 }
