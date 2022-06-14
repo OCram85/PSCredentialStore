@@ -19,7 +19,7 @@ function Test-CredentialStore {
 
     #>
     [CmdletBinding(DefaultParameterSetName = 'Private')]
-    [OutputBinding([bool])]
+    [OutputType([bool])]
     param (
         [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [string]$Path,

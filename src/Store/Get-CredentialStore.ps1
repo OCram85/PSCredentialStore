@@ -26,7 +26,7 @@ function Get-CredentialStore {
     #>
 
     [CmdletBinding(DefaultParameterSetName = 'Private')]
-    [OutputType("PSCredentialStore.Store")]
+    [OutputType('PSCredentialStore.Store')]
     param (
         [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
 
