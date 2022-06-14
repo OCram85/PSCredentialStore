@@ -33,7 +33,7 @@ function Test-CSConnection {
 
     [CmdletBinding()]
     [OutputType([bool])]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$RemoteHost,
