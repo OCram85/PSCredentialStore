@@ -23,18 +23,11 @@ function Get-CSPfxCertificate {
 
     .EXAMPLE
         Get-CSPfxCertificate -Thumbprint '12345678' -StoreName 'My' -StoreLocation 'CurrentUser'
-
-    .NOTES
-        - File Name   : Get-CSPfxCertificate.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding()]
     [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2])]
-    param(
+    param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]
         [string[]]$Thumbprint,

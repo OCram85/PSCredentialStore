@@ -23,17 +23,10 @@ function Test-CSPfxCertificate {
 
     .EXAMPLE
         Test-CSPfxCertificate -Thumbprint '12345678' -StoreName 'My' -StoreLocation 'CurrentUser'
-
-    .NOTES
-        File Name   : Test-CSPfxCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding()]
-    [OutputType([bool])]
+    [OutputType([boolean])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]

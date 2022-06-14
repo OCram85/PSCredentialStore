@@ -22,18 +22,10 @@ function Import-CSPfxCertificate {
 
     .EXAMPLE
         Import-CSPfxCertificate -Path (Join-Path -Path $Env:APPDATA -ChildPath '/PSCredentialStore.pfx')
-
-    .NOTES
-        File Name   : Import-CSPfxCertificate.ps1
-        Author      : Marco Blessing - marco.blessing@googlemail.com
-        Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding()]
-    [OutputType()]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Path,
@@ -68,6 +60,7 @@ function Import-CSPfxCertificate {
         )]
         [string]$OpenFlags = 'ReadWrite'
     )
+
     begin {
         $Store = [System.Security.Cryptography.X509Certificates.X509Store]::new($StoreName, $StoreLocation)
         try {
@@ -77,6 +70,7 @@ function Import-CSPfxCertificate {
             $_.Exception.Message | Write-Error -ErrorAction Stop
         }
     }
+    
     process {
         try {
             $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new(
