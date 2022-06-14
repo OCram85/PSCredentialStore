@@ -20,7 +20,7 @@ function Test-CSCertificate {
     #>
 
     [CmdletBinding()]
-    [OutputType([boolean])]
+    [OutputType([bool])]
     param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]

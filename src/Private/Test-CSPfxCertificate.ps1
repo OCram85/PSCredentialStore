@@ -26,7 +26,7 @@ function Test-CSPfxCertificate {
     #>
 
     [CmdletBinding()]
-    [OutputType([boolean])]
+    [OutputType([bool])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]

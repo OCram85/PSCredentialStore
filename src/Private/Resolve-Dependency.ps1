@@ -40,7 +40,7 @@ function Resolve-Dependency {
         }
     #>
 
-    [OutputType([boolean])]
+    [OutputType([bool])]
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]

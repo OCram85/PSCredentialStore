@@ -37,7 +37,7 @@ function Test-CredentialStoreItem {
         }
     #>
     [CmdletBinding(DefaultParameterSetName = 'Private')]
-    [OutputType([boolean])]
+    [OutputType([bool])]
     param (
         [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [string]$Path = "{0}\PSCredentialStore\CredentialStore.json" -f $env:ProgramData,
