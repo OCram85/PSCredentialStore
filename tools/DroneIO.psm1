@@ -1,18 +1,17 @@
 $Global:ProgressPreference = 'SilentlyContinue'
 
-function Invoke-ShowEnv() {
+function Invoke-ShowEnv {
     [CmdletBinding()]
-    param()
+    param ()
 
     process {
         Get-ChildItem -Path 'Env:' | Format-Table | Out-String
     }
 }
 
-function Invoke-InstallDependencies() {
+function Invoke-InstallDependencies {
     [CmdletBinding()]
-    [OutputType()]
-    param()
+    param ()
 
     process {
         try {
@@ -35,9 +34,9 @@ function Invoke-InstallDependencies() {
     }
 }
 
-function Invoke-Linter () {
+function Invoke-Linter {
     [CmdletBinding()]
-    param()
+    param ()
 
     process {
         Invoke-ScriptAnalyzer -Path './src/' -Recurse
@@ -46,10 +45,9 @@ function Invoke-Linter () {
 
 function Invoke-UnitTests {
     [CmdletBinding()]
-    Param()
+    param ()
 
     process {
-
         try {
             Write-Host '===== Preload internal private functions =====' -ForegroundColor Black -BackgroundColor Yellow
 
