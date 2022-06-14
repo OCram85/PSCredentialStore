@@ -3,8 +3,6 @@
 #endregion module-definition
 Set-Variable -Name "CSVersion" -Value "2.0.0" -Option Constant -Scope 'Script' -ErrorAction Stop
 
-
-
 #region dot-sourcing
 # dot-sourcing all module functions. The export is handled via manifest file.
 
