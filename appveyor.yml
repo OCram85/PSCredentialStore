@@ -31,7 +31,7 @@ environment:
   CodeCovToken:
     secure: LJOvamWIlVORDE7120KcmWVkHxOFYBSN99linyICXXmXLtYm81K/31YeMGiPlgTm
 
-build: false
+build: Script
 
 before_build:
   - ps: Invoke-AppVeyorBumpVersion
