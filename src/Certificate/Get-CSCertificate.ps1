@@ -21,7 +21,7 @@ function Get-CSCertificate {
     .EXAMPLE
         Get-CSCertificate -Type 'Shared' -Thumbprint '12334456'
     #>
-    
+
     [CmdletBinding()]
     [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2])]
     param (

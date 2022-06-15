@@ -1,7 +1,13 @@
 $Global:ProgressPreference = 'SilentlyContinue'
+$ErrorActionPreference = 'Stop'
 
 function Invoke-ShowEnv {
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSProvideCommentHelp',
+        '',
+        Justification = 'internal function'
+    )]
     param ()
 
     process {
@@ -11,6 +17,16 @@ function Invoke-ShowEnv {
 
 function Invoke-InstallDependencies {
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSProvideCommentHelp',
+        '',
+        Justification = 'internal function'
+    )]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSUseSingularNouns',
+        '',
+        Justification = 'internal function'
+    )]
     param ()
 
     process {
@@ -36,44 +52,78 @@ function Invoke-InstallDependencies {
 
 function Invoke-Linter {
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSProvideCommentHelp',
+        '',
+        Justification = 'internal function'
+    )]
     param ()
 
     process {
-        Invoke-ScriptAnalyzer -Path './src/' -Recurse
+        Import-Module -Name PSScriptAnalyzer
+        $AnalyzerSettings = @{
+            Path          = './src/'
+            Recurse       = $true
+            Settings      = './tools/PSScriptAnalyzerSettings.psd1'
+            ReportSummary = $true
+        }
+        Invoke-ScriptAnalyzer @AnalyzerSettings
     }
 }
 
-function Invoke-UnitTests {
+function Invoke-UnitTest {
     [CmdletBinding()]
-    param ()
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSProvideCommentHelp',
+        '',
+        Justification = 'internal function'
+    )]
+
+    param (
+        [Parameter( Mandatory = $false )]
+        [ValidateSet('JaCoCo', 'CoverageGutters')]
+        [string]$CoverageFormat = 'JaCoCo',
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('None', 'Normal', 'Detailed', 'Diagnostic')]
+        [string]$Verbosity = 'Normal',
+
+        [Parameter(Mandatory = $false)]
+        [switch]$PassThru,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$Tag,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string[]]$ExcludeTag
+    )
 
     process {
-        try {
-            Write-Host '===== Preload internal private functions =====' -ForegroundColor Black -BackgroundColor Yellow
-
-            $Privates = Get-ChildItem -Path (Join-Path -Path $Env:DRONE_WORKSPACE -ChildPath '/src/Private/*') -Include "*.ps1" -Recurse -ErrorAction Stop
-            foreach ($File in $Privates) {
-                if (Test-Path -Path $File.FullName) {
-                    . $File.FullName
-                    Write-Verbose -Message ('Private function dot-sourced: {0}' -f $File.FullName) -Verbose
-                }
-                else {
-                    Write-Warning -Message ('Could not find file: {0} !' -f $File.FullName)
-                }
-            }
+        Write-Verbose -Message '===== Running Pester =====' -Verbose:$VerbosePreference
+        $PesterConf = New-PesterConfiguration
+        $PesterConf.Run.Path = (Resolve-Path -Path './src').Path
+        $PesterConf.Run.Exit = $false
+        $PesterConf.Run.PassThru = $true
+        $PesterConf.CodeCoverage.Enabled = $true
+        $PesterConf.CodeCoverage.OutputFormat = $CoverageFormat
+        $PesterConf.TestResult.Enabled = $true
+        $CovFiles = Get-ChildItem -Path "./src/*.ps1" -Recurse | Where-Object {
+            $_.BaseName -notmatch '.Tests'
+        } | Select-Object -ExpandProperty 'FullName'
+        $PesterConf.CodeCoverage.Path = $CovFiles
+        $PesterConf.Output.Verbosity = $Verbosity
+        # Set Tags if given
+        if ($Tag) {
+            $PesterConf.Filter.Tag = $Tag
         }
-        catch {
-            $_.Exception.Message | Write-Error
-            throw 'Could not load required private functions!'
+        if ($ExcludeTag) {
+            $PesterConf.Filter.ExcludeTag = $ExcludeTag
         }
-
-        Write-Host '===== Running Pester =====' -ForegroundColor Black -BackgroundColor Yellow
-        $srcFiles = Get-ChildItem -Path "./src/*.ps1" -Recurse | Sort-Object -Property 'Name' | Select-Object -ExpandProperty 'FullName'
-        $TestFiles = Get-ChildItem -Path (Join-Path -Path '.' -ChildPath './tests/*.Tests.ps1') -Recurse | Sort-Object -Property Name
-        $TestResults = Invoke-Pester -Path $testFiles -CodeCoverage $srcFiles -PassThru -CodeCoverageOutputFile "./coverage.xml" -CodeCoverageOutputFileEncoding ascii -CodeCoverageOutputFileFormat JaCoCo
-
-        if ($TestResults.FailedCount -gt 0) {
-            throw ('{0} tests failed!' -f $TestResults.FailedCount)
+        $TestResults = Invoke-Pester -Configuration $PesterConf -ErrorAction 'Stop'
+        if ($PassThru.IsPresent) {
+            Write-Output -InputObject $TestResults
         }
     }
 }
