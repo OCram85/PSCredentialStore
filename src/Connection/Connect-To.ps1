@@ -14,8 +14,16 @@ function Connect-To {
         same hostname.
 
     .PARAMETER Type
-        Specify the host type of the target. Currently implemented targets are: Possible connection values are:
-        CiscoUcs, FTP, NetAppFAS, VMware, CisServer, ExchangeHTTP, ExchangeHTTPS, SCP.
+        Specify the host type of the target. Currently implemented targets are:
+        - CiscoUcs
+        - CiscoUcsCentral
+        - CisServer
+        - ExchangeHTTP
+        - ExchangeHTTPS
+        - FTP
+        - NetAppFAS
+        - SCP
+        - VMware
 
     .PARAMETER Credentials
         Use this parameter to bypass the stored credentials. Without this parameter Connect-To tries to read the
@@ -40,6 +48,9 @@ function Connect-To {
 
     .EXAMPLE
         Connect-To -RemoteHost "ucs.myside.local" -Type CiscoUcs
+
+    .EXAMPLE
+        Connect-To -RemoteHost "ucscentral.myside.local" -Type 'CiscoUcsCentral'
 
     .EXAMPLE
         Connect-To -RemoteHost "ftp.myside.local" -Type FTP
@@ -82,13 +93,14 @@ function Connect-To {
         [Parameter(Mandatory = $true, ParameterSetName = "Private")]
         [ValidateSet(
             'CiscoUcs',
-            'FTP',
-            'NetAppFAS',
-            'VMware',
+            'CiscoUcsCentral',
             'CisServer',
             'ExchangeHTTP',
             'ExchangeHTTPS',
-            'SCP'
+            'FTP',
+            'NetAppFAS',
+            'SCP',
+            'VMware'
         )]
         [string]$Type,
 
