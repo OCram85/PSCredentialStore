@@ -175,7 +175,7 @@ function Connect-To {
             switch ($Type) {
                 "CiscoUcs" {
                     try {
-                        $handle = Connect-Ucs -Name $RemoteHost -Credential $creds -ErrorAction Stop
+                        $handle = Connect-Ucs -Name $RemoteHost -Credential $creds -ErrorAction Stop -NotDefault
                         $ExecutionContext.SessionState.PSVariable.Set("DefaultUcs", $handle)
                     }
 
