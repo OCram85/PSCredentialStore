@@ -14,8 +14,16 @@ function Connect-To {
         same hostname.
 
     .PARAMETER Type
-        Specify the host type of the target. Currently implemented targets are: Possible connection values are:
-        CiscoUcs, FTP, NetAppFAS, VMware, CisServer, ExchangeHTTP, ExchangeHTTPS, SCP.
+        Specify the host type of the target. Currently implemented targets are:
+        - CiscoUcs
+        - CiscoUcsCentral
+        - CisServer
+        - ExchangeHTTP
+        - ExchangeHTTPS
+        - FTP
+        - NetAppFAS
+        - SCP
+        - VMware
 
     .PARAMETER Credentials
         Use this parameter to bypass the stored credentials. Without this parameter Connect-To tries to read the
@@ -40,6 +48,9 @@ function Connect-To {
 
     .EXAMPLE
         Connect-To -RemoteHost "ucs.myside.local" -Type CiscoUcs
+
+    .EXAMPLE
+        Connect-To -RemoteHost "ucscentral.myside.local" -Type 'CiscoUcsCentral'
 
     .EXAMPLE
         Connect-To -RemoteHost "ftp.myside.local" -Type FTP
@@ -82,13 +93,14 @@ function Connect-To {
         [Parameter(Mandatory = $true, ParameterSetName = "Private")]
         [ValidateSet(
             'CiscoUcs',
-            'FTP',
-            'NetAppFAS',
-            'VMware',
+            'CiscoUcsCentral',
             'CisServer',
             'ExchangeHTTP',
             'ExchangeHTTPS',
-            'SCP'
+            'FTP',
+            'NetAppFAS',
+            'SCP',
+            'VMware'
         )]
         [string]$Type,
 
@@ -109,6 +121,11 @@ function Connect-To {
     )
 
     begin {
+        # Set defaults for the preference variables.
+        $InformationPreference = 'Continue'
+        $ErrorActionPreference = 'Stop'
+        $ProgressPreference = 'SilentlyContinue'
+
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
         if ($PSCmdlet.ParameterSetName -eq "Private") {
@@ -122,7 +139,7 @@ function Connect-To {
 
         # First check the optional modules
         if (-not (Resolve-Dependency -Name $Type)) {
-            Write-Error -Message ("Could not resolve the optional dependencies defined for {0}" -f $Type) -ErrorAction 'Stop'
+            Write-Error -Message ("Could not resolve the optional dependencies defined for {0}" -f $Type)
         }
         switch ($Type) {
             "VMware" {
@@ -153,11 +170,8 @@ function Connect-To {
             }
 
             catch {
-                $MessageParams = @{
-                    Message     = "Unable to look up credential store item for RemoteHost {0}/Identifier {1}!" -f $RemoteHost, $Identifier
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
+                $m = "Unable to look up credential store item for {0}/Identifier {1}!" -f $RemoteHost, $Identifier
+                Write-Error -Message $m
             }
         }
         else {
@@ -165,11 +179,7 @@ function Connect-To {
         }
 
         if ($creds.UserName -eq "" -or $creds.Password.GetType().Name -ne "SecureString") {
-            $MessageParams = @{
-                Message     = "Please provide valid credentials for RemoteHost {0}!" -f $RemoteHost
-                ErrorAction = "Stop"
-            }
-            Write-Error @MessageParams
+            Write-Error -Message ("Please provide valid credentials for RemoteHost {0}!" -f $RemoteHost)
         }
         else {
             switch ($Type) {
@@ -180,11 +190,19 @@ function Connect-To {
                     }
 
                     catch {
-                        $MessageParams = @{
-                            Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
-                        }
-                        Write-Error @MessageParams
+                        $_.Exception.Message | Write-Warning
+                        Write-Error -Message ("Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type)
+                    }
+                }
+                'CiscoUcsCentral' {
+                    try {
+                        $handle = Connect-UcsCentral -Name $RemoteHost -Credential $creds -NotDefault
+                        $ExecutionContext.SessionState.PSVariable.Set('DefaultUcsCentral', $handle)
+                    }
+
+                    catch {
+                        $_.Exception.Message | Write-Warning
+                        Write-Error -Message ('Unable to connect to {0} using {1}' -f $RemoteHost, $Type)
                     }
                 }
                 "FTP" {

@@ -14,8 +14,16 @@ function Disconnect-From {
         same hostname.
 
     .PARAMETER Type
-        Specify the host type of the target. Currently implemented targets are: CiscoUcs, FTP, NetAppFAS, VMware,
-        CisServer, ExchangeHTTP, ExchangeHTTPS, SCP.
+        Specify the host type of the target. Currently implemented targets are:
+        - CiscoUcs
+        - CiscoUcsCentral
+        - CisServer
+        - ExchangeHTTP
+        - ExchangeHTTPS
+        - FTP
+        - NetAppFAS
+        - SCP
+        - VMware
 
     .PARAMETER Force
         Force the disconnect, even if the disconnect would fail.
@@ -28,6 +36,9 @@ function Disconnect-From {
 
     .EXAMPLE
         Disconnect-From -RemoteHost "ucs.myside.local" -Type CiscoUcs
+
+    .EXAMPLE
+        Disconnect-From -RemoteHost "ucscentral.myside.local" -Type 'CiscoUcsCentral'
 
     .EXAMPLE
         Disconnect-From -RemoteHost "ftp.myside.local" -Type FTP
@@ -67,13 +78,14 @@ function Disconnect-From {
         [Parameter(Mandatory = $true)]
         [ValidateSet(
             'CiscoUcs',
-            'FTP',
-            'NetAppFAS',
-            'VMware',
+            'CiscoUcsCentral',
             'CisServer',
             'ExchangeHTTP',
             'ExchangeHTTPS',
-            'SCP'
+            'FTP',
+            'NetAppFAS',
+            'SCP',
+            'VMware'
         )]
         [string]$Type,
 
@@ -81,43 +93,43 @@ function Disconnect-From {
         [switch]$Force
     )
 
+    # Set defaults for the preference variables.
+    $InformationPreference = 'Continue'
+    $ErrorActionPreference = 'Stop'
+    $ProgressPreference = 'SilentlyContinue'
+
+
     switch -Regex ($Type) {
         "VMware" {
             try {
                 if ($Force) {
-                    Disconnect-VIServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop -Force:$true
+                    Disconnect-VIServer -Server $RemoteHost -Confirm:$false -Force:$true
                 }
                 else {
-                    Disconnect-VIServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop
+                    Disconnect-VIServer -Server $RemoteHost -Confirm:$false
                 }
             }
 
             catch {
                 # Write a error message to the log.
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
+                $_.Exception.Message | Write-Warning
+                Write-Error -Message ("Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type)
             }
         }
         "CisServer" {
             try {
                 if ($Force) {
-                    Disconnect-CisServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop -Force:$true
+                    Disconnect-CisServer -Server $RemoteHost -Confirm:$false -Force:$true
                 }
                 else {
-                    Disconnect-CisServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop
+                    Disconnect-CisServer -Server $RemoteHost -Confirm:$false
                 }
             }
 
             catch {
                 # Write a error message to the log.
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
+                $_.Exception.Message | Write-Warning
+                Write-Error -Message ("Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type)
             }
         }
         # Check for an existing WinSCP Session var
@@ -147,11 +159,8 @@ function Disconnect-From {
 
             catch {
                 # Write a error message to the log.
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
+                $_.Exception.Message | Write-Warning
+                Write-Error -Message ("Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type)
             }
 
         }
@@ -162,24 +171,33 @@ function Disconnect-From {
 
             catch {
                 # Write a error message to the log.
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
+                $_.Exception.Message | Write-Warning
+                Write-Error -Message ("Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type)
             }
         }
+
+        'CiscoUcsCentral' {
+            try {
+                Disconnect-UcsCentral -Ucs $RemoteHost
+            }
+
+            catch {
+                # Write a error message to the log.
+                $_.Exception.Message | Write-Warning
+                Write-Error -Message ('Unable to disconnect from {0} using Type {1}.' -f $RemoteHost, $Type)
+            }
+        }
+
+
         "ExchangeHTTP*" {
             try {
-                Get-Variable -Name 'PSExchangeRemote' -Scope Global -ErrorAction Stop
-                Remove-PSSession -Session $Global:PSExchangeRemote -ErrorAction Stop
+                Get-Variable -Name 'PSExchangeRemote' -Scope Global
+                Remove-PSSession -Session $Global:PSExchangeRemote
             }
             catch {
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
+                # Write a error message to the log.
+                $_.Exception.Message | Write-Warning
+                Write-Error -Message ("Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type)
             }
         }
         "SCP" {
@@ -196,11 +214,7 @@ function Disconnect-From {
         }
         default {
             # Write a error message to the log.
-            $MessageParams = @{
-                Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                ErrorAction = "Stop"
-            }
-            Write-Error @MessageParams
+            Write-Error -Message ("Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type)
         }
     }
 }
