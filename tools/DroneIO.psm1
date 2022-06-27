@@ -30,11 +30,41 @@ function Invoke-InstallDependencies {
     param ()
 
     process {
+        $ErrorActionPreference = 'Stop'
         try {
-            Install-Module -Name 'PSScriptAnalyzer' -Scope CurrentUser -RequiredVersion '1.19.1' -Force -SkipPublisherCheck -AllowClobber -Verbose:$VerbosePreference -ErrorAction 'Stop'
-            Install-Module -Name 'Pester' -Scope CurrentUser -RequiredVersion '4.10.1' -Force -SkipPublisherCheck -AllowClobber -Verbose:$VerbosePreference -ErrorAction 'Stop'
-            Install-Module -Name 'posh-git' -Scope CurrentUser -RequiredVersion '0.7.3' -Force -SkipPublisherCheck -AllowClobber -Verbose:$VerbosePreference -ErrorAction 'Stop'
-            Install-Module -Name 'PSCoverage' -Scope CurrentUser -Force -SkipPublisherCheck -AllowClobber -RequiredVersion '1.2.108' -Verbose:$VerbosePreference -ErrorAction 'Stop'
+            $ParamsPSScript = @{
+                Name = 'PSScriptAnalyzer'
+                Scope = 'CurrentUser'
+                RequiredVersion = '1.20.0'
+                Force = $true
+                SkipPublisherCheck = $true
+                AllowClobber = $true
+                Verbose = $VerbosePreference
+            }
+            Install-Module @ParamsPSScript
+
+            $ParamsPester = @{
+                Name = 'Pester'
+                Scope = 'CurrentUser'
+                RequiredVersion = '5.3.3'
+                Force = $true
+                SkipPublisherCheck = $true
+                AllowClobber = $true
+                Verbose = $VerbosePreference
+            }
+            Install-Module @ParamsPester
+
+            $ParamsPosh = @{
+                Name = 'posh-git'
+                Scope = 'CurrentUser'
+                RequiredVersion = '1.1.0'
+                Force = $true
+                SkipPublisherCheck = $true
+                AllowClobber = $true
+                Verbose = $VerbosePreference
+                #ErrorAction = 'Stop'
+            }
+            Install-Module @ParamsPosh
         }
         catch {
             $ExceParams = @{
