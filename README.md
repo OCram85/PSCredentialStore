@@ -1,18 +1,42 @@
-[![AppVeyor branch](https://img.shields.io/appveyor/ci/OCram85/PSCredentialStore/master.svg?style=plastic "Master Branch Build Status")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master)
-[![AppVeyor tests branch](https://img.shields.io/appveyor/tests/OCram85/PSCredentialStore/master.svg?style=plastic "Pester Tests Results")](https://ci.appveyor.com/project/OCram85/pscredentialstore/branch/master/tests)
-[![Coveralls github](https://img.shields.io/coveralls/github/OCram85/PSCredentialStore.svg?style=plastic "Coveralls.io Coverage Report")](https://coveralls.io/github/OCram85/PSCredentialStore?branch=master)
-[![codecov](https://codecov.io/gh/OCram85/PSCredentialStore/branch/master/graph/badge.svg)](https://codecov.io/gh/OCram85/PSCredentialStore)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/PSCredentialStore.svg?style=plastic "PowershellGallery Published Version")](https://www.powershellgallery.com/packages/PSCredentialStore)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/vpre/PSCredentialStore.svg?label=latest%20preview&style=plastic "PowershellGallery Latest Preview Version")](https://www.powershellgallery.com/packages/PSCredentialStore)
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PSCredentialStore.svg?style=plastic "PowershellGallery Downloads")](https://www.powershellgallery.com/packages/PSCredentialStore)
+<p align="right">
+  <img src="http://forthebadge.com/images/badges/built-with-love.svg">
+  <img src="http://forthebadge.com/images/badges/for-you.svg">
+</p>
 
-![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)
-![forthebadge](http://forthebadge.com/images/badges/for-you.svg)
+<p align="center">
+  <a href="https://github.com/OCram85/PSCredentialStore/">
+    <img src="https://raw.githubusercontent.com/OCram85/PSCredentialStore/master/assets/social-logo.png" alt="PSCredentialStore" />
+  </a>
+</p>
 
-![social-logo](/assets/social-logo.png)
+<h1 align="center">
+  PSCredentialStore
+</h1>
 
-:key: General
-=======
+<p align="center">
+  🔐 A simple credential manager to store and reuse multiple PSCredential objects.
+</p>
+
+<p align="center">
+  <a href="https://cloud.drone.io/OCram85/PSCredentialStore">
+    <img src="https://cloud.drone.io/api/badges/OCram85/PSCredentialStore/status.svg" alt="Master Branch Build Status">
+  </a>
+  <a href="https://codecov.io/gh/OCram85/PSCredentialStore">
+    <img src="https://codecov.io/gh/OCram85/PSCredentialStore/branch/master/graph/badge.svg" alt="CodeCov">
+  </a>
+  <a href="https://www.powershellgallery.com/packages/PSCredentialStore">
+    <img src="https://img.shields.io/powershellgallery/v/PSCredentialStore.svg?style=plastic" alt="PowershellGallery Published Version">
+  </a>
+  <a href="https://www.powershellgallery.com/packages/PSCredentialStore">
+    <img src="https://img.shields.io/powershellgallery/vpre/PSCredentialStore.svg?label=latest%20preview&style=plastic" />
+  </a>
+  <a href="https://www.powershellgallery.com/packages/PSCredentialStore">
+    <img src="https://img.shields.io/powershellgallery/dt/PSCredentialStore.svg?style=plastic" />
+  </a>
+</p>
+
+
+## :key: General
 
 The PSCredentialStore is a simple credential manager for `PSCredential` objects. It stores PSCredentials in a simple json
 file. You can choose between a private and shared credential store. The private one exists in your profile and can
@@ -30,14 +54,12 @@ For more details read the [about_PSCredentialStore](/docs/about_PSCredentialStor
 
 You can find the [reference](/docs/PSCredentialStore.md) in the /docs/ path as well.
 
-:vulcan_salute: Requirements
-============
+## :vulcan_salute: Requirements
 
 - PowerShell >= `5.1`
 - .NET Framework >= `4.6` or .NET Core >= `1.0`
 
-:bomb: About Security
-============
+## :bomb: About Security
 
 >This section explains some security topics and the the design decisions we made to balance the usage and security needs.
 
@@ -66,21 +88,16 @@ Here is s brief hierarchy description of the certificate location: *(First match
 | Shared (Linux)       | `LocalMachine`\\`My`   |
 |                      | `LocalMachine`\\`Root` |
 
+## :hammer_and_wrench: Installation
 
-
-:hammer_and_wrench: Installation
-============
-
-:artificial_satellite: PowerShellGallery.com (Recommended Way)
----------------------------------------
+### :artificial_satellite: PowerShellGallery.com (Recommended Way)
 
 * Make sure you use PowerShell 5.1 or higher with `$PSVersionTable`.
 * Use the builtin PackageManagement and install with: `Import-Module PowerShellGet; Install-Module 'PSCredentialStore' -Repository 'PSGallery'`
   * Additionally use the `-AllowPrerelease` switch until we publish the final release!
 * Done. Start exploring the Module with `Import-Module PSCredentialStore ; Get-Command -Module PSCredentialStore`
 
-:building_construction: Manual Way
-----------
+### :building_construction: Manual Way
 
 * Take a look at the [Latest Release](https://github.com/OCram85/PSCredentialStore/releases/latest) page.
 * Download the `PSCredentialStore.zip`.
@@ -88,8 +105,7 @@ Here is s brief hierarchy description of the certificate location: *(First match
   * Don't forget to change the NTFS permission flag in the context menu.
 * Start with `Import-Module PSCredentialStore`
 
-:sparkles: Quick Start
------------
+### :sparkles: Quick Start
 
 **1.** First we need a blank credential store. You can decide between a *private* or *shared* store. The private
 Credential Store can only be accessed with your profile on the machine you created it.
@@ -155,8 +171,7 @@ Connect-To -RemoteHost "exchange1.myside.local" -Type ExchangeHTTPS
 Connect-To -RemoteHost "ubuntu.myside.local" -Type SCP
 ```
 
-:pushpin: Credits
--------
+### :pushpin: Credits
 
 A huge thanks to all the people who helped with their projects and indirect contributions which made this possible!
 
