@@ -202,7 +202,6 @@ function Invoke-UnitTest {
         $TestResults = Invoke-Pester -Configuration $PesterConf -ErrorAction 'Stop'
 
         if ($TestResults.FailedCount -gt 0) {
-            Write-FailureStateFile -StepName 'Pester'
             throw ('{0} tests failed!' -f $TestResults.FailedCount)
         }
 
