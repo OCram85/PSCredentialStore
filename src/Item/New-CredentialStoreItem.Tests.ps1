@@ -67,7 +67,7 @@ Describe "New-CredentialStoreItem" {
             $StoreItemParam = @{
                 Shared = $true
                 Path = $tmpCS
-                RemeHost = $RemoteHost
+                RemoteHost = $RemoteHost
                 Credential = $mycreds
                 identifier = 'Foo'
             }
