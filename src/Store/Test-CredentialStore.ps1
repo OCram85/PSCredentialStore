@@ -16,8 +16,8 @@ function Test-CredentialStore {
 
     .EXAMPLE
         Test-CredentialStore -eq $true
-
     #>
+
     [CmdletBinding(DefaultParameterSetName = 'Private')]
     [OutputType([bool])]
     param (

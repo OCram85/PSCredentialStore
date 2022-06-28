@@ -27,7 +27,7 @@ function Test-CSPfxCertificate {
 
     [CmdletBinding()]
     [OutputType([bool])]
-    param(
+    param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Thumbprint,

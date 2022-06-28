@@ -33,9 +33,10 @@ function Test-Module {
     .EXAMPLE
         .\Test-Dependency -Name 'VMware.PowerCLI' -Type 'Module' -StopIfFails
     #>
+
     [OutputType([bool])]
     [CmdletBinding()]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Name,

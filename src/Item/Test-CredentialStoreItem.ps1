@@ -29,13 +29,14 @@ function Test-CredentialStoreItem {
         [None]
 
     .EXAMPLE
-        If (Test-CredentialStoreItem -RemoteHost "Default") {
+        if (Test-CredentialStoreItem -RemoteHost "Default") {
             Get-CredentialStoreItem -RemoteHost "Default"
         }
-        Else {
+        else {
             Write-Warning ("The given Remote Host {0} does not exist in the credential Store!" -f $RemoteHost)
         }
     #>
+
     [CmdletBinding(DefaultParameterSetName = 'Private')]
     [OutputType([bool])]
     param (

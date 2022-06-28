@@ -8,7 +8,8 @@ function Get-ModuleBase {
 
     .OUTPUTS
         Returns the base path as string
-#>
+    #>
+
     [CmdletBinding()]
     [OutputType([string])]
     param ()

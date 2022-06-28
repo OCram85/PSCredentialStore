@@ -21,7 +21,7 @@ function Test-CSCertificate {
 
     [CmdletBinding()]
     [OutputType([bool])]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet('Private', 'Shared')]

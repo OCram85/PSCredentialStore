@@ -242,6 +242,5 @@ function New-CredentialStore {
         }
     }
 
-    end {
-    }
+    end {}
 }

@@ -70,7 +70,7 @@ function Import-CSPfxCertificate {
             $_.Exception.Message | Write-Error -ErrorAction Stop
         }
     }
-    
+
     process {
         try {
             $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new(
