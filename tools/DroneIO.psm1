@@ -105,7 +105,7 @@ function Start-PSScriptAnalyzer {
         }
         $AnalyzerResults = Invoke-ScriptAnalyzer @AnalyzerSettings
         if ( $AnalyzerResults ) {
-            Write-Output -InputObject $AnalyzerSettings
+            Write-Output -InputObject $AnalyzerResults
         }
     }
 }
