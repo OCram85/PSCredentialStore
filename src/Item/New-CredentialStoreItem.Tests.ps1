@@ -79,7 +79,7 @@ Describe "New-CredentialStoreItem" {
     Context "General Exception handling" {
         Mock Test-CredentialStore { return $false } -ModuleName 'PSCredentialStore'
         It "Missing CredentialStore should throw" {
-            { New-CredentialStoreItem -Shared -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
+            { New-CredentialStoreItem -Shared -Path '/tmp/missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
         }
     }
     Context "Testing pipeline paramter" {
