@@ -1,3 +1,16 @@
+BeforeAll {
+    $ManifestFile = (Get-Item -Path "./src/*.psd1").FullName
+    Import-Module $ManifestFile -Force
+
+    $PrivateFunctions = (Get-ChildItem -Path "./src/Private/*.ps1" | Where-Object {
+            $_.BaseName -notmatch '.Tests'
+        }
+    ).FullName
+    foreach ( $func in $PrivateFunctions) {
+        . $func
+    }
+}
+
 Describe "Test-ModuleName" {
     Context "Basic input tests" {
         It "Testing standard module should not throw" {
@@ -20,7 +33,7 @@ Describe "Test-ModuleName" {
             Test-Module -Name 'foobar2000' | Should -Be $false
         }
         It "StopifFails switch should thrown an error" {
-            {Test-Module -Name 'foobar2000' -StopIfFails }| Should -Throw
+            { Test-Module -Name 'foobar2000' -StopIfFails } | Should -Throw
         }
     }
 }
