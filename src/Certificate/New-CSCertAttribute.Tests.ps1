@@ -5,18 +5,16 @@ BeforeAll {
 
 Describe "New-CSCertAttribute" {
     Context "Basis Tests" {
-        It "TShould not throw" {
-            {
-                $AttribParams = @{
-                    Country                = 'DE'
-                    State                  = 'BW'
-                    City                   = 'KA'
-                    Organization           = 'IT'
-                    OrganizationalUnitName = ''
-                    CommonName             = 'MyCert'
-                }
-                New-CSCertAttribute @AttribParams
-            } | Should -Not -Throw
+        It "Should not throw" {
+            $AttribParams = @{
+                Country                = 'DE'
+                State                  = 'BW'
+                City                   = 'KA'
+                Organization           = 'IT'
+                OrganizationalUnitName = ''
+                CommonName             = 'MyCert'
+            }
+            { New-CSCertAttribute @AttribParams } | Should -Not -Throw
         }
     }
 }
