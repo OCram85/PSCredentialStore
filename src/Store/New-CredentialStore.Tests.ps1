@@ -33,8 +33,8 @@ BeforeAll {
 
 Describe "New-CredentialStore" {
     Context "Private CS tests" {
-        $pCS = Get-DefaultCredentialStorePath
         It "Test1: Create new private CredentialStore" {
+            $pCS = Get-DefaultCredentialStorePath
             { New-CredentialStore -Confirm:$false } | Should -Not -Throw
             $result = Test-Path -Path $pCS
             $CS = Get-Content -Path $pCS -Raw | ConvertFrom-Json
@@ -44,6 +44,7 @@ Describe "New-CredentialStore" {
             { New-CredentialStore -Confirm:$false } | Should -Throw
         }
         It "Test3: Reset existing Credential Store" {
+            $pCS = Get-DefaultCredentialStorePath
             $now = Get-Date
             $CS = Get-Content -Path $pCS -Raw | ConvertFrom-Json
             $CSCreation = [DateTime]$CS.Created
@@ -52,8 +53,8 @@ Describe "New-CredentialStore" {
         }
     }
     Context "Shared CS tests" {
-        $sCS = Get-DefaultCredentialStorePath -Shared
         It "Test1: Create a new Shared Credential Store" {
+            $sCS = Get-DefaultCredentialStorePath -Shared
             { New-CredentialStore -Confirm:$false -Shared } | Should -Not -Throw
             Test-Path -Path $sCS | Should -Be $true
         }
@@ -61,6 +62,7 @@ Describe "New-CredentialStore" {
             { New-CredentialStore -Shared -Confirm:$false } | Should -Throw
         }
         It "Test3: Reset shared CredentialStore" {
+            $sCS = Get-DefaultCredentialStorePath -Shared
             $now = Get-Date
             $CS = Get-Content -Path $sCS -Raw | ConvertFrom-Json
             $CSCreation = [DateTime]$CS.Created
@@ -69,14 +71,16 @@ Describe "New-CredentialStore" {
         }
     }
     Context "Custom Shared CS tests" {
-        $cCS = Join-Path -Path (Get-TempDir) -ChildPath "CredentialStore.json"
         It "Test1: Create new custom shared" {
+            $cCS = Join-Path -Path (Get-TempDir) -ChildPath "CredentialStore.json"
             { New-CredentialStore -Path $cCS -Shared -Confirm:$false } | Should -Not -Throw
         }
         It "Test2: Try to override exiting one" {
+            $cCS = Join-Path -Path (Get-TempDir) -ChildPath "CredentialStore.json"
             { New-CredentialStore -Path $cCS -Shared -Confirm:$false } | Should -Throw
         }
         It "Test3: Reset existing custom CredentialStore" {
+            $cCS = Join-Path -Path (Get-TempDir) -ChildPath "CredentialStore.json"
             { New-CredentialStore -Path $cCS -Shared -Force -Confirm:$false } | Should -Not -Throw
         }
     }
@@ -109,21 +113,24 @@ Describe "New-CredentialStore" {
     }
 }
 
-# Cleanup test stores and restore existing ones.
-$VerbosePreference = "Continue"
-Write-Verbose "Restoring private CredentialStore"
-If (Test-Path -Path $BackupFile) {
-    If (Test-Path -Path $CSPath) {
-        Remove-Item -Path $CSPath
-        Move-Item -Path $BackupFile -Destination $CSPath
+AfterAll {
+    # Cleanup test stores and restore existing ones.
+    $VerbosePreference = "Continue"
+    Write-Verbose "Restoring private CredentialStore"
+    If (Test-Path -Path $BackupFile) {
+        If (Test-Path -Path $CSPath) {
+            Remove-Item -Path $CSPath
+            Move-Item -Path $BackupFile -Destination $CSPath
+        }
     }
-}
 
-Write-Verbose "Restoring shared CredentialStore"
-If (Test-Path -Path $BackupSharedFile) {
-    If (Test-Path -Path $CSShared) {
-        Remove-Item -Path $CSShared
-        Move-Item -Path $BackupSharedFile -Destination $CSShared
+    Write-Verbose "Restoring shared CredentialStore"
+    If (Test-Path -Path $BackupSharedFile) {
+        If (Test-Path -Path $CSShared) {
+            Remove-Item -Path $CSShared
+            Move-Item -Path $BackupSharedFile -Destination $CSShared
+        }
     }
+    $VerbosePreference = "SilentlyContinue"
+
 }
-$VerbosePreference = "SilentlyContinue"

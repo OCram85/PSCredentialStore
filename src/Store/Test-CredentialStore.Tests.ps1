@@ -15,16 +15,17 @@ BeforeAll {
 
 Describe "Test-CredentialStore" {
     Context "Basic logic tests" {
-        $TestCredentialStore = Join-Path -Path $RepoRoot -ChildPath '/resources/cs/CredentialStore.json'
         It "Test1: Should Not Throw" {
+            $TestCredentialStore = './resources/cs/CredentialStore.json'
             { Test-CredentialStore -Shared -Path $TestCredentialStore } | Should -Not -Throw
         }
         It "Test2: Read valid CredentialStore" {
+            $TestCredentialStore = './resources/cs/CredentialStore.json'
             $res = Test-CredentialStore -Shared -Path $TestCredentialStore
             $res | Should -Be $true
         }
         It "Test3: Read a broken CredentialStore" {
-            $BrokenCS = Join-Path -Path $RepoRoot -ChildPath '{0}/resources/cs/Broken_CS.json'
+            $BrokenCS = './resources/cs/Broken_CS.json'
             $oWarningPreference = $WarningPreference
             $WarningPreference = 'SilentlyContinue'
             $res = Test-CredentialStore -Shared -Path $BrokenCS
