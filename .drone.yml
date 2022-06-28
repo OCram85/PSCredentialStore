@@ -19,6 +19,7 @@ steps:
 
   - name: LintTests
     image: mcr.microsoft.com/powershell:latest
+    failure: ignore
     commands:
       - |
         pwsh -NonInteractive -c "& {
@@ -29,6 +30,7 @@ steps:
 
   - name: UnitTests
     image: mcr.microsoft.com/powershell:latest
+    failure: ignore
     commands:
       - |
         pwsh -NonInteractive -c "& {
