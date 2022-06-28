@@ -88,7 +88,7 @@
                 "Remove-Item ./coverage.xml -ErrorAction 'SilentlyContinue';",
                 "Remove-Item ./testResults.xml -ErrorAction 'SilentlyContinue';",
                 "Import-Module ./tools/DroneIO.psm1;",
-                "Invoke-UnitTest -CoverageFormat 'CoverageGutters' -Verbosity 'Debug'"
+                "Invoke-UnitTest -CoverageFormat 'CoverageGutters' -Verbosity 'Diagnostic'"
             ],
             "group": "test",
             "problemMatcher": [
