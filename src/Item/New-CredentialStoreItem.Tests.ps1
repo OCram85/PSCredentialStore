@@ -1,7 +1,12 @@
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
     'PSAvoidUsingConvertToSecureStringWithPlainText',
     '',
-    Justification = 'justification'
+    Justification = 'just used in pester tests.'
+)]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSProvideCommentHelp',
+    '',
+    Justification = 'no need in internal pester helpers.'
 )]
 param ()
 
@@ -53,7 +58,7 @@ Describe "New-CredentialStoreItem" {
                 New-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds
             } | Should -Not -Throw
             $tmpCS = Get-Content -Path $tmpCS -Raw | ConvertFrom-Json
-            $res = Get-Member -InputObject $tmpCS -Name $RemoteHost -Membertype Properties
+            $res = Get-Member -InputObject $tmpCS -Name $RemoteHost -MemberType Properties
             $res.Name | Should -Be $RemoteHost
         }
         It "Adds Item with identifier to shared store" {
@@ -65,8 +70,8 @@ Describe "New-CredentialStoreItem" {
             $mycreds = [PSCredential]::new($UserName, $Password)
             $RemoteHost = "foobar2"
             $StoreItemParam = @{
-                Shared = $true
-                Path = $tmpCS
+                Shared     = $true
+                Path       = $tmpCS
                 RemoteHost = $RemoteHost
                 Credential = $mycreds
                 identifier = 'Foo'
