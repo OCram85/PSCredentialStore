@@ -1,6 +1,14 @@
 BeforeAll {
     $ManifestFile = (Get-Item -Path "./src/*.psd1").FullName
     Import-Module $ManifestFile -Force
+
+    $PrivateFunctions = (Get-ChildItem -Path "./src/Private/*.ps1" | Where-Object {
+            $_.BaseName -notmatch '.Tests'
+        }
+    ).FullName
+    foreach ( $func in $PrivateFunctions) {
+        . $func
+    }
 }
 
 Describe "New-CSCertificate" {
