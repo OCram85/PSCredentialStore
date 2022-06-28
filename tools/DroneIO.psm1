@@ -80,6 +80,35 @@ function Invoke-InstallDependencies {
     }
 }
 
+
+function Start-PSScriptAnalyzer {
+    [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSUseShouldProcessForStateChangingFunctions',
+        '',
+        Justification = 'justification'
+    )]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSProvideCommentHelp',
+        '',
+        Justification = 'internal function'
+    )]
+    param ()
+
+    process {
+        $AnalyzerSettings = @{
+            Path          = './src/'
+            Recurse       = $true
+            Settings      = './tools/PSScriptAnalyzerSettings.psd1'
+            ReportSummary = $true
+            ErrorAction   = 'Stop'
+        }
+        $AnalyzerResults = Invoke-ScriptAnalyzer @AnalyzerSettings
+        if ( $AnalyzerResults ) {
+            Write-Output -InputObject $AnalyzerSettings
+        }
+    }
+}
 function Invoke-Linter {
     [CmdletBinding()]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
@@ -90,16 +119,20 @@ function Invoke-Linter {
     param ()
 
     process {
-        Import-Module -Name PSScriptAnalyzer
-        $AnalyzerSettings = @{
-            Path          = './src/'
-            Recurse       = $true
-            Settings      = './tools/PSScriptAnalyzerSettings.psd1'
-            ReportSummary = $true
-            ErrorAction   = 'Stop'
-        }
         try {
-            $AnalyzerResults = Invoke-ScriptAnalyzer @AnalyzerSettings
+            $AnalyzerResults = Start-PSScriptAnalyzer
+        }
+        catch {
+            Write-Debug -Message $_.Exception.Message -Debug
+            if ($_.Exception.Message -match 'Object reference not set') {
+                Write-Debug -Message 'ReRun PSScriptAnalyzer' -Debug
+                $AnalyzerResults = Start-PSScriptAnalyzer
+            }
+            else {
+                Write-Error -Message 'PSScriptAnalyzer failer'
+            }
+        }
+        finally {
             if ( $AnalyzerResults ) {
                 $AnalyzerResults | Sort-Object -Property @(
                     "ScriptName",
@@ -112,10 +145,6 @@ function Invoke-Linter {
                     "Message"
                 ) -AutoSize | Out-String | Write-Verbose -Verbose
             }
-        }
-        catch {
-            Write-Debug -Message $_.Exception.Message -Debug
-            Write-Error -Message 'PSScriptAnalyzer failer'
         }
     }
 }
@@ -171,6 +200,12 @@ function Invoke-UnitTest {
             $PesterConf.Filter.ExcludeTag = $ExcludeTag
         }
         $TestResults = Invoke-Pester -Configuration $PesterConf -ErrorAction 'Stop'
+
+        if ($TestResults.FailedCount -gt 0) {
+            Write-FailureStateFile -StepName 'Pester'
+            throw ('{0} tests failed!' -f $TestResults.FailedCount)
+        }
+
         if ($PassThru.IsPresent) {
             Write-Output -InputObject $TestResults
         }
