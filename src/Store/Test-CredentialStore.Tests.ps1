@@ -1,4 +1,17 @@
-$RepoRoot = (Get-Item -Path (Get-GitDirectory) -Force).Parent | Select-Object -ExpandProperty 'FullName'
+BeforeAll {
+    $ManifestFile = (Get-Item -Path "./src/*.psd1").FullName
+    Import-Module $ManifestFile -Force
+
+    $PrivateFunctions = (Get-ChildItem -Path "./src/Private/*.ps1" | Where-Object {
+            $_.BaseName -notmatch '.Tests'
+        }
+    ).FullName
+    foreach ( $func in $PrivateFunctions) {
+        . $func
+    }
+
+    $RepoRoot = (Get-Item -Path (Get-GitDirectory) -Force).Parent | Select-Object -ExpandProperty 'FullName'
+}
 
 Describe "Test-CredentialStore" {
     Context "Basic logic tests" {

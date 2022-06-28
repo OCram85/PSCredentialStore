@@ -1,23 +1,35 @@
-# Backup existing credential stores
-$VerbosePreference = "Continue"
-Write-Verbose "Backup private Credential Store..."
-$CSPath = Get-DefaultCredentialStorePath
-$BackupFile = "{0}.back" -f $CSPath
-If (Test-Path -Path $CSPath) {
-    Move-Item -Path $CSPath -Destination $BackupFile
+BeforeAll {
+    $ManifestFile = (Get-Item -Path "./src/*.psd1").FullName
+    Import-Module $ManifestFile -Force
+
+    $PrivateFunctions = (Get-ChildItem -Path "./src/Private/*.ps1" | Where-Object {
+            $_.BaseName -notmatch '.Tests'
+        }
+    ).FullName
+    foreach ( $func in $PrivateFunctions) {
+        . $func
+    }
+    # Backup existing credential stores
+    $VerbosePreference = "Continue"
+    Write-Verbose "Backup private Credential Store..."
+    $CSPath = Get-DefaultCredentialStorePath
+    $BackupFile = "{0}.back" -f $CSPath
+    if (Test-Path -Path $CSPath) {
+        Move-Item -Path $CSPath -Destination $BackupFile
+    }
+    Write-Verbose "Backup shared CredentialStore..."
+    $CSShared = Get-DefaultCredentialStorePath -Shared
+    $BackupSharedFile = "{0}.back" -f $CSShared
+    if (Test-Path -Path $CSShared) {
+        Move-Item -Path $CSShared -Destination $BackupSharedFile
+    }
+    Write-Verbose "Remove old CredentialStore in Temp dir"
+    $CSTemp = Join-Path -Path (Get-TempDir) -ChildPath '/CredentialStore.json'
+    if (Test-Path -Path $CSTemp) {
+        Remove-Item -Path $CSTemp
+    }
+    $VerbosePreference = "SilentlyContinue"
 }
-Write-Verbose "Backup shared CredentialStore..."
-$CSShared = Get-DefaultCredentialStorePath -Shared
-$BackupSharedFile = "{0}.back" -f $CSShared
-If (Test-Path -Path $CSShared) {
-    Move-Item -Path $CSShared -Destination $BackupSharedFile
-}
-Write-Verbose "Remove old CredentialStore in Temp dir"
-$CSTemp = Join-Path -Path (Get-TempDir) -ChildPath '/CredentialStore.json'
-If (Test-Path -Path $CSTemp) {
-    Remove-Item -Path $CSTemp
-}
-$VerbosePreference = "SilentlyContinue"
 
 Describe "New-CredentialStore" {
     Context "Private CS tests" {
