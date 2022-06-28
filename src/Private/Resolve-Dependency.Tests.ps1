@@ -13,8 +13,8 @@ BeforeAll {
 
 Describe "Resolve-Dependency" {
     Context "Basic syntax check" {
-        Mock Get-ModuleBase { return (Join-Path -Path $PWD -ChildPath '/resources') }
-        Mock Test-Module { return $true }
+        Mock Get-ModuleBase { return (Join-Path -Path $PWD -ChildPath '/resources') } -ModuleName 'PSCredentialStore'
+        Mock Test-Module { return $true } -ModuleName 'PSCredentialStore'
         It "Test1: Should not throw" {
             { Resolve-Dependency -Name 'foobar2000' } | Should -Not -Throw
         }
@@ -27,7 +27,7 @@ Describe "Resolve-Dependency" {
         Mock Get-ModuleBase {
             if ($IsWindows) { return "C:\" }
             elseif ($isLinux) { return "/" }
-        }
+        } -ModuleName 'PSCredentialStore'
         It "Missing dependency file should not cause an error" {
             { Resolve-Dependency -Name 'awesome' } | Should -Not -Throw
         }
@@ -37,7 +37,7 @@ Describe "Resolve-Dependency" {
         }
     }
     Context "Testing input variations" {
-        Mock Get-ModuleBase { return (Join-Path -Path $PWD -ChildPath '/resources') }
+        Mock Get-ModuleBase { return (Join-Path -Path $PWD -ChildPath '/resources') } -ModuleName 'PSCredentialStore'
         It "Should return true if all given dependencies exist" {
             Resolve-Dependency -Name 'Existing' | Should -Be $true
         }
