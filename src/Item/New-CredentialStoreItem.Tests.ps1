@@ -1,6 +1,19 @@
+BeforeAll {
+    $ManifestFile = (Get-Item -Path "./src/*.psd1").FullName
+    Import-Module $ManifestFile -Force
+
+    $PrivateFunctions = (Get-ChildItem -Path "./src/Private/*.ps1" | Where-Object {
+            $_.BaseName -notmatch '.Tests'
+        }
+    ).FullName
+    foreach ( $func in $PrivateFunctions) {
+        . $func
+    }
+}
+
 Describe "New-CredentialStoreItem" {
     Context "Private Credential Store tests" {
-        It "Test1: Add entry to existing private store." {
+        It "Add entry to existing private store." {
             # Creat a fresh CredentialStore first
             New-CredentialStore -Force
 
@@ -20,7 +33,7 @@ Describe "New-CredentialStoreItem" {
         }
     }
     Context "Test with new shared Credential Store" {
-        It "Test2: Create new RemoteHost entry" {
+        It "Create new RemoteHost entry" {
             # prepare test environment
             $tmpCS = Join-Path -Path (Get-TempDir) -ChildPath '/CredentialStore.json'
             New-CredentialStore -Shared -Path $tmpCS -Force
@@ -48,7 +61,6 @@ Describe "New-CredentialStoreItem" {
         }
     }
     Context "Test optional parameter lookup" {
-
         It "Test missing Credential" {
             function global:Get-Credential ([string]$Message) {
                 $UserName = 'testuser'
@@ -65,7 +77,7 @@ Describe "New-CredentialStoreItem" {
 
     }
     Context "General Exception handling" {
-        Mock Test-CredentialStore { return $false }
+        Mock Test-CredentialStore { return $false } -ModuleName 'PSCredentialStore'
         It "Missing CredentialStore should throw" {
             { New-CredentialStoreItem -Shared -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
         }
