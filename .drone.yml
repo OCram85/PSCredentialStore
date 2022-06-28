@@ -22,10 +22,9 @@ steps:
     commands:
       - |
         pwsh -NonInteractive -c "& {
-          $ErrorActionPreference = 'Stop';
           Import-Module './tools/DroneIO.psm1';
           Invoke-InstallDependencies;
-          Invoke-Linter
+          Invoke-Linter -ErrorAction 'Stop'
         }"
 
   - name: UnitTests
@@ -33,10 +32,9 @@ steps:
     commands:
       - |
         pwsh -NonInteractive -c "& {
-          $ErrorActionPreference = 'Stop';
           Import-Module './tools/DroneIO.psm1';
           Invoke-InstallDependencies;
-          Invoke-UnitTest -Verbosity 'Detailed'
+          Invoke-UnitTest -Verbosity 'Detailed' -ErrorAction 'Stop'
         }"
 
   - name: coverage
