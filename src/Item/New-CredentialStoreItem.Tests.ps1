@@ -79,14 +79,18 @@ Describe "New-CredentialStoreItem" {
     Context "General Exception handling" {
         Mock Test-CredentialStore { return $false } -ModuleName 'PSCredentialStore'
         It "Missing CredentialStore should throw" {
-            { New-CredentialStoreItem -Shared -Path '/tmp/missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
+            {
+                New-CredentialStoreItem -Shared -Path '/tmp/missingStore.json' -RemoteHost 'notrelevant'
+            } | Should -Throw "Could not add anything into the given CredentialStore."
         }
     }
     Context "Testing pipeline paramter" {
         It "Add the item with credential value from pipe" {
             $UserName = 'pipeUser'
             $Password = ConvertTo-SecureString -String "pipePasswd" -AsPlainText -Force
-            { [PSCredential]::new($UserName, $Password) | New-CredentialStoreItem -RemoteHost 'PipeHost' } | Should -Not -Throw
+            {
+                [PSCredential]::new($UserName, $Password) | New-CredentialStoreItem -RemoteHost 'PipeHost'
+            } | Should -Not -Throw
         }
 
         It "Testing written item" {
