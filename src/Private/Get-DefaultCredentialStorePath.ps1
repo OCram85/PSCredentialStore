@@ -14,23 +14,16 @@ function Get-DefaultCredentialStorePath {
 
     .EXAMPLE
         $Path = Get-DefaultCredentialStorePath
-
-    .NOTES
-        - File Name   : Get-DefaultCredentialStorePath.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding()]
     [OutputType([string])]
-    param(
+    param (
         [Parameter(Mandatory = $false)]
         [switch]$Shared
     )
 
-    begin { }
+    begin {}
 
     process {
         if ($Shared.IsPresent) {
@@ -57,5 +50,5 @@ function Get-DefaultCredentialStorePath {
         }
     }
 
-    end { }
+    end {}
 }

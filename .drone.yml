@@ -11,18 +11,32 @@ steps:
   - name: Environments
     image: mcr.microsoft.com/powershell:latest
     commands:
-      - pwsh -NonInteractive -c "& {Import-Module './tools/DroneIO.psm1' -Verbose; Invoke-ShowEnv -Verbose}"
-      - pwsh -NonInteractive -c "& {Import-Module './tools/DroneIO.psm1' -Verbose; Invoke-InstallDependencies -Verbose}"
+      - |
+        pwsh -NonInteractive -c "& {
+          Import-Module './tools/DroneIO.psm1' -Verbose;
+          Invoke-ShowEnv -Verbose
+        }"
+
   - name: LintTests
     image: mcr.microsoft.com/powershell:latest
     commands:
-      - pwsh -NonInteractive -c "& {Import-Module './tools/DroneIO.psm1'; Invoke-InstallDependencies}"
-      - pwsh -NonInteractive -c "& {Import-Module './tools/DroneIO.psm1'; Invoke-Linter}"
+      - |
+        pwsh -NonInteractive -c "& {
+          Import-Module './tools/DroneIO.psm1';
+          Invoke-InstallDependencies;
+          Invoke-Linter
+        }"
+
   - name: UnitTests
     image: mcr.microsoft.com/powershell:latest
     commands:
-      - pwsh -NonInteractive -c "& {Import-Module './tools/DroneIO.psm1'; Invoke-InstallDependencies}"
-      - pwsh -NonInteractive -c "& {Import-Module './tools/DroneIO.psm1'; Invoke-UnitTests}"
+      - |
+        pwsh -NonInteractive -c "& {
+          Import-Module './tools/DroneIO.psm1';
+          Invoke-InstallDependencies;
+          Invoke-UnitTest
+        }"
+
   - name: coverage
     image: plugins/codecov
     settings:

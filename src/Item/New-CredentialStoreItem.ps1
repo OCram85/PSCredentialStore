@@ -33,25 +33,17 @@ function New-CredentialStoreItem {
 
     .EXAMPLE
         New-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
-
-    .NOTES
-        - File Name   : New-CredentialStoreItem.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
 
-    [CmdletBinding(DefaultParameterSetName = "Private")]
-    param(
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Private")]
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
+    param (
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Private')]
         [ValidateNotNullOrEmpty()]
         [string]$RemoteHost,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Private')]
         [ValidateNotNullOrEmpty()]
         [string]$Identifier,
 
@@ -59,10 +51,10 @@ function New-CredentialStoreItem {
         [ValidateNotNullOrEmpty()]
         [PSCredential]$Credential,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
         [switch]$Shared,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [ValidateNotNullOrEmpty()]
         [string]$Path
 
@@ -72,10 +64,10 @@ function New-CredentialStoreItem {
     begin {
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
             $Path = Get-DefaultCredentialStorePath
         }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
             if (!($PSBoundParameters.ContainsKey('Path'))) {
                 $Path = Get-DefaultCredentialStorePath -Shared
             }
@@ -96,7 +88,7 @@ function New-CredentialStoreItem {
 
         $CSContent = Get-CredentialStore -Shared -Path $Path
 
-        $CurrentDate = Get-Date -UFormat "%Y-%m-%d %H:%M:%S"
+        $CurrentDate = Get-Date -Format 'u'
 
         if ($Identifier -ne "") {
             $CredentialName = $RemoteHost = "{0}/{1}" -f $Identifier, $RemoteHost
@@ -119,7 +111,7 @@ function New-CredentialStoreItem {
 
             if (Get-Member -InputObject $CSContent -Name $CredentialName -Membertype Properties) {
                 $MessageParams = @{
-                    Message = "The given host already exists. Nothing to do here."
+                    Message = 'The given host already exists. Nothing to do here.'
                 }
                 Write-Warning @MessageParams
             }
@@ -139,8 +131,8 @@ function New-CredentialStoreItem {
                 }
                 catch {
                     $MessageParams = @{
-                        Message     = "Couldn't add item into credential store!"
-                        ErrorAction = "Stop"
+                        Message     = 'Could not add item into credential store!'
+                        ErrorAction = 'Stop'
                     }
                     Write-Error @MessageParams
                 }
@@ -148,15 +140,13 @@ function New-CredentialStoreItem {
         }
         else {
             $MessageParams = @{
-                Message     = "Please Provide at least a valid user!"
-                ErrorAction = "Stop"
+                Message     = 'Please Provide at least a valid user!'
+                ErrorAction = 'Stop'
             }
             Write-Error @MessageParams
         }
     }
 
-    end {
-
-    }
+    end {}
 
 }

@@ -58,28 +58,20 @@ function Connect-To {
 
     .EXAMPLE
         Connect-To -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
-
-    .NOTES
-        - File Name   : Connect-To.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
 
-    [CmdletBinding(DefaultParameterSetName = "Private")]
-    param(
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Private")]
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
+    param (
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Private')]
         [string]$RemoteHost,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Private')]
         [string]$Identifier,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Private')]
         [ValidateSet(
             'CiscoUcs',
             'FTP',
@@ -92,29 +84,29 @@ function Connect-To {
         )]
         [string]$Type,
 
-        [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
-        [Parameter(Mandatory = $False, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $False, ParameterSetName = 'Shared')]
+        [Parameter(Mandatory = $False, ParameterSetName = 'Private')]
         [PSCredential]$Credentials,
 
-        [Parameter(Mandatory = $true, ParameterSetNAme = "Shared")]
+        [Parameter(Mandatory = $true, ParameterSetNAme = 'Shared')]
         [switch]$Shared,
 
-        [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $False, ParameterSetName = 'Shared')]
         [ValidateNotNullOrEmpty()]
         [string]$Path,
 
-        [Parameter(Mandatory = $False, ParameterSetName = "Private")]
-        [Parameter(Mandatory = $False, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $False, ParameterSetName = 'Private')]
+        [Parameter(Mandatory = $False, ParameterSetName = 'Shared')]
         [switch]$PassThru
     )
 
     begin {
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
             $Path = Get-DefaultCredentialStorePath
         }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
             if (!($PSBoundParameters.ContainsKey('Path'))) {
                 $Path = Get-DefaultCredentialStorePath -Shared
             }
@@ -155,7 +147,7 @@ function Connect-To {
             catch {
                 $MessageParams = @{
                     Message     = "Unable to look up credential store item for RemoteHost {0}/Identifier {1}!" -f $RemoteHost, $Identifier
-                    ErrorAction = "Stop"
+                    ErrorAction = 'Stop'
                 }
                 Write-Error @MessageParams
             }
@@ -164,10 +156,10 @@ function Connect-To {
             $creds = $Credentials
         }
 
-        if ($creds.UserName -eq "" -or $creds.Password.GetType().Name -ne "SecureString") {
+        if ($creds.UserName -eq "" -or $creds.Password.GetType().Name -ne 'SecureString') {
             $MessageParams = @{
                 Message     = "Please provide valid credentials for RemoteHost {0}!" -f $RemoteHost
-                ErrorAction = "Stop"
+                ErrorAction = 'Stop'
             }
             Write-Error @MessageParams
         }
@@ -176,13 +168,13 @@ function Connect-To {
                 "CiscoUcs" {
                     try {
                         $handle = Connect-Ucs -Name $RemoteHost -Credential $creds -ErrorAction Stop
-                        $ExecutionContext.SessionState.PSVariable.Set("DefaultUcs", $handle)
+                        $ExecutionContext.SessionState.PSVariable.Set('DefaultUcs', $handle)
                     }
 
                     catch {
                         $MessageParams = @{
                             Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -207,7 +199,7 @@ function Connect-To {
                         # Check the connection state and find out if the session is still open.
                         $MessageParams = @{
                             Message     = "Connection to {0} using Type {1} was established. But now it seems to be lost!" -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -221,7 +213,7 @@ function Connect-To {
                         # Write a error message to the log.
                         $MessageParams = @{
                             Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -235,7 +227,7 @@ function Connect-To {
                         # Write a error message to the log.
                         $MessageParams = @{
                             Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -255,7 +247,7 @@ function Connect-To {
                         # Write a error message to the log.
                         $MessageParams = @{
                             Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -274,7 +266,7 @@ function Connect-To {
                         # Write a error message to the log.
                         $MessageParams = @{
                             Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -293,7 +285,7 @@ function Connect-To {
                         # Write a error message to the log.
                         $MessageParams = @{
                             Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -314,7 +306,7 @@ function Connect-To {
                         # Write a error message to the log.
                         $MessageParams = @{
                             Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -323,7 +315,7 @@ function Connect-To {
                         # Check the connection state and find out if the session is still open.
                         $MessageParams = @{
                             Message     = "Connection to {0} using Type {1} was established. But now it seems to be lost!" -f $RemoteHost, $Type
-                            ErrorAction = "Stop"
+                            ErrorAction = 'Stop'
                         }
                         Write-Error @MessageParams
                     }
@@ -332,7 +324,7 @@ function Connect-To {
                     # Write a error message to the log.
                     $MessageParams = @{
                         Message     = "Unable to connect to {0} using Type {1}." -f $RemoteHost, $Type
-                        ErrorAction = "Stop"
+                        ErrorAction = 'Stop'
                     }
                     Write-Error @MessageParams
                 }

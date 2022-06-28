@@ -21,24 +21,16 @@ function Test-CSConnection {
 
     .EXAMPLE
         Test-CMConnection -RemoteHost "vcr01.internal.net" -Type VMware
-
-    .NOTES
-        - File Name   : Test-CSConnection.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
 
     [CmdletBinding()]
     [OutputType([bool])]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$RemoteHost,
 
-        [Parameter(Mandatory = $True)]
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet("CiscoUcs", "FTP", "NetAppFAS", "VMware")]
         [string]$Type

@@ -32,18 +32,11 @@ function Test-Module {
 
     .EXAMPLE
         .\Test-Dependency -Name 'VMware.PowerCLI' -Type 'Module' -StopIfFails
-
-    .NOTES
-        - File Name   : Test-Module.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [OutputType([bool])]
     [CmdletBinding()]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$Name,
@@ -56,7 +49,8 @@ Could not find the required {0} called {1}. Please install the required {0} to r
         [Parameter(Mandatory = $false)]
         [switch]$StopIfFails
     )
-    begin { }
+
+    begin {}
 
     process {
         $Message = $MessagePattern -f $Type, $Name
@@ -73,5 +67,5 @@ Could not find the required {0} called {1}. Please install the required {0} to r
         }
     }
 
-    end { }
+    end {}
 }

@@ -38,15 +38,8 @@ function Resolve-Dependency {
         If (-not (Resolve-Dependency -Name 'VMware')) {
             Write-Error -Message ("Could not resolve the optional dependencies defined for {0}" -f 'VMware') -ErrorAction 'Stop'
         }
-
-    .NOTES
-        - File Name   : ResolveDependency.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [OutputType([bool])]
     [CmdletBinding()]
     param (
@@ -86,6 +79,5 @@ function Resolve-Dependency {
         }
     }
 
-    end {
-    }
+    end {}
 }

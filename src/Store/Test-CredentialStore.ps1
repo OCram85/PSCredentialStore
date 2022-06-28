@@ -16,36 +16,27 @@ function Test-CredentialStore {
 
     .EXAMPLE
         Test-CredentialStore -eq $true
-
-    .NOTES
-        - File Name   : Test-CredentialStore.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
-    [CmdletBinding(DefaultParameterSetName = "Private")]
-    param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
+    [OutputType([bool])]
+    param (
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [string]$Path,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
         [switch]$Shared
     )
 
-    begin {
-        # Set latest Credential Store version
-        #Set-Variable -Name "CSVersion" -Value "2.0.0" -Option Constant
-    }
+    begin {}
 
     process {
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
             $Path = Get-DefaultCredentialStorePath
         }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
             if (!($PSBoundParameters.ContainsKey('Path'))) {
                 $Path = Get-DefaultCredentialStorePath -Shared
             }
@@ -53,15 +44,15 @@ function Test-CredentialStore {
         Write-Verbose -Message ("Path is: {0}" -f $Path)
 
         if (Test-Path $Path) {
-            Write-Verbose "CredentialStore in given path found."
-            return $true
+            Write-Verbose 'CredentialStore in given path found.'
+            Write-Output $true
         }
         else {
-            Write-Verbose "The given CredentialStore does not exist!"
-            return $false
+            Write-Verbose 'The given CredentialStore does not exist!'
+            Write-Output $false
         }
     }
 
-    end { }
+    end {}
 
 }

@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "streetsidesoftware.code-spell-checker",
+        "streetsidesoftware.code-spell-checker-german",
+        "hediet.vscode-drawio",
+        "editorconfig.editorconfig",
+        "eamodio.gitlens",
+        "vscode-icons-team.vscode-icons",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        "ryanluker.vscode-coverage-gutters"
+    ]
+}

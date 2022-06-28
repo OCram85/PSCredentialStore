@@ -49,49 +49,38 @@ function New-CredentialStore {
     .EXAMPLE
         New-CredentialStore -Shared -Path "C:\TMP\CredentialStore.json"
         # Creates a new shared CredentialStore in the given location.
-
-    .NOTES
-        - File Name   : New-CredentialStore.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
 
-    [CmdletBinding(SupportsShouldProcess = $true, DefaultParameterSetName = "Private")]
-    [OutputType("PSCredentialStore.Store")]
-    param(
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+    [CmdletBinding(SupportsShouldProcess = $true, DefaultParameterSetName = 'Private')]
+    [OutputType('PSCredentialStore.Store')]
+    param (
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
         [switch]$Shared,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [ValidateNotNullOrEmpty()]
         [System.IO.FileInfo]$Path,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Switch]$Force,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Private')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [switch]$Force,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Switch]$PassThru,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Private')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [switch]$PassThru,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Switch]$SkipPFXCertCreation,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Private')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [switch]$SkipPFXCertCreation,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Switch]$UseCertStore
+        [Parameter(Mandatory = $false, ParameterSetName = 'Private')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [switch]$UseCertStore
     )
 
     begin {
         # Lets get the current Date in a human readable format.
-        $CurrentDate = Get-Date -UFormat "%Y-%m-%d %H:%M:%S"
-
-        # Set latest Credential Store version
-        # Set-Variable -Name "CSVersion" -Value "2.0.0" -Option Constant -Scope
+        $CurrentDate = Get-Date -Format 'u'
 
         # test if the path input is a valid file path
         if ($PSCmdlet.MyInvocation.BoundParameters.ContainsKey('Path')) {
@@ -108,7 +97,7 @@ function New-CredentialStore {
                 $ErrorParams = @{
                     ErrorAction = 'Stop'
                     Exception   = [System.IO.InvalidDataException]::new(
-                        'Your provided path does not contain the required file extension .json !'
+                        'Your provided path does not contain the required file extension .json!'
                     )
                 }
                 Write-Error @ErrorParams
@@ -119,17 +108,17 @@ function New-CredentialStore {
     process {
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
             $Path = Get-DefaultCredentialStorePath
         }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
             if (!($PSBoundParameters.ContainsKey('Path'))) {
                 $Path = Get-DefaultCredentialStorePath -Shared
             }
         }
 
         # Test if in the CredentialStore already exists.
-        Write-Verbose "Test if there is already a credential store."
+        Write-Verbose 'Test if there is already a credential store.'
         if ((Test-Path -Path $Path) -and ($Force -ne $true)) {
             $ErrorParams = @{
                 ErrorAction = 'Stop'
@@ -211,11 +200,11 @@ function New-CredentialStore {
             Type           = $null
         }
 
-        if ($PSCmdlet.ParameterSetName -eq "Shared") {
-            $ObjProperties.Type = "Shared"
+        if ($PSCmdlet.ParameterSetName -eq 'Shared') {
+            $ObjProperties.Type = 'Shared'
         }
         else {
-            $ObjProperties.Type = "Private"
+            $ObjProperties.Type = 'Private'
         }
 
         if (! $SkipPFXCertCreation.IsPresent) {
@@ -253,6 +242,5 @@ function New-CredentialStore {
         }
     }
 
-    end {
-    }
+    end {}
 }

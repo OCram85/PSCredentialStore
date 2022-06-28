@@ -1,56 +1,121 @@
+// A task runner that invokes Pester to run all Pester tests under the
+// current workspace folder.
+// NOTE: This Test task runner requires an updated version of Pester (>=4.0.3)
+// in order for the problemMatcher to find failed test information (message, line, file).
+// If you don't have that version, you can update Pester from the PowerShell Gallery
+// with this command:
+//
+// PS C:\> Update-Module Pester
+//
+// If that gives an error like:
+// "Module 'Pester' was not installed by using Install-Module, so it cannot be updated."
+// then execute:
+//
+// PS C:\> Install-Module Pester -Scope CurrentUser -Force
+//
+// NOTE: The Clean, Build and Publish tasks require PSake. PSake can be installed
+// from the PowerShell Gallery with this command:
+//
+// PS C:\> Install-Module PSake -Scope CurrentUser -Force
+//
+// Available variables which can be used inside of strings:
+// ${workspaceFolder} the path of the workspace folder that contains the tasks.json file
+// ${workspaceFolderBasename} the name of the workspace folder that contains the tasks.json file without any slashes (/)
+// ${file} the current opened file
+// ${relativeFile} the current opened file relative to the workspace folder containing the file
+// ${fileBasename} the current opened file's basename
+// ${fileBasenameNoExtension} the current opened file's basename without the extension
+// ${fileDirname} the current opened file's dirname
+// ${fileExtname} the current opened file's extension
+// ${cwd} the task runner's current working directory on startup
+// ${lineNumber} the current selected line number in the active file
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
-    // Start PowerShell
-    "windows": {
-        "command": "${env:windir}/System32/WindowsPowerShell/v1.0/powershell.exe",
-        "args": [
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass"
-        ]
-    },
+    //"windows": {
+    //    "options": {
+    //        "shell": {
+    //            // switch back to windows powershell 5.1
+    //            // "executable": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    //            "executable": "pwsh.exe",
+    //            "args": [
+    //                "-NoProfile",
+    //                "-ExecutionPolicy",
+    //                "Bypass",
+    //                "-Command"
+    //            ]
+    //        }
+    //    }
+    //},
     "linux": {
-        "command": "/usr/bin/powershell",
-        "args": [
-            "-NoProfile"
-        ]
+        "options": {
+            "shell": {
+                "executable": "/usr/bin/pwsh",
+                "args": [
+                    "-NoProfile",
+                    "-Command"
+                ]
+            }
+        }
     },
-    "osx": {
-        "command": "/usr/local/bin/powershell",
-        "args": [
-            "-NoProfile"
-        ]
-    },
+    //"osx": {
+    //    "options": {
+    //        "shell": {
+    //            "executable": "/usr/local/bin/pwsh",
+    //            "args": [
+    //                "-NoProfile",
+    //                "-Command"
+    //            ]
+    //        }
+    //    }
+    //},
     "tasks": [
         {
-            "taskName": "Test",
-            "suppressTaskName": true,
-            "args": [
-                "Write-Host 'Invoking Pester...'; $ProgressPreference = 'SilentlyContinue'; Invoke-Pester -Script ( Get-ChildItem -Path '.\\tests\\*.Tests.ps1' -Recurse | Sort-Object -Property Name ) -EnableExit $flase -PesterOption @{IncludeVSCodeMarker=$true};",
-                "Invoke-Command { Write-Host 'Completed Test task in task runner.' }"
+            "label": "DroneIO: Invoke-Linter",
+            "type": "shell",
+            "command": [
+                "Import-Module ./tools/DroneIO.psm1;",
+                "Invoke-Linterq | Format-Table -AutoSize"
             ],
-            "problemMatcher": "$pester",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            }
+            "group": "test",
+            "problemMatcher": [
+                "$pester"
+            ]
         },
         {
-            "taskName": "DebugBuild",
-            "suppressTaskName": true,
-            "args": [
-                "Write-Host 'Invoking Build...';",
-                "Write-Host -Object 'Test previous builds.' -ForegroundColor Blue;",
-                "If (Test-Path -Path '.\\bin\\PSCredentialStore.zip') { Remove-Item -Path '.\\bin\\PSCredentialStore.zip' -Verbose};",
-                "Copy-Item -Path '.\\src\\' -Destination '.\\bin\\PSCredentialStore' -Recurse -Verbose -Force;",
-                "Compress-Archive -Path '.\\src\\*' -DestinationPath '.\\bin\\PSCredentialStore.zip' -Update -Verbose;"
+            "label": "DroneIO: Invoke-UnitTest",
+            "type": "shell",
+            "command": [
+                "Remove-Item ./coverage.xml -ErrorAction 'SilentlyContinue';",
+                "Remove-Item ./testResults.xml -ErrorAction 'SilentlyContinue';",
+                "Import-Module ./tools/DroneIO.psm1;",
+                "Invoke-UnitTest -CoverageFormat 'CoverageGutters' -Verbosity 'Debug'"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "test",
+            "problemMatcher": [
+                "$pester"
+            ]
+        },
+        {
+            "label": "Add dictionary item",
+            "type": "shell",
+            "command": [
+                "$DefaultFile = Get-ChildItem -Path './.vscode/dictionaries/default.txt';",
+                "$Content = Get-Content -Path $DefaultFile;",
+                "$Content += '${input:DictionaryItem}';",
+                "$Content = $Content | Sort-Object -Unique;",
+                "Set-Content -Value $Content -Path $DefaultFile"
+            ],
+            "group": "none",
+            "problemMatcher": [
+                "$pester"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "DictionaryItem",
+            "type": "promptString",
+            "description": "Input for dictionary file default.txt"
         }
     ]
 }

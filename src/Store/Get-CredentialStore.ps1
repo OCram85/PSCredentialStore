@@ -23,35 +23,28 @@ function Get-CredentialStore {
 
     .EXAMPLE
         $CSContent = Get-CredentialStore -Path "C:\TMP\mystore.json"
-
-    .NOTES
-        - File Name   : Get-CredentialStore.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
 
-    [CmdletBinding(DefaultParameterSetName = "Private")]
-    [OutputType("PSCredentialStore.Store")]
-    param(
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
+    [OutputType('PSCredentialStore.Store')]
+    param (
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
 
         [string]$Path,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
         [switch]$Shared
     )
 
-    begin { }
+    begin {}
 
     process {
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
             $Path = Get-DefaultCredentialStorePath
         }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
             if (!($PSBoundParameters.ContainsKey('Path'))) {
                 $Path = Get-DefaultCredentialStorePath -Shared
             }
@@ -61,26 +54,26 @@ function Get-CredentialStore {
             try {
                 $FileContent = Get-Content -Path $Path -Raw
                 $CS = ConvertFrom-Json $FileContent
-                $CS.PSObject.TypeNames.Insert(0, "PSCredentialStore.Store")
-                return $CS
+                $CS.PSObject.TypeNames.Insert(0, 'PSCredentialStore.Store')
+                Write-Output $CS
             }
             catch [System.Exception] {
                 $MessageParams = @{
-                    Message     = "Unknown CredentialStore format. Invalid JSON file."
-                    ErrorAction = "Stop"
+                    Message     = 'Unknown CredentialStore format. Invalid JSON file.'
+                    ErrorAction = 'Stop'
                 }
                 Write-Error @MessageParams
             }
         }
         else {
             $MessageParams = @{
-                Message     = "Could not find the CredentialStore."
-                ErrorAction = "Stop"
+                Message     = 'Could not find the CredentialStore.'
+                ErrorAction = 'Stop'
             }
             Write-Error @MessageParams
         }
     }
 
-    end { }
+    end {}
 
 }

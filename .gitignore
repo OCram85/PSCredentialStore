@@ -1,3 +1,18 @@
 # Don't local track test builds
 bin/PSCredentialStore.zip
 bin/PSCredentialStore/*
+
+# Basic ignore patterns
+*.log
+*.secret
+
+# data  dir related prod files
+data/*.csv
+
+# Ignore templ build artifacts
+/bin/*
+!bin/.gitkeep
+
+# Ignore Unit Test result files
+coverage.xml
+testResults.xml

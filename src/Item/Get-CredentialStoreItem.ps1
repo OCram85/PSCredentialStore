@@ -29,33 +29,25 @@ function Get-CredentialStoreItem {
 
     .EXAMPLE
         $myCreds = Get-CredentialStoreItem -Path "C:\TMP\mystore.json" -RemoteHost "esx01.myside.local"
-
-    .NOTES
-        - File Name   : Get-CredentialStoreItem.ps1
-        - Author      : Messing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
 
-    [CmdletBinding(DefaultParameterSetName = "Private")]
+    [CmdletBinding(DefaultParameterSetName = 'Private')]
     [OutputType([PSCredential])]
-    param(
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
-        [Parameter(Mandatory = $true, ParameterSetName = "Private")]
+    param (
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Private')]
         [ValidateNotNullOrEmpty()]
         [string]$RemoteHost,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
-        [Parameter(Mandatory = $false, ParameterSetName = "Private")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Private')]
         [ValidateNotNullOrEmpty()]
         [string]$Identifier,
 
-        [Parameter(Mandatory = $true, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Shared')]
         [switch]$Shared,
 
-        [Parameter(Mandatory = $false, ParameterSetName = "Shared")]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Shared')]
         [ValidateNotNullOrEmpty()]
         [string]$Path
     )
@@ -63,10 +55,10 @@ function Get-CredentialStoreItem {
     begin {
         # Set the CredentialStore for private, shared or custom mode.
         Write-Debug ("ParameterSetName: {0}" -f $PSCmdlet.ParameterSetName)
-        if ($PSCmdlet.ParameterSetName -eq "Private") {
+        if ($PSCmdlet.ParameterSetName -eq 'Private') {
             $Path = Get-DefaultCredentialStorePath
         }
-        elseif ($PSCmdlet.ParameterSetName -eq "Shared") {
+        elseif ($PSCmdlet.ParameterSetName -eq 'Shared') {
             if (!($PSBoundParameters.ContainsKey('Path'))) {
                 $Path = Get-DefaultCredentialStorePath -Shared
             }
@@ -85,7 +77,7 @@ function Get-CredentialStoreItem {
             $CS = Get-CredentialStore -Shared -Path $Path
             $CSMembers = Get-Member -InputObject $CS
             # Let's first check if the given remote host exists as object property
-            if (($CSMembers.MemberType -eq "NoteProperty") -and ($CSMembers.Name -contains $CredentialName)) {
+            if (($CSMembers.MemberType -eq 'NoteProperty') -and ($CSMembers.Name -contains $CredentialName)) {
                 if ($null -eq $CS.PfxCertificate) {
                     $Cert = Get-CSCertificate -Type $CS.Type -Thumbprint $CS.Thumbprint
                 }
@@ -106,16 +98,16 @@ function Get-CredentialStoreItem {
             }
             else {
                 $MsgParams = @{
-                    ErrorAction = "Stop"
-                    Message     = "Could not find credentials for the given remote host: {0}" -f $RemoteHost
+                    ErrorAction = 'Stop'
+                    Message     = 'Could not find credentials for the given remote host: {0}' -f $RemoteHost
                 }
                 Write-Error @MsgParams
             }
         }
         else {
             $MsgParams = @{
-                ErrorAction = "Stop"
-                Message     = "The given credential store ({0}) does not exist!" -f $Path
+                ErrorAction = 'Stop'
+                Message     = 'The given credential store ({0}) does not exist!' -f $Path
             }
             Write-Error @MsgParams
         }

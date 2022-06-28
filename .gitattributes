@@ -1,2 +1,24 @@
+# images
+*.jpg  binary
+*.jpeg binary
+*.bmp  binary
+*.tiff binary
+*.png  binary
+*.svg  binary
+*.ico  binary
+
+# binary files
+*.exe  binary
+*.dll  binary
+
+# PowerShell specific
+*.ps1  working-tree-encoding=UTF-8
+*.psm1 working-tree-encoding=UTF-8
+*.psd1 working-tree-encoding=UTF-8
+
+# set markdown to lf for online editing
+*.md working-tree-encoding=UTF-8
+
+# Vendor resources config
 src/Vendor/libressl255/* filter=lfs diff=lfs merge=lfs -text
 *.pfx filter=lfs diff=lfs merge=lfs -text

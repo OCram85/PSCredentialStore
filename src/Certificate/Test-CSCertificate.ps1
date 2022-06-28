@@ -17,18 +17,11 @@ function Test-CSCertificate {
 
     .EXAMPLE
         Test-CSCertificate -Type 'Shared'
-
-    .NOTES
-        - File Name   : Test-CSCertificate.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
+
     [CmdletBinding()]
     [OutputType([bool])]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [ValidateSet('Private', 'Shared')]

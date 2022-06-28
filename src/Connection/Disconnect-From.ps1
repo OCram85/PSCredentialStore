@@ -49,18 +49,10 @@ function Disconnect-From {
 
     .EXAMPLE
         Disconnect-From -RemoteHost "exchange01.myside.local" -Type ExchangeHTTPS
-
-    .NOTES
-        - File Name   : Disconnect-From.ps1
-        - Author      : Marco Blessing - marco.blessing@googlemail.com
-        - Requires    :
-
-    .LINK
-        https://github.com/OCram85/PSCredentialStore
     #>
 
     [CmdletBinding()]
-    param(
+    param (
         [Parameter(Mandatory = $true)]
         [string]$RemoteHost,
 
@@ -81,126 +73,132 @@ function Disconnect-From {
         [switch]$Force
     )
 
-    switch -Regex ($Type) {
-        "VMware" {
-            try {
-                if ($Force) {
-                    Disconnect-VIServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop -Force:$true
+    begin {}
+
+    process {
+        switch -Regex ($Type) {
+            "VMware" {
+                try {
+                    if ($Force) {
+                        Disconnect-VIServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop -Force:$true
+                    }
+                    else {
+                        Disconnect-VIServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop
+                    }
+                }
+
+                catch {
+                    # Write a error message to the log.
+                    $MessageParams = @{
+                        Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                        ErrorAction = 'Stop'
+                    }
+                    Write-Error @MessageParams
+                }
+            }
+            "CisServer" {
+                try {
+                    if ($Force) {
+                        Disconnect-CisServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop -Force:$true
+                    }
+                    else {
+                        Disconnect-CisServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop
+                    }
+                }
+
+                catch {
+                    # Write a error message to the log.
+                    $MessageParams = @{
+                        Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                        ErrorAction = 'Stop'
+                    }
+                    Write-Error @MessageParams
+                }
+            }
+            # Check for an existing WinSCP Session var
+            "FTP" {
+                if ($Global:WinSCPSession.Opened) {
+                    Remove-WinSCPSession -WinSCPSession $Global:WinSCPSession
                 }
                 else {
-                    Disconnect-VIServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop
+                    $MessageParams = @{
+                        Message     = 'There is no open WinSCP Session'
+                        ErrorAction = 'Stop'
+                    }
+                    Write-Error @MessageParams
                 }
             }
+            # DataONTAP doesn't have a CmdLet `Disconnect-NcController`.
+            # So we go ahead and clear the CurrentNcController variable.
+            "NetAppFAS" {
+                try {
+                    $MessageParams = @{
+                        Message     = "Setting {0} to `$null, which will disconnect NetAppFAS" -f $Global:CurrentNcController
+                        ErrorAction = 'Continue'
+                    }
+                    Write-Verbose @MessageParams
+                    $Global:CurrentNcController = $null
+                }
 
-            catch {
-                # Write a error message to the log.
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
+                catch {
+                    # Write a error message to the log.
+                    $MessageParams = @{
+                        Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                        ErrorAction = 'Stop'
+                    }
+                    Write-Error @MessageParams
                 }
-                Write-Error @MessageParams
+
             }
-        }
-        "CisServer" {
-            try {
-                if ($Force) {
-                    Disconnect-CisServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop -Force:$true
+            "CiscoUcs" {
+                try {
+                    Disconnect-Ucs -Ucs $RemoteHost
+                }
+
+                catch {
+                    # Write a error message to the log.
+                    $MessageParams = @{
+                        Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                        ErrorAction = 'Stop'
+                    }
+                    Write-Error @MessageParams
+                }
+            }
+            "ExchangeHTTP*" {
+                try {
+                    Get-Variable -Name 'PSExchangeRemote' -Scope Global -ErrorAction Stop
+                    Remove-PSSession -Session $Global:PSExchangeRemote -ErrorAction Stop
+                }
+                catch {
+                    $MessageParams = @{
+                        Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
+                        ErrorAction = 'Stop'
+                    }
+                    Write-Error @MessageParams
+                }
+            }
+            "SCP" {
+                if ($Global:WinSCPSession.Opened) {
+                    Remove-WinSCPSession -WinSCPSession $Global:WinSCPSession
                 }
                 else {
-                    Disconnect-CisServer -Server $RemoteHost -Confirm:$false -ErrorAction Stop
+                    $MessageParams = @{
+                        Message     = 'There is no open WinSCP Session'
+                        ErrorAction = 'Stop'
+                    }
+                    Write-Error @MessageParams
                 }
             }
-
-            catch {
+            default {
                 # Write a error message to the log.
                 $MessageParams = @{
                     Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
+                    ErrorAction = 'Stop'
                 }
                 Write-Error @MessageParams
             }
-        }
-        # Check for an existing WinSCP Session var
-        "FTP" {
-            if ($Global:WinSCPSession.Opened) {
-                Remove-WinSCPSession -WinSCPSession $Global:WinSCPSession
-            }
-            else {
-                $MessageParams = @{
-                    Message     = "There is no open WinSCP Session"
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
-            }
-        }
-        # DataONTAP doesn't have a CmdLet `Disconnect-NcController`.
-        # So we go ahead and clear the CurrentNcController variable.
-        "NetAppFAS" {
-            try {
-                $MessageParams = @{
-                    Message     = "Setting {0} to `$null, which will disconnect NetAppFAS" -f $Global:CurrentNcController
-                    ErrorAction = "Continue"
-                }
-                Write-Verbose @MessageParams
-                $Global:CurrentNcController = $null
-            }
-
-            catch {
-                # Write a error message to the log.
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
-            }
-
-        }
-        "CiscoUcs" {
-            try {
-                Disconnect-Ucs -Ucs $RemoteHost
-            }
-
-            catch {
-                # Write a error message to the log.
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
-            }
-        }
-        "ExchangeHTTP*" {
-            try {
-                Get-Variable -Name 'PSExchangeRemote' -Scope Global -ErrorAction Stop
-                Remove-PSSession -Session $Global:PSExchangeRemote -ErrorAction Stop
-            }
-            catch {
-                $MessageParams = @{
-                    Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
-            }
-        }
-        "SCP" {
-            if ($Global:WinSCPSession.Opened) {
-                Remove-WinSCPSession -WinSCPSession $Global:WinSCPSession
-            }
-            else {
-                $MessageParams = @{
-                    Message     = "There is no open WinSCP Session"
-                    ErrorAction = "Stop"
-                }
-                Write-Error @MessageParams
-            }
-        }
-        default {
-            # Write a error message to the log.
-            $MessageParams = @{
-                Message     = "Unable to disconnect from {0} using Type {1}." -f $RemoteHost, $Type
-                ErrorAction = "Stop"
-            }
-            Write-Error @MessageParams
         }
     }
+
+    end {}
 }
