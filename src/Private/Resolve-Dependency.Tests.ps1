@@ -13,8 +13,15 @@ BeforeAll {
 
 Describe "Resolve-Dependency" {
     Context "Basic syntax check" {
-        Mock Get-ModuleBase { return (Join-Path -Path $PWD -ChildPath '/resources') } -ModuleName 'PSCredentialStore'
-        Mock Test-Module { return $true } -ModuleName 'PSCredentialStore'
+        BeforeAll {
+            Mock -ModuleName 'PSCredentialStore' Get-ModuleBase {
+                return (Join-Path -Path $PWD -ChildPath '/resources')
+            }
+            Mock -ModuleName 'PSCredentialStore' Test-Module {
+                return $true
+            }
+        }
+
         It "Test1: Should not throw" {
             { Resolve-Dependency -Name 'foobar2000' } | Should -Not -Throw
         }
@@ -37,11 +44,16 @@ Describe "Resolve-Dependency" {
         }
     }
     Context "Testing input variations" {
-        Mock Get-ModuleBase { return (Join-Path -Path $PWD -ChildPath '/resources') } -ModuleName 'PSCredentialStore'
         It "Should return true if all given dependencies exist" {
+            Mock Get-ModuleBase {
+                return (Join-Path -Path $PWD -ChildPath '/resources')
+            }
             Resolve-Dependency -Name 'Existing' | Should -Be $true
         }
         It "Mixed results should return false" {
+            Mock Get-ModuleBase {
+                return (Join-Path -Path $PWD -ChildPath '/resources')
+            }
             Resolve-Dependency -Name 'PSGetMixed' | Should -Be $false
         }
     }
