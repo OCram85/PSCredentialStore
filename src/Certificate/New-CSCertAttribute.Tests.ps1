@@ -11,7 +11,7 @@ Describe "New-CSCertAttribute" {
                 State                  = 'BW'
                 City                   = 'KA'
                 Organization           = 'IT'
-                OrganizationalUnitName = ''
+                OrganizationalUnitName = 'foo'
                 CommonName             = 'MyCert'
             }
             { New-CSCertAttribute @AttribParams } | Should -Not -Throw
