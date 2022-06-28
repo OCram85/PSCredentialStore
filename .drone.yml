@@ -34,7 +34,7 @@ steps:
         pwsh -NonInteractive -c "& {
           Import-Module './tools/DroneIO.psm1';
           Invoke-InstallDependencies;
-          Invoke-UnitTest
+          Invoke-UnitTest -Verbosity 'Detailed'
         }"
 
   - name: coverage
