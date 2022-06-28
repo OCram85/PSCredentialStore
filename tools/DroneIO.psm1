@@ -144,6 +144,7 @@ function Invoke-Linter {
                     "RuleName",
                     "Message"
                 ) -AutoSize | Out-String | Write-Verbose -Verbose
+                throw 'PS Script Analyzer failed!'
             }
         }
     }
