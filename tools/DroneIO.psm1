@@ -114,8 +114,8 @@ function Invoke-Linter {
             }
         }
         catch {
+            Write-Debug -Message $_.Exception.Message -Debug
             Write-Error -Message 'PSScriptAnalyzer failer'
-            Write-Error -Message $_.Exception.Message -ErrorAction 'Stop'
         }
     }
 }
