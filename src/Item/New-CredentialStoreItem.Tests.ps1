@@ -1,3 +1,10 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSAvoidUsingConvertToSecureStringWithPlainText',
+    '',
+    Justification = 'justification'
+)]
+param ()
+
 BeforeAll {
     $ManifestFile = (Get-Item -Path "./src/*.psd1").FullName
     Import-Module $ManifestFile -Force
@@ -42,7 +49,9 @@ Describe "New-CredentialStoreItem" {
             $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
             $mycreds = [PSCredential]::new($UserName, $Password)
             $RemoteHost = "foobar"
-            { New-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds } | Should -Not -Throw
+            {
+                New-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds
+            } | Should -Not -Throw
             $tmpCS = Get-Content -Path $tmpCS -Raw | ConvertFrom-Json
             $res = Get-Member -InputObject $tmpCS -Name $RemoteHost -Membertype Properties
             $res.Name | Should -Be $RemoteHost
@@ -55,7 +64,14 @@ Describe "New-CredentialStoreItem" {
             $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
             $mycreds = [PSCredential]::new($UserName, $Password)
             $RemoteHost = "foobar2"
-            New-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds -Identifier 'Foo'
+            $StoreItemParam = @{
+                Shared = $true
+                Path = $tmpCS
+                RemeHost = $RemoteHost
+                Credential = $mycreds
+                identifier = 'Foo'
+            }
+            New-CredentialStoreItem @StoreItemParam
             $writtenItem = Get-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Identifier 'Foo'
             ($writtenItem.UserName -eq $UserName) -and ($writtenItem.Password.Length -gt 0) | Should -Be $true
         }
