@@ -23,7 +23,7 @@ Describe "New-CSCertificate" {
                 CommonName             = 'MyCert'
             }
             $CertAttribs = @{
-                CRTAttribute = $attribs
+                CRTAttribute = New-CSCertAttribute @attribs
                 KeyName      = Join-Path -Path (Get-TempDir) -ChildPath '/foo.key'
                 CertName     = Join-Path -Path (Get-TempDir) -ChildPath '/cert.pfx'
             }
