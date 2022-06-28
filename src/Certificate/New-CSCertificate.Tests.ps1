@@ -3,10 +3,10 @@ BeforeAll {
     Import-Module $ManifestFile -Force
 }
 
-Describe "New-CSCertAttribute" {
-    Context "Basis Tests" -Tag 'Unit' {
+Describe "New-CSCertificate" {
+    Context "Basic Tests" -Tag 'Unit' {
         It "Should not throw" {
-            $AttribParams = @{
+            $attribs = @{
                 Country                = 'DE'
                 State                  = 'BW'
                 City                   = 'KA'
@@ -14,7 +14,12 @@ Describe "New-CSCertAttribute" {
                 OrganizationalUnitName = 'foo'
                 CommonName             = 'MyCert'
             }
-            { New-CSCertAttribute @AttribParams } | Should -Not -Throw
+            $CertAttribs = @{
+                CRTAttribute = $attribs
+                KeyName      = Join-Path -Path (Get-TempDir) -ChildPath '/foo.key'
+                CertName     = Join-Path -Path (Get-TempDir) -ChildPath '/cert.pfx'
+            }
+            { New-CSCertificate @CertAttribs } | Should -Not -Throw
         }
     }
 }
