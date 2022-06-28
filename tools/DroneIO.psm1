@@ -33,35 +33,35 @@ function Invoke-InstallDependencies {
         $ErrorActionPreference = 'Stop'
         try {
             $ParamsPSScript = @{
-                Name = 'PSScriptAnalyzer'
-                Scope = 'CurrentUser'
-                RequiredVersion = '1.20.0'
-                Force = $true
+                Name               = 'PSScriptAnalyzer'
+                Scope              = 'CurrentUser'
+                RequiredVersion    = '1.20.0'
+                Force              = $true
                 SkipPublisherCheck = $true
-                AllowClobber = $true
-                Verbose = $VerbosePreference
+                AllowClobber       = $true
+                Verbose            = $VerbosePreference
             }
             Install-Module @ParamsPSScript
 
             $ParamsPester = @{
-                Name = 'Pester'
-                Scope = 'CurrentUser'
-                RequiredVersion = '5.3.3'
-                Force = $true
+                Name               = 'Pester'
+                Scope              = 'CurrentUser'
+                RequiredVersion    = '5.3.3'
+                Force              = $true
                 SkipPublisherCheck = $true
-                AllowClobber = $true
-                Verbose = $VerbosePreference
+                AllowClobber       = $true
+                Verbose            = $VerbosePreference
             }
             Install-Module @ParamsPester
 
             $ParamsPosh = @{
-                Name = 'posh-git'
-                Scope = 'CurrentUser'
-                RequiredVersion = '1.1.0'
-                Force = $true
+                Name               = 'posh-git'
+                Scope              = 'CurrentUser'
+                RequiredVersion    = '1.1.0'
+                Force              = $true
                 SkipPublisherCheck = $true
-                AllowClobber = $true
-                Verbose = $VerbosePreference
+                AllowClobber       = $true
+                Verbose            = $VerbosePreference
                 #ErrorAction = 'Stop'
             }
             Install-Module @ParamsPosh
@@ -96,8 +96,27 @@ function Invoke-Linter {
             Recurse       = $true
             Settings      = './tools/PSScriptAnalyzerSettings.psd1'
             ReportSummary = $true
+            ErrorAction   = 'Stop'
         }
-        Invoke-ScriptAnalyzer @AnalyzerSettings
+        try {
+            $AnalyzerResults = Invoke-ScriptAnalyzer @AnalyzerSettings
+            if ( $AnalyzerResults ) {
+                $AnalyzerResults | Sort-Object -Property @(
+                    "ScriptName",
+                    "Line"
+                ) | Format-Table @(
+                    "Severity",
+                    "ScriptName",
+                    "Line",
+                    "RuleName",
+                    "Message"
+                ) -AutoSize | Out-String | Write-Verbose -Verbose
+            }
+        }
+        catch {
+            Write-Error -Message 'PSScriptAnalyzer failer'
+            Write-Error -Message $_.Exception.Message -ErrorAction 'Stop'
+        }
     }
 }
 
