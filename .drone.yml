@@ -93,3 +93,11 @@ steps:
           Invoke-InstallDependencies;
           Invoke-UnitTest -Verbosity 'Detailed' -ErrorAction 'Stop'
         }"
+
+  - name: FinalState
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
+    commands:
+      - |
+        pwsh -NonInteractive -c "& {
+          Write-Verbose -Message ('Failed Steps: {0}' -f $Env:DRONE_FAILED_STEPS)
+        }"
