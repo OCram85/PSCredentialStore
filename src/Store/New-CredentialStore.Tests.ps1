@@ -9,6 +9,7 @@ BeforeAll {
     foreach ( $func in $PrivateFunctions) {
         . $func
     }
+
     # Backup existing credential stores
     $VerbosePreference = "Continue"
     Write-Verbose "Backup private Credential Store..."
