@@ -92,3 +92,4 @@ steps:
           Import-Module './tools/DroneIO.psm1';
           Invoke-InstallDependencies;
           Invoke-UnitTest -Verbosity 'Detailed' -ErrorAction 'Stop'
+        }"
