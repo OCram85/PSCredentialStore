@@ -46,3 +46,49 @@ steps:
         from_secret: CodeCovToken
       files:
         - coverage.xml
+
+---
+
+kind: pipeline
+type: docker
+name: PWSH_LTS_7.2_Ubuntu-focal
+
+platform:
+  os: linux
+  arch: amd64
+
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: Environments
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
+    commands:
+      - |
+        pwsh -NonInteractive -c "& {
+          Import-Module './tools/DroneIO.psm1' -Verbose;
+          Invoke-ShowEnv -Verbose
+        }"
+
+  - name: LintTests
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
+    failure: ignore
+    commands:
+      - |
+        pwsh -NonInteractive -c "& {
+          Import-Module './tools/DroneIO.psm1';
+          Invoke-InstallDependencies;
+          Invoke-Linter -ErrorAction 'Stop'
+        }"
+
+  - name: UnitTests
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
+    failure: ignore
+    commands:
+      - |
+        pwsh -NonInteractive -c "& {
+          Import-Module './tools/DroneIO.psm1';
+          Invoke-InstallDependencies;
+          Invoke-UnitTest -Verbosity 'Detailed' -ErrorAction 'Stop'
