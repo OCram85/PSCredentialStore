@@ -74,7 +74,7 @@ steps:
 
   - name: LintTests
     image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
-    failure: ignore
+    #failure: ignore
     commands:
       - |
         pwsh -NonInteractive -c "& {
@@ -85,7 +85,7 @@ steps:
 
   - name: UnitTests
     image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
-    failure: ignore
+    #failure: ignore
     commands:
       - |
         pwsh -NonInteractive -c "& {
@@ -102,3 +102,6 @@ steps:
           Import-Module './tools/DroneIO.psm1';
           Invoke-ShowEnv -Verbose
         }"
+    depends_on:
+      - LintTests
+      - UnitTests
