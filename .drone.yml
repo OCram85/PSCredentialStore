@@ -99,5 +99,6 @@ steps:
     commands:
       - |
         pwsh -NonInteractive -c "& {
-          Write-Verbose -Message ('Failed Steps: {0}' -f $Env:DRONE_FAILED_STEPS)
+          Import-Module './tools/DroneIO.psm1';
+          Invoke-ShowEnv -Verbose
         }"
