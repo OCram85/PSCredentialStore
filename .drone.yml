@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: docker
-name: Linux_PWSH7_Build
+name: PWSH_LTS_7.2_Ubuntu-focal
 
 platform:
   os: linux
@@ -9,7 +9,7 @@ platform:
 
 steps:
   - name: Environments
-    image: mcr.microsoft.com/powershell:latest
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
     commands:
       - |
         pwsh -NonInteractive -c "& {
@@ -18,7 +18,7 @@ steps:
         }"
 
   - name: LintTests
-    image: mcr.microsoft.com/powershell:latest
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
     failure: ignore
     commands:
       - |
@@ -29,7 +29,7 @@ steps:
         }"
 
   - name: UnitTests
-    image: mcr.microsoft.com/powershell:latest
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
     failure: ignore
     commands:
       - |
@@ -47,61 +47,11 @@ steps:
       files:
         - coverage.xml
 
----
-
-kind: pipeline
-type: docker
-name: PWSH_LTS_7.2_Ubuntu-focal
-
-platform:
-  os: linux
-  arch: amd64
-
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: Environments
-    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
-    commands:
-      - |
-        pwsh -NonInteractive -c "& {
-          Import-Module './tools/DroneIO.psm1' -Verbose;
-          Invoke-ShowEnv -Verbose
-        }"
-
-  - name: LintTests
-    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
-    #failure: ignore
-    commands:
-      - |
-        pwsh -NonInteractive -c "& {
-          Import-Module './tools/DroneIO.psm1';
-          Invoke-InstallDependencies;
-          Invoke-Linter -ErrorAction 'Stop'
-        }"
-
-  - name: UnitTests
-    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
-    #failure: ignore
-    commands:
-      - |
-        pwsh -NonInteractive -c "& {
-          Import-Module './tools/DroneIO.psm1';
-          Invoke-InstallDependencies;
-          Invoke-UnitTest -Verbosity 'Detailed' -ErrorAction 'Stop'
-        }"
-
-  - name: FinalState
+  - name: SetPipelineState
     image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
     commands:
       - |
         pwsh -NonInteractive -c "& {
           Import-Module './tools/DroneIO.psm1';
-          Invoke-ShowEnv -Verbose
+          Invoke-BuildState -ErrorAction 'Stop'
         }"
-    depends_on:
-      - LintTests
-      - UnitTests

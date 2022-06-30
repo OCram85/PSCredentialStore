@@ -144,6 +144,7 @@ function Invoke-Linter {
                     "RuleName",
                     "Message"
                 ) -AutoSize | Out-String | Write-Verbose -Verbose
+                Update-BuildStateFile
                 throw 'PS Script Analyzer failed!'
             }
         }
@@ -203,11 +204,47 @@ function Invoke-UnitTest {
         $TestResults = Invoke-Pester -Configuration $PesterConf -ErrorAction 'Stop'
 
         if ($TestResults.FailedCount -gt 0) {
+            Update-BuildStateFile
             throw ('{0} tests failed!' -f $TestResults.FailedCount)
         }
 
         if ($PassThru.IsPresent) {
             Write-Output -InputObject $TestResults
+        }
+    }
+}
+
+function Update-BuildStateFile {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
+        [string]$StepName = $Env:DRONE_FAILED_STEPS
+    )
+
+    process {
+        $StateFilePath = Join-Path -Path $PWD -ChildPath './STATE.xml'
+        if (Test-Path -Path $StateFilePath) {
+            $StateContent = Import-Clixml -Path $StateFilePath
+            $StateContent.Steps += $StepName
+        }
+        else {
+            $StateContent = [PSCustomObject]@{
+                Steps = @($StepName)
+            }
+        }
+        Export-Clixml -Path $StateFilePath -InputObject $StateContent -Force -Encoding utf8NoBOM
+    }
+}
+
+function Invoke-BuildState {
+    [CmdletBinding()]
+    param ()
+
+    process {
+        $StateFilePath = Join-Path -Path $PWD -ChildPath './STATE.xml'
+        if ( Test-Path -Path $StateFilePath ) {
+            throw 'One one more pipeline steps failed. Marking the pipeline as failed!'
         }
     }
 }
