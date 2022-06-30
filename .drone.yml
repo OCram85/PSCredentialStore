@@ -36,7 +36,7 @@ steps:
         pwsh -NonInteractive -c "& {
           Import-Module './tools/DroneIO.psm1';
           Invoke-InstallDependencies;
-          Invoke-UnitTest -Verbosity 'Detailed' -ErrorAction 'Stop'
+          Invoke-UnitTest -Verbosity 'Normal' -ErrorAction 'Stop'
         }"
 
   - name: coverage
@@ -46,6 +46,8 @@ steps:
         from_secret: CodeCovToken
       files:
         - coverage.xml
+    depends_on:
+      - UnitTests
 
   - name: SetPipelineState
     image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
@@ -55,3 +57,7 @@ steps:
           Import-Module './tools/DroneIO.psm1';
           Invoke-BuildState -ErrorAction 'Stop'
         }"
+    depends_on:
+      - LintTests
+      - UnitTests
+      - Coverage
