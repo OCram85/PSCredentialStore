@@ -39,7 +39,7 @@ steps:
           Invoke-UnitTest -Verbosity 'Normal' -ErrorAction 'Stop'
         }"
 
-  - name: coverage
+  - name: Coverage
     image: plugins/codecov
     settings:
       token:
