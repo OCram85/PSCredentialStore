@@ -9,8 +9,6 @@ BeforeAll {
     foreach ( $func in $PrivateFunctions) {
         . $func
     }
-
-    $RepoRoot = (Get-Item -Path (Get-GitDirectory) -Force).Parent | Select-Object -ExpandProperty 'FullName'
 }
 
 Describe "Test-CredentialStore" {
