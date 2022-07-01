@@ -36,7 +36,7 @@ Describe "New-CredentialStore" {
     Context "Private CS tests" {
         It "Test1: Create new private CredentialStore" {
             $pCS = Get-DefaultCredentialStorePath
-            { New-CredentialStore -Confirm:$false } | Should -Not -Throw
+            { New-CredentialStore -Confirm:$false -Force } | Should -Not -Throw
             $result = Test-Path -Path $pCS
             $CS = Get-Content -Path $pCS -Raw | ConvertFrom-Json
             ($result -eq $true) -and ($CS.Type -eq "Private") | Should -Be $true
