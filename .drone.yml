@@ -36,7 +36,7 @@ steps:
         pwsh -NonInteractive -c "& {
           Import-Module './tools/DroneIO.psm1';
           Invoke-InstallDependencies;
-          Invoke-UnitTest -Verbosity 'Normal' -ErrorAction 'Stop'
+          Invoke-UnitTest -Verbosity 'Normal' -ExcludeTag @( 'Integration', 'Disabled') -ErrorAction 'Stop'
         }"
 
   - name: Coverage
