@@ -13,7 +13,7 @@ BeforeAll {
 
 Describe "Get-CredentialStore" {
     Context "Basic logic tests" {
-        It "Test1: Read CS without params" {
+        It "Read CS without params" {
             $TestCredentialStore = './resources/cs/CredentialStore.json'
             $TestPfxCert = './resources/cs/PSCredentialStore.pfx'
             if (! (Test-Path -Path (Get-DefaultCredentialStorePath)) ) {
@@ -21,7 +21,7 @@ Describe "Get-CredentialStore" {
             }
             { Get-CredentialStore } | Should -Not -Throw
         }
-        It "Test2: Read Credential Store with testing data" {
+        It "Read Credential Store with testing data" {
             $TestCredentialStore = './resources/cs/CredentialStore.json'
             $TestPfxCert = './resources/cs/PSCredentialStore.pfx'
             {

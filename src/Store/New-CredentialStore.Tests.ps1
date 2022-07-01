@@ -34,17 +34,17 @@ BeforeAll {
 
 Describe "New-CredentialStore" {
     Context "Private CS tests" {
-        It "Test1: Create new private CredentialStore" {
+        It "Create new private CredentialStore" {
             $pCS = Get-DefaultCredentialStorePath
             { New-CredentialStore -Confirm:$false -Force } | Should -Not -Throw
             $result = Test-Path -Path $pCS
             $CS = Get-Content -Path $pCS -Raw | ConvertFrom-Json
             ($result -eq $true) -and ($CS.Type -eq "Private") | Should -Be $true
         }
-        It "Test2: Try to override private Store" {
+        It "Try to override private Store" {
             { New-CredentialStore -Confirm:$false } | Should -Throw
         }
-        It "Test3: Reset existing Credential Store" {
+        It "Reset existing Credential Store" {
             $pCS = Get-DefaultCredentialStorePath
             $now = Get-Date
             $CS = Get-Content -Path $pCS -Raw | ConvertFrom-Json
@@ -54,15 +54,15 @@ Describe "New-CredentialStore" {
         }
     }
     Context "Shared CS tests" {
-        It "Test1: Create a new Shared Credential Store" {
+        It "Create a new Shared Credential Store" {
             $sCS = Get-DefaultCredentialStorePath -Shared
             { New-CredentialStore -Confirm:$false -Shared } | Should -Not -Throw
             Test-Path -Path $sCS | Should -Be $true
         }
-        It "Test2: Try to override existing shared CS" {
+        It "Try to override existing shared CS" {
             { New-CredentialStore -Shared -Confirm:$false } | Should -Throw
         }
-        It "Test3: Reset shared CredentialStore" {
+        It "Reset shared CredentialStore" {
             $sCS = Get-DefaultCredentialStorePath -Shared
             $now = Get-Date
             $CS = Get-Content -Path $sCS -Raw | ConvertFrom-Json
@@ -72,15 +72,15 @@ Describe "New-CredentialStore" {
         }
     }
     Context "Custom Shared CS tests" {
-        It "Test1: Create new custom shared" {
+        It "Create new custom shared" {
             $cCS = Join-Path -Path (Get-TempDir) -ChildPath "CredentialStore.json"
-            { New-CredentialStore -Path $cCS -Shared -Confirm:$false } | Should -Not -Throw
+            { New-CredentialStore -Path $cCS -Shared -Confirm:$false -SkipPFXCertCreation } | Should -Not -Throw
         }
-        It "Test2: Try to override exiting one" {
+        It "Try to override exiting one" {
             $cCS = Join-Path -Path (Get-TempDir) -ChildPath "CredentialStore.json"
             { New-CredentialStore -Path $cCS -Shared -Confirm:$false } | Should -Throw
         }
-        It "Test3: Reset existing custom CredentialStore" {
+        It "Reset existing custom CredentialStore" {
             $cCS = Join-Path -Path (Get-TempDir) -ChildPath "CredentialStore.json"
             { New-CredentialStore -Path $cCS -Shared -Force -Confirm:$false } | Should -Not -Throw
         }
@@ -88,7 +88,11 @@ Describe "New-CredentialStore" {
     Context "Test exception handling" {
         Mock Out-File { throw "foobar exception" }
         It "JSON Conversion should fail and throw" {
-            { New-CredentialStore -Path (Join-Path -Path (Get-TempDir) -ChildPath '/dummy.json') -Shared -Confirm:$false } | Should -Throw
+            {
+                New-CredentialStore -Path (
+                    Join-Path -Path (Get-TempDir) -ChildPath '/dummy.json'
+                ) -Shared -Confirm:$false
+            } | Should -Throw
         }
     }
     Context "Tests for Windows certificate store" {
