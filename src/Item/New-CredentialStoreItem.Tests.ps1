@@ -1,6 +1,31 @@
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSAvoidUsingConvertToSecureStringWithPlainText',
+    '',
+    Justification = 'just used in pester tests.'
+)]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSProvideCommentHelp',
+    '',
+    Justification = 'no need in internal pester helpers.'
+)]
+param ()
+
+BeforeAll {
+    $ManifestFile = (Get-Item -Path "./src/*.psd1").FullName
+    Import-Module $ManifestFile -Force
+
+    $PrivateFunctions = (Get-ChildItem -Path "./src/Private/*.ps1" | Where-Object {
+            $_.BaseName -notmatch '.Tests'
+        }
+    ).FullName
+    foreach ( $func in $PrivateFunctions) {
+        . $func
+    }
+}
+
 Describe "New-CredentialStoreItem" {
     Context "Private Credential Store tests" {
-        It "Test1: Add entry to existing private store." {
+        It "Add entry to existing private store." {
             # Creat a fresh CredentialStore first
             New-CredentialStore -Force
 
@@ -20,7 +45,7 @@ Describe "New-CredentialStoreItem" {
         }
     }
     Context "Test with new shared Credential Store" {
-        It "Test2: Create new RemoteHost entry" {
+        It "Create new RemoteHost entry" {
             # prepare test environment
             $tmpCS = Join-Path -Path (Get-TempDir) -ChildPath '/CredentialStore.json'
             New-CredentialStore -Shared -Path $tmpCS -Force
@@ -29,9 +54,11 @@ Describe "New-CredentialStoreItem" {
             $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
             $mycreds = [PSCredential]::new($UserName, $Password)
             $RemoteHost = "foobar"
-            { New-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds } | Should -Not -Throw
+            {
+                New-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds
+            } | Should -Not -Throw
             $tmpCS = Get-Content -Path $tmpCS -Raw | ConvertFrom-Json
-            $res = Get-Member -InputObject $tmpCS -Name $RemoteHost -Membertype Properties
+            $res = Get-Member -InputObject $tmpCS -Name $RemoteHost -MemberType Properties
             $res.Name | Should -Be $RemoteHost
         }
         It "Adds Item with identifier to shared store" {
@@ -42,13 +69,19 @@ Describe "New-CredentialStoreItem" {
             $Password = ConvertTo-SecureString -String "mypasswd" -AsPlainText -Force
             $mycreds = [PSCredential]::new($UserName, $Password)
             $RemoteHost = "foobar2"
-            New-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Credential $mycreds -Identifier 'Foo'
+            $StoreItemParam = @{
+                Shared     = $true
+                Path       = $tmpCS
+                RemoteHost = $RemoteHost
+                Credential = $mycreds
+                identifier = 'Foo'
+            }
+            New-CredentialStoreItem @StoreItemParam
             $writtenItem = Get-CredentialStoreItem -Shared -Path $tmpCS -RemoteHost $RemoteHost -Identifier 'Foo'
             ($writtenItem.UserName -eq $UserName) -and ($writtenItem.Password.Length -gt 0) | Should -Be $true
         }
     }
     Context "Test optional parameter lookup" {
-
         It "Test missing Credential" {
             function global:Get-Credential ([string]$Message) {
                 $UserName = 'testuser'
@@ -65,16 +98,20 @@ Describe "New-CredentialStoreItem" {
 
     }
     Context "General Exception handling" {
-        Mock Test-CredentialStore { return $false }
+        Mock Test-CredentialStore { return $false } -ModuleName 'PSCredentialStore'
         It "Missing CredentialStore should throw" {
-            { New-CredentialStoreItem -Shared -Path 'C:\missingStore.json' -RemoteHost 'notrelevant' } | Should -Throw "Could not add anything"
+            {
+                New-CredentialStoreItem -Shared -Path '/tmp/missingStore.json' -RemoteHost 'notrelevant'
+            } | Should -Throw "Could not add anything into the given CredentialStore."
         }
     }
     Context "Testing pipeline paramter" {
         It "Add the item with credential value from pipe" {
             $UserName = 'pipeUser'
             $Password = ConvertTo-SecureString -String "pipePasswd" -AsPlainText -Force
-            { [PSCredential]::new($UserName, $Password) | New-CredentialStoreItem -RemoteHost 'PipeHost' } | Should -Not -Throw
+            {
+                [PSCredential]::new($UserName, $Password) | New-CredentialStoreItem -RemoteHost 'PipeHost'
+            } | Should -Not -Throw
         }
 
         It "Testing written item" {

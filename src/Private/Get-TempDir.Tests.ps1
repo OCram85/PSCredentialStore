@@ -1,7 +1,20 @@
+BeforeAll {
+    $ManifestFile = (Get-Item -Path "./src/*.psd1").FullName
+    Import-Module $ManifestFile -Force
+
+    $PrivateFunctions = (Get-ChildItem -Path "./src/Private/*.ps1" | Where-Object {
+            $_.BaseName -notmatch '.Tests'
+        }
+    ).FullName
+    foreach ( $func in $PrivateFunctions) {
+        . $func
+    }
+}
+
 Describe "Get-TempDir" {
     Context "Basic tests" {
         It "Should not throw" {
-            {Get-TempDir} | Should -Not -Throw
+            { Get-TempDir } | Should -Not -Throw
         }
         It "Should return the correct os tmp path" {
             $Path = Get-TempDir
@@ -17,7 +30,11 @@ Describe "Get-TempDir" {
                 }
             }
             if ($Env:APPVEYOR) {
-                if (($isWindows) -or ($PSVersionTable.PSVersion.Major -lt 6) -or ($PSVersionTable.PSEdition -eq 'Desktop')) {
+                if (
+                    ($isWindows) -or
+                    ($PSVersionTable.PSVersion.Major -lt 6) -or
+                    ($PSVersionTable.PSEdition -eq 'Desktop')
+                ) {
                     $RefPath = (Resolve-Path -Path $env:TEMP).Path
                     $Path | Should -Be $RefPath
                 }

@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: docker
-name: Linux_PWSH7_Build
+name: PWSH_LTS_7.2_Ubuntu-focal
 
 platform:
   os: linux
@@ -9,7 +9,7 @@ platform:
 
 steps:
   - name: Environments
-    image: mcr.microsoft.com/powershell:latest
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
     commands:
       - |
         pwsh -NonInteractive -c "& {
@@ -18,29 +18,46 @@ steps:
         }"
 
   - name: LintTests
-    image: mcr.microsoft.com/powershell:latest
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
+    failure: ignore
     commands:
       - |
         pwsh -NonInteractive -c "& {
           Import-Module './tools/DroneIO.psm1';
           Invoke-InstallDependencies;
-          Invoke-Linter
+          Invoke-Linter -ErrorAction 'Stop'
         }"
 
   - name: UnitTests
-    image: mcr.microsoft.com/powershell:latest
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
+    failure: ignore
     commands:
       - |
         pwsh -NonInteractive -c "& {
           Import-Module './tools/DroneIO.psm1';
           Invoke-InstallDependencies;
-          Invoke-UnitTest -Verbosity 'Detailed'
+          Invoke-UnitTest -Verbosity 'Normal' -ExcludeTag @( 'Integration', 'Disabled') -ErrorAction 'Stop'
         }"
 
-  - name: coverage
+  - name: Coverage
     image: plugins/codecov
     settings:
       token:
         from_secret: CodeCovToken
       files:
         - coverage.xml
+    depends_on:
+      - UnitTests
+
+  - name: SetPipelineState
+    image: mcr.microsoft.com/powershell:lts-7.2-ubuntu-focal
+    commands:
+      - |
+        pwsh -NonInteractive -c "& {
+          Import-Module './tools/DroneIO.psm1';
+          Invoke-BuildState -ErrorAction 'Stop'
+        }"
+    depends_on:
+      - LintTests
+      - UnitTests
+      - Coverage
