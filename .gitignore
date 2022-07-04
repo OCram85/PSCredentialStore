@@ -16,3 +16,6 @@ data/*.csv
 # Ignore Unit Test result files
 coverage.xml
 testResults.xml
+
+# Optional build state file
+STATE.xml
