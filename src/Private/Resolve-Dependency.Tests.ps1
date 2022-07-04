@@ -14,10 +14,10 @@ BeforeAll {
 Describe "Resolve-Dependency" {
     Context "Basic syntax check" {
         BeforeAll {
-            Mock -ModuleName 'PSCredentialStore' Get-ModuleBase {
+            Mock  Get-ModuleBase {
                 return (Join-Path -Path $PWD -ChildPath '/resources')
             }
-            Mock -ModuleName 'PSCredentialStore' Test-Module {
+            Mock Test-Module {
                 return $true
             }
         }
@@ -34,7 +34,7 @@ Describe "Resolve-Dependency" {
         Mock Get-ModuleBase {
             if ($IsWindows) { return "C:\" }
             elseif ($isLinux) { return "/" }
-        } -ModuleName 'PSCredentialStore'
+        }
         It "Missing dependency file should not cause an error" {
             { Resolve-Dependency -Name 'awesome' } | Should -Not -Throw
         }
