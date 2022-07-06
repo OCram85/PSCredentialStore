@@ -1,2 +1,0 @@
-src/Vendor/libressl255/* filter=lfs diff=lfs merge=lfs -text
-*.pfx filter=lfs diff=lfs merge=lfs -text

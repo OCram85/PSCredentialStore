@@ -1,3 +1,0 @@
-# Don't local track test builds
-bin/PSCredentialStore.zip
-bin/PSCredentialStore/*
